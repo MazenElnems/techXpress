@@ -1,3 +1,18 @@
-﻿
+﻿@using PresentationLayer.VMs
+@model IEnumerable<ProductVM>
+
 <h2>Products</h2>
 
+<a href="Product/Create" class="btn btn-dark">Create Product</a>
+
+
+<table class="table table-striped">
+    @foreach(var product in Model)
+    {
+        <tr>
+            <td>@product.Name</td>
+            <td>@product.Price</td>
+            <td><img src="/Images/@product.Image" style="width:80px;"></img></td>
+        </tr>
+    }
+</table>
