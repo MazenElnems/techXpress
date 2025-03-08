@@ -1,3 +1,11 @@
+using BusinessLogicLayer.Abstraction;
+using BusinessLogicLayer.Managers;
+using BusinessLogicLayer.Services;
+using DataAccessLayer.Abstraction;
+using DataAccessLayer.Data;
+using DataAccessLayer.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 namespace PresentationLayer
 {
     public class Program
@@ -6,12 +14,19 @@ namespace PresentationLayer
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            #region Add Services to container
             builder.Services.AddControllersWithViews();
 
-            var app = builder.Build();
+            builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
+            optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Devlopment_DB")));
 
-            // Configure the HTTP request pipeline.
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductManager, ProductManager>();
+            builder.Services.AddTransient<IFilesService, FilesService>(); 
+            #endregion
+
+            #region Configure the HTTP request pipeline.
+            var app = builder.Build();
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -30,7 +45,8 @@ namespace PresentationLayer
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
-            app.Run();
+            app.Run(); 
+            #endregion
         }
     }
 }
