@@ -16,15 +16,39 @@ namespace PresentationLayer.Controllers
             _filesService = filesService;
         }
 
+        [HttpPost]
+        public IActionResult Index(string searchTerm, string searchBy, decimal? minPrice, decimal? maxPrice)
+        {
+            IEnumerable<ProductVM> productVMs = _productManager
+                .GetProductsByFilter(searchTerm,searchBy,minPrice,maxPrice)
+                .Select(p => new ProductVM
+                {
+                    Description = p.Description,
+                    Image = p.Image,
+                    Name = p.Name,
+                    Price = p.Price
+                });
+
+            ViewData["SearchTerm"] = searchTerm;
+            ViewData["SearchBy"] = searchBy;
+            ViewData["MinPrice"] = minPrice;
+            ViewData["MaxPrice"] = maxPrice;
+
+            return View(productVMs);
+        }
+
+        [HttpGet]
         public IActionResult Index()
         {
-            IEnumerable<ProductVM> productVMs = _productManager.GetAll().Select(p => new ProductVM
-            {
-                Description = p.Description,
-                Image = p.Image,
-                Name = p.Name,
-                Price = p.Price
-            });
+            IEnumerable<ProductVM> productVMs = _productManager
+                .GetAll()
+                .Select(p => new ProductVM
+                {
+                    Description = p.Description,
+                    Image = p.Image,
+                    Name = p.Name,
+                    Price = p.Price
+                });
 
             return View(productVMs);
         }

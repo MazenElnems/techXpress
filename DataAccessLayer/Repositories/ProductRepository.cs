@@ -28,5 +28,10 @@ namespace DataAccessLayer.Repositories
         {
             return _db.Products.ToList();
         }
+
+        public IEnumerable<Product> GetWithFilter(Func<Product,bool> filter)
+        {
+            return _db.Products.Where(filter);
+        }
     }
 }

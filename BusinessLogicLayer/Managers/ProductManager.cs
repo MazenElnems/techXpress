@@ -46,5 +46,24 @@ namespace BusinessLogicLayer.Managers
             });
             return productDTOs;
         }
+
+        public IEnumerable<ProductDTO> GetProductsByFilter(string searchTerm, string searchBy, decimal? minPrice, decimal? maxPrice)
+        {
+            IEnumerable<Product> products = _productRepository.GetWithFilter(p =>
+                (string.IsNullOrEmpty(searchTerm) || (searchBy == "name" ? p.Name.ToLower().Contains(searchTerm.Trim().ToLower()) : p.Description.ToLower().Contains(searchTerm.Trim().ToLower()))) &&
+                (!minPrice.HasValue || p.Price >= minPrice.Value) &&
+                (!maxPrice.HasValue || p.Price <= maxPrice.Value) 
+            );
+
+            return products.Select(p => new ProductDTO
+            {
+                Name = p.Name,
+                Price = p.Price,
+                StockQuantity = p.StockQuantity,
+                Image = p.Image,
+                Description = p.Description
+            });
+
+        }
     }
 }
