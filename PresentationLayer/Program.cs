@@ -23,6 +23,7 @@ namespace PresentationLayer
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IProductManager, ProductManager>();
             builder.Services.AddTransient<IFilesService, FilesService>(); 
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             #endregion
 
             #region Configure the HTTP request pipeline.

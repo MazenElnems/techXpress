@@ -9,8 +9,11 @@ namespace DataAccessLayer.Abstraction
 {
     public interface IProductRepository
     {
+        IEnumerable<Product> GetProductsByCategory(int categoryId);
+        IEnumerable<Product> GetProductsBySeller(int sellerId);
+        Product GetProductWithDetails(int productId);
         void Create(Product product);
         IEnumerable<Product> GetAll();
-        IEnumerable<Product> GetWithFilter(Func<Product,bool> filter);
+        IEnumerable<Product> GetWithFilter(Func<Product, bool> filter);
     }
 }

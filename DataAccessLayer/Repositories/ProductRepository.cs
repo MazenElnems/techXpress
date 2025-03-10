@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer.Abstraction;
 using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,56 @@ namespace DataAccessLayer.Repositories
         public IEnumerable<Product> GetAll()
         {
             return _db.Products.ToList();
+        }
+
+        public IEnumerable<Product> GetProductsByCategory(int categoryId)
+        {
+            if (categoryId <= 0)
+                throw new ArgumentException("Invalid category ID.", nameof(categoryId));
+
+            try
+            {
+                return _db.Products.Where(p => p.CategoryId == categoryId).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while retrieving products for category ID {categoryId}.", ex);
+            }
+        }
+
+        public IEnumerable<Product> GetProductsBySeller(int sellerId)
+        {
+            if (sellerId <= 0)
+                throw new ArgumentException("Invalid seller ID.", nameof(sellerId));
+
+            try
+            {
+                return _db.Products.Where(p => p.SellerId == sellerId).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while retrieving products for seller ID {sellerId}.", ex);
+            }
+        }
+
+        public Product GetProductWithDetails(int productId)
+        {
+            if (productId <= 0)
+                throw new ArgumentException("Invalid product ID.", nameof(productId));
+
+            try
+            {
+                return _db.Products
+                    .Include(p => p.Category)
+                    .Include(p => p.Seller)
+                    .Include(p => p.Reviews)
+                    .ThenInclude(r => r.User)
+                    .FirstOrDefault(p => p.Id == productId);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while retrieving product details for product ID {productId}.", ex);
+            }
         }
 
         public IEnumerable<Product> GetWithFilter(Func<Product,bool> filter)

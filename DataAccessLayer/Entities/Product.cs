@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entities
 {
@@ -14,5 +11,15 @@ namespace DataAccessLayer.Entities
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
         public string Image { get; set; }
+
+        // Foreign keys
+        public int CategoryId { get; set; }
+        public int SellerId { get; set; }
+
+        // Navigation properties
+        public Category Category { get; set; }
+        public Seller Seller { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
+        public ICollection<Review> Reviews { get; set; }
     }
 }
