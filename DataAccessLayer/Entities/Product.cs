@@ -7,7 +7,7 @@ namespace DataAccessLayer.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
         public string Image { get; set; }
@@ -19,7 +19,6 @@ namespace DataAccessLayer.Entities
         // Navigation properties
         public Category Category { get; set; }
         public Seller Seller { get; set; }
-        public ICollection<OrderDetail> OrderDetails { get; set; }
         public ICollection<Review> Reviews { get; set; }
     }
 }

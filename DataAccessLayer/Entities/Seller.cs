@@ -6,7 +6,7 @@ namespace DataAccessLayer.Entities
     public class Seller
     {
         public int SellerId { get; set; }
-        public string StoreName { get; set; }
+        public string? StoreName { get; set; }
         public string SellerName { get; set; }
 
         // Navigation properties

@@ -2,12 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DataAccessLayer.EntityConfigurations
+namespace DataAccessLayer.Data.EntityConfigurations
 {
     public class ReviewEntityTypeConfiguration : IEntityTypeConfiguration<Review>
     {
         public void Configure(EntityTypeBuilder<Review> builder)
         {
+            builder
+                .ToTable("Reviews");
+
+            builder
+                .HasKey(r => r.ReviewId);
+
             builder
                 .HasOne(r => r.User)
                 .WithMany(u => u.Reviews)

@@ -2,12 +2,26 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DataAccessLayer.EntityConfigurations
+namespace DataAccessLayer.Data.EntityConfigurations
 {
     public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
+            builder
+                .ToTable("Products");
+
+            builder
+                .HasKey(p => p.Id);
+
+            builder
+                .Property(p => p.Name)
+                .IsRequired();
+
+            builder
+                .Property(p => p.Image)
+                .IsRequired();
+
             builder
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)

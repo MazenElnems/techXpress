@@ -2,12 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DataAccessLayer.EntityConfigurations
+namespace DataAccessLayer.Data.EntityConfigurations
 {
     public class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Order>
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
+            builder
+                .ToTable("Orders");
+
+            builder
+                .HasKey(o =>  o.OrderId);
+
             builder
                 .HasOne(o => o.Payment)
                 .WithMany()
