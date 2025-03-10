@@ -1,4 +1,4 @@
-﻿namespace PresentationLayer.VMs
+﻿namespace PresentationLayer.VMs.Products
 {
     public class ProductVM
     {

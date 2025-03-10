@@ -15,6 +15,10 @@ namespace DataAccessLayer.Data.EntityConfigurations
                 .HasKey(o =>  o.OrderId);
 
             builder
+                .Property(o => o.OrderStatus)
+                .HasConversion<string>();
+
+            builder
                 .HasOne(o => o.Payment)
                 .WithMany()
                 .HasForeignKey(o => o.PaymentId);

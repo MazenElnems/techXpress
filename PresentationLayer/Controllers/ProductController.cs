@@ -2,7 +2,7 @@
 using BusinessLogicLayer.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.ActionRequests;
-using PresentationLayer.VMs;
+using PresentationLayer.VMs.Products;
 
 namespace PresentationLayer.Controllers
 {
@@ -21,13 +21,7 @@ namespace PresentationLayer.Controllers
         {
             IEnumerable<ProductVM> productVMs = _productManager
                 .GetProductsByFilter(searchTerm,searchBy,minPrice,maxPrice)
-                .Select(p => new ProductVM
-                {
-                    Description = p.Description,
-                    Image = p.Image,
-                    Name = p.Name,
-                    Price = p.Price
-                });
+                .Select(p => p.ToProductVM());
 
             ViewData["SearchTerm"] = searchTerm;
             ViewData["SearchBy"] = searchBy;
@@ -42,13 +36,7 @@ namespace PresentationLayer.Controllers
         {
             IEnumerable<ProductVM> productVMs = _productManager
                 .GetAll()
-                .Select(p => new ProductVM
-                {
-                    Description = p.Description,
-                    Image = p.Image,
-                    Name = p.Name,
-                    Price = p.Price
-                });
+                .Select(p => p.ToProductVM());
 
             return View(productVMs);
         }
