@@ -46,7 +46,7 @@ TechXpress is a full-featured e-commerce platform designed for selling electroni
    ```sh
    dotnet run
    ```
-6. Open a browser and navigate to `http://localhost:5000`.
+6. Open a browser and navigate to `http://localhost:[port]`.
 
 ## Contributing
 Contributions are welcome! To contribute:
