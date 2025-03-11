@@ -16,5 +16,7 @@ namespace DataAccessLayer.Abstraction
         void Create(Product product);
         IEnumerable<Product> GetAll();
         IEnumerable<Product> GetWithFilter(Expression<Func<Product, bool>> filter);
+        void Delete(Product product);
+        void Update(Product product);
     }
 }
