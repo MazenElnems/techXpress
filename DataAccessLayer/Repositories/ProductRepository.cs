@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,8 +22,47 @@ namespace DataAccessLayer.Repositories
 
         public void Create(Product product)
         {
-            _db.Products.Add(product);
-            _db.SaveChanges();
+            if(product is null)
+                throw new ArgumentNullException(nameof(product) + " is null");
+            try
+            {
+                _db.Products.Add(product);
+                _db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while adding {nameof(product)} to the database ", ex);
+            }
+        }
+
+        public void Delete (Product product)
+        {
+            if (product is null)
+                throw new ArgumentNullException(nameof(product) + " is null");
+            try
+            {
+                _db.Products.Remove(product);
+                _db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while removing {nameof(product)} ", ex);
+            }
+        }
+
+        public void Update(Product product)
+        {
+            if (product is null)
+                throw new ArgumentNullException(nameof(product) + " is null");
+            try
+            {
+                _db.Products.Update(product);
+                _db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while updating {nameof(product)} ", ex);
+            }
         }
 
         public IEnumerable<Product> GetAll()
@@ -60,7 +100,7 @@ namespace DataAccessLayer.Repositories
             }
         }
 
-        public Product GetProductWithDetails(int productId)
+        public Product? GetProductWithDetails(int productId)
         {
             if (productId <= 0)
                 throw new ArgumentException("Invalid product ID.", nameof(productId));
@@ -80,9 +120,9 @@ namespace DataAccessLayer.Repositories
             }
         }
 
-        public IEnumerable<Product> GetWithFilter(Func<Product,bool> filter)
+        public IEnumerable<Product> GetWithFilter(Expression<Func<Product,bool>> filter)
         {
-            return _db.Products.Where(filter);
+            return _db.Products.Where(filter).ToList();
         }
     }
 }
