@@ -1,4 +1,4 @@
-﻿using BusinessLogicLayer.DTOs;
+﻿using BusinessLogicLayer.DTOs.Product;
 using DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;

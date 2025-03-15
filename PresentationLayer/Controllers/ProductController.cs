@@ -1,5 +1,5 @@
 ﻿using BusinessLogicLayer.Abstraction;
-using BusinessLogicLayer.DTOs;
+using BusinessLogicLayer.DTOs.Product;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.ActionRequests;
 using PresentationLayer.VMs.Products;

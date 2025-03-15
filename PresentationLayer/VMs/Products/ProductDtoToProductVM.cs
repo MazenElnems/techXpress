@@ -1,4 +1,4 @@
-﻿using BusinessLogicLayer.DTOs;
+﻿using BusinessLogicLayer.DTOs.Product;
 
 namespace PresentationLayer.VMs.Products
 {

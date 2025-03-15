@@ -1,5 +1,5 @@
 ﻿using BusinessLogicLayer.Abstraction;
-using BusinessLogicLayer.DTOs;
+using BusinessLogicLayer.DTOs.Product;
 using DataAccessLayer.Abstraction;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
