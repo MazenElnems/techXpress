@@ -5,7 +5,10 @@ namespace DataAccessLayer.Abstraction
 {
     public interface ICategoryRepository
     {
-        IEnumerable<Category> GetAll();
         void Add(Category category);
+        IEnumerable<Category> GetAll();
+        void Update(Category category);
+        void Delete(Category category);
+        Category? GetById(int id);
     }
 }

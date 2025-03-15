@@ -1,18 +1,13 @@
 ﻿using BusinessLogicLayer.DTOs.CategoryDTOs;
+using DataAccessLayer.Abstraction;
 using DataAccessLayer.Entities;
-using DataAccessLayer.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.Managers
 {
     public class CategoryManager
     {
-        private readonly CategoryRepository _categoryRepository;
-        public CategoryManager(CategoryRepository categoryRepository)
+        private readonly ICategoryRepository _categoryRepository;
+        public CategoryManager(ICategoryRepository categoryRepository)
         {
             _categoryRepository = categoryRepository;
         }
