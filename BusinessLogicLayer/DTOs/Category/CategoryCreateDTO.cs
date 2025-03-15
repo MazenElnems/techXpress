@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccessLayer.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,4 +12,13 @@ namespace BusinessLogicLayer.DTOs.CategoryDTOs
         public string Name { get; set; }
     }
 
+
+    public static class CategoryCreateDTOMapping
+    {
+        public static Category ToCategory(this CategoryCreateDTO categoryCreateDTO)
+        {
+            return new Category { Name = categoryCreateDTO.Name };
+        }
+
+    }
 }

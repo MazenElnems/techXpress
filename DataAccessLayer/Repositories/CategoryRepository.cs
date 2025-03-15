@@ -17,12 +17,52 @@ namespace DataAccessLayer.Repositories
 
         public void Add(Category category)
         {
-            _db.Categories.Add(category);
+            try
+            {
+                _db.Categories.Add(category);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while creating category." , ex);
+            }
         }
 
         public IEnumerable<Category> GetAll()
         {
             return _db.Categories;
         }
+
+        public void Update(Category category)
+        {
+            try
+            {
+                _db.Categories.Update(category);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while updating category with category ID {category.CategoryId}." , ex);
+            }
+        }
+
+        public void Delete(Category category) 
+        {
+            try
+            {
+                _db.Categories.Remove(category);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while removing category with category ID {category.CategoryId}.", ex);
+            }
+        }
+
+        public Category? GetById(int id)
+        {
+            Category? category = _db.Find<Category>(id);
+
+            return category;
+        }
+
+
     }
 }
