@@ -1,4 +1,4 @@
-﻿using BusinessLogicLayer.DTOs.Product;
+﻿using BusinessLogicLayer.DTOs.Products;
 using DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ namespace BusinessLogicLayer.Abstraction
     {
         void Create(ProductDTO product);
         IEnumerable<ProductDTO> GetAll();
-        IEnumerable<ProductDTO> GetProductsByFilter(string searchTerm, string searchBy, decimal? minPrice, decimal? maxPrice);
+        IEnumerable<ProductDTO> GetProductsByFilter(string searchTerm, string searchBy,
+            decimal? minPrice, decimal? maxPrice, List<int> selectedCategories,bool all);
     }
 }

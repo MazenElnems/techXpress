@@ -1,0 +1,10 @@
+﻿@using PresentationLayer.VMs.Category
+@model IEnumerable<CategoryVM> 
+
+<h1>Categories</h1>
+
+
+@foreach(var category in Model)
+{
+    <p>@category.Name</p>
+}

@@ -1,4 +1,5 @@
-﻿@using PresentationLayer.ActionRequests
+﻿@using BusinessLogicLayer.DTOs.CategoryDTOs
+@using PresentationLayer.ActionRequests
 @model CreateProductActionRequest
 
 <div class="container mt-4">
@@ -22,6 +23,17 @@
         <div class="mb-3">
             <label for="StockQuantity" class="form-label">Stock Quantity</label>
             <input type="number" id="StockQuantity" name="StockQuantity" class="form-control" placeholder="Enter stock quantity" required>
+        </div>
+
+        <div class="mb-3">
+
+            <select name="CategoryId">
+                <option value="" selected>Select Category</option>
+                @foreach(var category in (IEnumerable<CategoryDTO>) ViewData["Categories"])
+                {
+                    <option value="@category.CategoryId"> @category.Name </option>
+                }
+            </select>
         </div>
 
         <div class="mb-3">

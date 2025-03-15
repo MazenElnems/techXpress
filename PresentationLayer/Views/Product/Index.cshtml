@@ -1,5 +1,17 @@
-﻿@using PresentationLayer.VMs.Products
+﻿@using PresentationLayer.VMs.Category
+@using PresentationLayer.VMs.Products
 @model IEnumerable<ProductVM>
+
+@{
+    var searchBy = ViewData["SearchBy"] as string ?? "name";
+    var searchTerm = ViewData["SearchTerm"] as string ?? "";
+    var minPrice = ViewData["MinPrice"] as string ?? "";
+    var maxPrice = ViewData["MaxPrice"] as string ?? "";
+    var all = ViewData["all"] as bool? ?? false;
+    var selectedCategories = ViewData["selectedCategories"] as List<int> ?? new List<int>();
+    var categories = ViewData["Categories"] as IEnumerable<CategoryVM> ?? new List<CategoryVM>();
+}
+
 
 <h2>Products</h2>
 
@@ -8,30 +20,58 @@
     <div class="row">
         <div class="col-md-4">
             <input type="text" name="searchTerm" class="form-control" placeholder="Search..."
-                   value="@(ViewData["SearchTerm"] ?? "")">
+                   value="@searchTerm">
         </div>
 
         <div class="col-md-4">
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="searchBy" value="name" id="searchByName"
-                @(ViewData["SearchBy"]?.ToString() == "name" ? "checked" : "")>
+                @(searchBy == "name" ? "checked" : "")>
                 <label class="form-check-label" for="searchByName">Name</label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="searchBy" value="description" id="searchByDescription"
-                @(ViewData["SearchBy"]?.ToString() == "description" ? "checked" : "")>
+                @(searchBy == "description" ? "checked" : "")>
                 <label class="form-check-label" for="searchByDescription">Description</label>
             </div>
         </div>
 
         <div class="col-md-2">
             <input type="number" name="minPrice" class="form-control" placeholder="Min Price"
-                   value="@(ViewData["MinPrice"] ?? "")">
+                   value="@minPrice">
         </div>
         <div class="col-md-2">
             <input type="number" name="maxPrice" class="form-control" placeholder="Max Price"
-                   value="@(ViewData["MaxPrice"] ?? "")">
+                   value="@maxPrice">
         </div>
+
+        <div class="col-md-12 mt-3">
+            <label>Filter by Categories:</label><br>
+
+            <div class="form-check form-check-inline">
+                <input type="checkbox" class="form-check-input" value="true" name = "all" id = "All"
+                @(all ? "checked" : "") />
+                <label class="form-check-label" for="All">All</label>
+
+            </div>
+
+            @foreach (var category in categories)
+            {
+                <div class="form-check form-check-inline">
+                    <input type="checkbox"
+                           class="form-check-input"
+                           name="SelectedCategories"
+                           value="@category.CategoryId"
+                           id="category_@category.CategoryId"
+                           @(selectedCategories.Contains(category.CategoryId) ? "checked" : "")>
+
+                    <label class="form-check-label" for="category_@category.CategoryId">@category.Name</label>
+                </div>
+            }
+
+
+        </div>
+
 
         <div class="col-md-12 mt-2">
             <button type="submit" class="btn btn-dark">Search</button>

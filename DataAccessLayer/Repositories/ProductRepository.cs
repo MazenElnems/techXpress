@@ -22,6 +22,7 @@ namespace DataAccessLayer.Repositories
 
         public void Create(Product product)
         {
+            product.SellerId = 1;       // Default sellerId 
             if(product is null)
                 throw new ArgumentNullException(nameof(product) + " is null");
             try

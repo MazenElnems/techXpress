@@ -1,5 +1,5 @@
 ﻿using BusinessLogicLayer.Abstraction;
-using BusinessLogicLayer.DTOs.Product;
+using BusinessLogicLayer.DTOs.Products;
 using DataAccessLayer.Abstraction;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories;
@@ -22,47 +22,27 @@ namespace BusinessLogicLayer.Managers
 
         public void Create(ProductDTO productDTO)
         {
-            Product product = new Product
-            {
-                Name = productDTO.Name,
-                Price = productDTO.Price,
-                StockQuantity = productDTO.StockQuantity,
-                Image = productDTO.Image,
-                Description = productDTO.Description
-            };
-
+            Product product = productDTO.ToProduct();
             _productRepository.Create(product);
         }
 
         public IEnumerable<ProductDTO> GetAll() 
         {
-            var productDTOs = _productRepository.GetAll().Select(p => new ProductDTO
-            {
-                Name = p.Name,
-                Price = p.Price,
-                StockQuantity = p.StockQuantity,
-                Image = p.Image,
-                Description = p.Description
-            });
+            var productDTOs = _productRepository.GetAll().Select(p => p.ToDto());
             return productDTOs;
         }
 
-        public IEnumerable<ProductDTO> GetProductsByFilter(string searchTerm, string searchBy, decimal? minPrice, decimal? maxPrice)
+        public IEnumerable<ProductDTO> GetProductsByFilter(string searchTerm, string searchBy,
+            decimal? minPrice, decimal? maxPrice,List<int> selectedCategories, bool all = false)
         {
             IEnumerable<Product> products = _productRepository.GetWithFilter(p =>
                 (string.IsNullOrEmpty(searchTerm) || (searchBy == "name" ? p.Name.ToLower().Contains(searchTerm.Trim().ToLower()) : p.Description.ToLower().Contains(searchTerm.Trim().ToLower()))) &&
                 (!minPrice.HasValue || p.Price >= minPrice.Value) &&
-                (!maxPrice.HasValue || p.Price <= maxPrice.Value) 
+                (!maxPrice.HasValue || p.Price <= maxPrice.Value) &&
+                all || selectedCategories.Contains(p.CategoryId)
             );
 
-            return products.Select(p => new ProductDTO
-            {
-                Name = p.Name,
-                Price = p.Price,
-                StockQuantity = p.StockQuantity,
-                Image = p.Image,
-                Description = p.Description
-            });
+            return products.Select(p => p.ToDto());
 
         }
     }
