@@ -1,0 +1,14 @@
+﻿@using PresentationLayer.VMs.Products
+@model ProductVM
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg" style="width: 28rem; border-radius: 15px;">
+        <img src="/Images/@Model.Image" class="card-img-top" alt="@Model.Name" style="height: 350px; border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover;">
+        <div class="card-body">
+            <h3 class="card-title mb-3 fw-bold text-primary">@Model.Name</h3>
+            <p class="card-text text-success fw-bold" style="font-size: 1.2rem;">$@Model.Price</p>
+            <p class="card-text text-muted">@Model.Description</p>
+            <button class="btn btn-primary mt-3 w-100">Add to shipping card</button>
+        </div>
+    </div>
+</div>

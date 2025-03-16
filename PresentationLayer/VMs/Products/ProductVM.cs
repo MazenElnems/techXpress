@@ -4,6 +4,7 @@ namespace PresentationLayer.VMs.Products
 {
     public class ProductVM
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
@@ -16,6 +17,7 @@ namespace PresentationLayer.VMs.Products
         {
             return new ProductVM
             {
+                Id = dto.Id,
                 Price = dto.Price,
                 Description = dto.Description,
                 Image = dto.Image,

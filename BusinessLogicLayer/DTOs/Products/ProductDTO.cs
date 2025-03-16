@@ -8,6 +8,7 @@ namespace BusinessLogicLayer.DTOs.Products
 {
     public class ProductDTO
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
@@ -22,6 +23,7 @@ namespace BusinessLogicLayer.DTOs.Products
         {
             return new ProductDTO
             {
+                Id = product.Id,
                 Name = product.Name,
                 Description = product.Description,
                 Price = product.Price,
@@ -35,6 +37,7 @@ namespace BusinessLogicLayer.DTOs.Products
         {
             return new Product
             {
+                Id = productDTO.Id,
                 Name = productDTO.Name,
                 Description = productDTO.Description,
                 Price = productDTO.Price,

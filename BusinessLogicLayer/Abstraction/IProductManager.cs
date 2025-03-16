@@ -10,6 +10,7 @@ namespace BusinessLogicLayer.Abstraction
 {
     public interface IProductManager
     {
+        ProductDTO? GetById(int id);
         void Create(ProductDTO product);
         IEnumerable<ProductDTO> GetAll();
         IEnumerable<ProductDTO> GetProductsByFilter(string searchTerm, string searchBy,

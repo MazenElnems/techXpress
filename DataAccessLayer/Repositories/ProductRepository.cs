@@ -20,6 +20,11 @@ namespace DataAccessLayer.Repositories
             _db = db;
         }
 
+        public Product? GetById(int id)
+        {
+            return _db.Find<Product>(id);
+        }
+
         public void Create(Product product)
         {
             product.SellerId = 1;       // Default sellerId 

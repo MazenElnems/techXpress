@@ -92,5 +92,16 @@ namespace PresentationLayer.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult Details(int id)
+        {
+            ProductDTO? productDTO = _productManager.GetById(id);
+
+            if(productDTO != null)
+            {
+                return View(productDTO.ToProductVM());
+            }
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

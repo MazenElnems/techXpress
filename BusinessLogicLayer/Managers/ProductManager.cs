@@ -20,6 +20,16 @@ namespace BusinessLogicLayer.Managers
             _productRepository = productRepository;
         }
 
+        public ProductDTO? GetById(int id)
+        {
+            Product? product = _productRepository.GetById(id);
+
+            if(product != null) 
+                return product.ToDto();
+
+            return null;
+        }
+
         public void Create(ProductDTO productDTO)
         {
             Product product = productDTO.ToProduct();
