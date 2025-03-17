@@ -2,34 +2,39 @@
 @using PresentationLayer.ActionRequests
 @model CreateProductActionRequest
 
+@{
+    var categories = ViewData["Categories"] as IEnumerable<CategoryDTO> ?? new List<CategoryDTO>();
+    ViewData["Title"] = "Product";
+}
+
 <div class="container mt-4">
     <h2>Create Product</h2>
-    <form action="/Product/Create" method="post" enctype="multipart/form-data">
+    <form asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="mb-3">
-            <label for="Name" class="form-label">Product Name</label>
-            <input type="text" id="Name" name="Name" class="form-control" placeholder="Enter product name" required>
+            <label asp-for="Name" class="form-label">Product Name</label>
+            <input asp-for="Name" class="form-control" placeholder="Enter product's name" required>
         </div>
 
         <div class="mb-3">
-            <label for="Description" class="form-label">Description</label>
-            <textarea id="Description" name="Description" class="form-control" placeholder="Enter product description" rows="3" required></textarea>
+            <label asp-for="Description" class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-control" placeholder="Enter product description" rows="3" required></textarea>
         </div>
 
         <div class="mb-3">
-            <label for="Price" class="form-label">Price</label>
-            <input type="number" id="Price" name="Price" class="form-control" step="0.01" placeholder="Enter price" required>
+            <label asp-for="Price" class="form-label">Price</label>
+            <input asp-for="Price" class="form-control" step="0.01" placeholder="Enter price" required>
         </div>
 
         <div class="mb-3">
-            <label for="StockQuantity" class="form-label">Stock Quantity</label>
-            <input type="number" id="StockQuantity" name="StockQuantity" class="form-control" placeholder="Enter stock quantity" required>
+            <label asp-for="StockQuantity" class="form-label">Stock Quantity</label>
+            <input asp-for="StockQuantity" class="form-control" placeholder="Enter stock quantity" required>
         </div>
 
         <div class="mb-3">
 
-            <select name="CategoryId">
+            <select asp-for="CategoryId">
                 <option value="" selected>Select Category</option>
-                @foreach(var category in (IEnumerable<CategoryDTO>) ViewData["Categories"])
+                @foreach (var category in categories)
                 {
                     <option value="@category.CategoryId"> @category.Name </option>
                 }
@@ -37,8 +42,8 @@
         </div>
 
         <div class="mb-3">
-            <label for="Image" class="form-label">Image URL</label>
-            <input type="file" id="Image" name="Image" class="form-control">
+            <label asp-for="Image" class="form-label">Image URL</label>
+            <input asp-for="Image" type="file" class="form-control">
         </div>
 
         <button type="submit" class="btn btn-primary">Create Product</button>

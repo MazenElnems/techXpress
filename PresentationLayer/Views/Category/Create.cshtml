@@ -1,0 +1,18 @@
+﻿@using PresentationLayer.ActionRequests
+@model CreateCategoryActionRequest
+
+<h1>Create Category</h1>
+
+<form asp-controller="Category" asp-action="Create" method="post">
+    <label asp-for="Name" class="form-label">Category Name</label>
+    <input asp-for="Name" class="form-control"></input>
+    <span asp-validation-for="Name" class="text-danger"></span>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

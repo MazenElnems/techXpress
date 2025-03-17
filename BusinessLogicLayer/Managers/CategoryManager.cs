@@ -49,12 +49,7 @@ namespace BusinessLogicLayer.Managers
 
         public void Delete(int id) 
         {
-            Category? category = _categoryRepository.GetById(id);
-
-            if (category is null)
-                throw new ApplicationException($"Category ID {id} not found");
-
-            _categoryRepository.Delete(category);
+            _categoryRepository.Delete(id);
         }
     }
 }

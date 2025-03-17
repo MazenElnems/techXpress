@@ -20,6 +20,7 @@ namespace DataAccessLayer.Repositories
             try
             {
                 _db.Categories.Add(category);
+                _db.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -36,7 +37,12 @@ namespace DataAccessLayer.Repositories
         {
             try
             {
-                _db.Categories.Update(category);
+                Category? categoryToUpdate = _db.Categories.FirstOrDefault(c => c.CategoryId == category.CategoryId);
+                if(categoryToUpdate != null) 
+                {                
+                    categoryToUpdate.Name = category.Name;
+                    _db.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -44,15 +50,20 @@ namespace DataAccessLayer.Repositories
             }
         }
 
-        public void Delete(Category category) 
+        public void Delete(int id) 
         {
             try
             {
-                _db.Categories.Remove(category);
+                Category? categoryToDelete = _db.Categories.FirstOrDefault(c => c.CategoryId == id);
+                if(categoryToDelete != null)
+                {
+                    _db.Categories.Remove(categoryToDelete);
+                    _db.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
-                throw new ApplicationException($"An error occurred while removing category with category ID {category.CategoryId}.", ex);
+                throw new ApplicationException($"An error occurred while removing category with category ID {id}.", ex);
             }
         }
 

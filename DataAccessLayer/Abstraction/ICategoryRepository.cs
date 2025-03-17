@@ -8,7 +8,7 @@ namespace DataAccessLayer.Abstraction
         void Add(Category category);
         IEnumerable<Category> GetAll();
         void Update(Category category);
-        void Delete(Category category);
+        void Delete(int id);
         Category? GetById(int id);
     }
 }

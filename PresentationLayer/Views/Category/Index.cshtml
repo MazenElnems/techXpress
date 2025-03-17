@@ -1,10 +1,36 @@
 ﻿@using PresentationLayer.VMs.Category
 @model IEnumerable<CategoryVM> 
 
+<partial name="_NotificationPartial" />
+
 <h1>Categories</h1>
 
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Category Name
+            </th>
 
-@foreach(var category in Model)
-{
-    <p>@category.Name</p>
-}
+            <td></td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var category in Model)
+        {
+            <tr>
+                <td>
+                    @category.Name
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-controller="Category" asp-route-id="@category.CategoryId">Delete</a>
+                </td>
+                <td>
+                    <a asp-action="Update" asp-controller="Category" asp-route-id="@category.CategoryId">Edit</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
