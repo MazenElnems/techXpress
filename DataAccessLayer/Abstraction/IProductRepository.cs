@@ -8,16 +8,10 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Abstraction
 {
-    public interface IProductRepository
+    public interface IProductRepository : IRepository<Product>
     {
         IEnumerable<Product> GetProductsByCategory(int categoryId);
         IEnumerable<Product> GetProductsBySeller(int sellerId);
         Product? GetProductWithDetails(int productId);
-        Product? GetById(int id);
-        void Create(Product product);
-        IEnumerable<Product> GetAll();
-        IEnumerable<Product> GetWithFilter(Expression<Func<Product, bool>> filter);
-        void Delete(Product product);
-        void Update(Product product);
     }
 }

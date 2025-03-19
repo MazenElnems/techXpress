@@ -11,69 +11,14 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : Repository<Product> , IProductRepository
     {
         private readonly AppDbContext _db;
 
         public ProductRepository(AppDbContext db)
+            :base(db)
         {
             _db = db;
-        }
-
-        public Product? GetById(int id)
-        {
-            return _db.Find<Product>(id);
-        }
-
-        public void Create(Product product)
-        {
-            product.SellerId = 1;       // Default sellerId 
-            if(product is null)
-                throw new ArgumentNullException(nameof(product) + " is null");
-            try
-            {
-                _db.Products.Add(product);
-                _db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException($"An error occurred while adding {nameof(product)} to the database ", ex);
-            }
-        }
-
-        public void Delete (Product product)
-        {
-            if (product is null)
-                throw new ArgumentNullException(nameof(product) + " is null");
-            try
-            {
-                _db.Products.Remove(product);
-                _db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException($"An error occurred while removing {nameof(product)} ", ex);
-            }
-        }
-
-        public void Update(Product product)
-        {
-            if (product is null)
-                throw new ArgumentNullException(nameof(product) + " is null");
-            try
-            {
-                _db.Products.Update(product);
-                _db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException($"An error occurred while updating {nameof(product)} ", ex);
-            }
-        }
-
-        public IEnumerable<Product> GetAll()
-        {
-            return _db.Products.ToList();
         }
 
         public IEnumerable<Product> GetProductsByCategory(int categoryId)
@@ -126,9 +71,5 @@ namespace DataAccessLayer.Repositories
             }
         }
 
-        public IEnumerable<Product> GetWithFilter(Expression<Func<Product,bool>> filter)
-        {
-            return _db.Products.Where(filter).ToList();
-        }
     }
 }

@@ -19,11 +19,9 @@ namespace PresentationLayer
 
             builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
             optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Devlopment_DB")));
-
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IProductManager, ProductManager>();
             builder.Services.AddTransient<IFilesService, FilesService>(); 
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICategoryManager, CategoryManager>();
             #endregion
 

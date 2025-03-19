@@ -7,15 +7,15 @@ namespace BusinessLogicLayer.Managers
 {
     public class CategoryManager : ICategoryManager
     {
-        private readonly ICategoryRepository _categoryRepository;
-        public CategoryManager(ICategoryRepository categoryRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryManager(IUnitOfWork unitOfWork)
         {
-            _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public IEnumerable<CategoryDTO> GetAll()
         {
-            IEnumerable<CategoryDTO> categories = _categoryRepository.GetAll()
+            IEnumerable<CategoryDTO> categories = _unitOfWork.CategoryRepository.GetAll()
                 .Select(c => c.ToDTO());
             
             return categories;
@@ -23,7 +23,7 @@ namespace BusinessLogicLayer.Managers
 
         public CategoryDTO? GetById(int id)
         {
-            var category = _categoryRepository.GetById(id);
+            var category = _unitOfWork.CategoryRepository.GetById(id);
             if (category == null)
                 return null;
 
@@ -36,7 +36,7 @@ namespace BusinessLogicLayer.Managers
                 throw new ArgumentNullException(nameof(categoryCreateDTO));
 
             Category category = categoryCreateDTO.ToCategory();
-            _categoryRepository.Add(category);
+            _unitOfWork.CategoryRepository.Add(category);
         }
 
         public void Update(CategoryDTO categoryDTO)
@@ -44,12 +44,12 @@ namespace BusinessLogicLayer.Managers
             if (categoryDTO == null)
                 throw new ArgumentNullException(nameof(categoryDTO));
 
-            _categoryRepository.Update(categoryDTO.ToCategory());
+            _unitOfWork.CategoryRepository.Update(categoryDTO.ToCategory());
         }
 
         public void Delete(int id) 
         {
-            _categoryRepository.Delete(id);
+            _unitOfWork.CategoryRepository.Delete(id);
         }
     }
 }

@@ -13,16 +13,16 @@ namespace BusinessLogicLayer.Managers
 {
     public class ProductManager : IProductManager
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ProductManager(IProductRepository productRepository)
+        public ProductManager(IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public ProductDTO? GetById(int id)
         {
-            Product? product = _productRepository.GetById(id);
+            Product? product = _unitOfWork.ProductRepository.GetById(p => p.Id == id);
 
             if(product != null) 
                 return product.ToDto();
@@ -33,19 +33,20 @@ namespace BusinessLogicLayer.Managers
         public void Create(ProductDTO productDTO)
         {
             Product product = productDTO.ToProduct();
-            _productRepository.Create(product);
+            _unitOfWork.ProductRepository.Create(product);
+            _unitOfWork.Save();
         }
 
         public IEnumerable<ProductDTO> GetAll() 
         {
-            var productDTOs = _productRepository.GetAll().Select(p => p.ToDto());
+            var productDTOs = _unitOfWork.ProductRepository.GetAll().Select(p => p.ToDto());
             return productDTOs;
         }
 
         public IEnumerable<ProductDTO> GetProductsByFilter(string searchTerm, string searchBy,
             decimal? minPrice, decimal? maxPrice,List<int> selectedCategories, bool all = false)
         {
-            IEnumerable<Product> products = _productRepository.GetWithFilter(p =>
+            IEnumerable<Product> products = _unitOfWork.ProductRepository.GetAllWhere(p =>
                 (string.IsNullOrEmpty(searchTerm) || (searchBy == "name" ? p.Name.ToLower().Contains(searchTerm.Trim().ToLower()) : p.Description.ToLower().Contains(searchTerm.Trim().ToLower()))) &&
                 (!minPrice.HasValue || p.Price >= minPrice.Value) &&
                 (!maxPrice.HasValue || p.Price <= maxPrice.Value) &&
