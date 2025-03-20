@@ -7,14 +7,21 @@ namespace PresentationLayer.ActionRequests
     public class UpdateCategoryActionRequest
     {
         public int Id { get; set; }
+
+        [Remote(action: "CheckName", controller: "Category", AdditionalFields = nameof(Id), ErrorMessage = "There is already a category with the same name.")]
         public string Name { get; set; }
     }
+
 
     public static class UpdateCategoryActionRequestMapping
     {
         public static CategoryDTO ToDto(this UpdateCategoryActionRequest request)
         {
-            return new CategoryDTO { Name = request.Name };
+            return new CategoryDTO 
+            {
+                Name = request.Name ,
+                CategoryId = request.Id
+            };
         }
         public static CategoryVM ToVM(this UpdateCategoryActionRequest request) 
         {

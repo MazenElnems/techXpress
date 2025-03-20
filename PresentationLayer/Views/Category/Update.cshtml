@@ -7,7 +7,9 @@
 
 <h1>Edit Category</h1>
 
-<form asp-controller="Category" asp-action="Update" asp-route-id="@Model.Id" method="post">
+<form asp-controller="Category" asp-action="Update" method="post">
+    <input type="hidden" asp-for="Id" />
+
     <label asp-for="Name" class="form-label">Category Name</label>
     <input asp-for="Name" class="form-control"></input>
     <span asp-validation-for="Name" class="text-danger"></span>
@@ -15,3 +17,6 @@
     <button type="submit" class="btn btn-primary">Update</button>
 </form>
 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

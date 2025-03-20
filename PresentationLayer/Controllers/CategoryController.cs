@@ -54,12 +54,11 @@ namespace PresentationLayer.Controllers
         } 
 
         [HttpPost]
-        public IActionResult Update(int id, UpdateCategoryActionRequest request)
+        public IActionResult Update(UpdateCategoryActionRequest request)
         {
             if (ModelState.IsValid)
             {
                 CategoryDTO categoryDTO = request.ToDto();
-                categoryDTO.CategoryId = id;
                 _categoryManager.Update(categoryDTO);
                 TempData["successNotification"] = "Category Updated Successfully";
                 
@@ -79,6 +78,22 @@ namespace PresentationLayer.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult CheckName(string name, int id)
+        {
+            CategoryDTO? category = _categoryManager.GetAll()
+                .FirstOrDefault(c => c.Name.Trim() == name.Trim() && c.CategoryId != id);
+
+            if (category == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json(false);
+            }
+        }
+
 
     }
 }

@@ -7,6 +7,7 @@ namespace PresentationLayer.ActionRequests
     public class CreateCategoryActionRequest
     {
         [MaxLength(50)]
+        [Remote("CheckName","Category",ErrorMessage= "There is already a category with the same name.")]
         public string Name { get; set; }
     }
 
