@@ -1,32 +1,35 @@
 ﻿using BusinessLogicLayer.DTOs.Products;
-using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace PresentationLayer.ActionRequests
 {
-    public class CreateProductActionRequest
+    public class UpdateProductActionRequest
     {
+        public int Id { get; set; }
         [StringLength(100)]
         public string Name { get; set; }
         public string Description { get; set; }
         [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
-        [Range(0 , int.MaxValue)]
+        [Range(0, int.MaxValue)]
         public int StockQuantity { get; set; }
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
+        [ValidateNever]
+        public string ImageName { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem> CategoryList { get; set; }
         public int CategoryId { get; set; }
     }
 
-    public static class CreateProductActionRequestMapping
+    public static class UpdateProductActionRequestMapping
     {
-        public static ProductDTO ToDto(this CreateProductActionRequest request)
+        public static ProductDTO ToDto(this UpdateProductActionRequest request)
         {
             return new ProductDTO
             {
+                Id = request.Id,
                 Name = request.Name,
                 CategoryId = request.CategoryId,
                 Price = request.Price,
@@ -34,6 +37,21 @@ namespace PresentationLayer.ActionRequests
                 Description = request.Description
             };
         }
-    }
+        
+        public static UpdateProductActionRequest ToActionRequest(this ProductDTO product)
+        {
+            return new UpdateProductActionRequest
+            {
+                Id = product.Id,
+                Name = product.Name,
+                CategoryId = product.CategoryId,
+                Price = product.Price,
+                StockQuantity = product.StockQuantity,
+                Description = product.Description,
+                ImageName = product.Image
+            };
+        }
 
+
+    }
 }

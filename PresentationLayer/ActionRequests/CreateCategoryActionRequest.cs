@@ -1,11 +1,11 @@
 ﻿using BusinessLogicLayer.DTOs.CategoryDTOs;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace PresentationLayer.ActionRequests
 {
     public class CreateCategoryActionRequest
     {
-        [Required]
         [MaxLength(50)]
         public string Name { get; set; }
     }

@@ -2,6 +2,7 @@
 using BusinessLogicLayer.DTOs.CategoryDTOs;
 using BusinessLogicLayer.DTOs.Products;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using PresentationLayer.ActionRequests;
 using PresentationLayer.VMs.Category;
 using PresentationLayer.VMs.Products;
@@ -19,6 +20,25 @@ namespace PresentationLayer.Controllers
             _productManager = productManager;
             _filesService = filesService;
             _categoryManager = categoryManager;
+        }
+
+        [HttpGet]
+        public IActionResult Index()
+        {
+            IEnumerable<ProductVM> productVMs = _productManager
+                .GetAll()
+                .Select(p => p.ToProductVM())
+                .ToList();
+
+            IEnumerable<CategoryVM> categoryVMs = _categoryManager
+                .GetAll()
+                .Select(c => c.ToVM())
+                .ToList();
+
+            ViewData["Categories"] = categoryVMs;
+            ViewData["all"] = true;
+
+            return View(productVMs);
         }
 
         [HttpPost]
@@ -46,51 +66,86 @@ namespace PresentationLayer.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
-        {
-            IEnumerable<ProductVM> productVMs = _productManager
-                .GetAll()
-                .Select(p => p.ToProductVM())
-                .ToList();
-
-            IEnumerable<CategoryVM> categoryVMs = _categoryManager
-                .GetAll()
-                .Select(c => c.ToVM());
-
-            ViewData["Categories"] = categoryVMs;
-            ViewData["all"] = true;
-
-
-            return View(productVMs);
-        }
-
-        [HttpGet]
         public IActionResult Create()
         {
-            IEnumerable<CategoryDTO> categoryDTOs = _categoryManager.GetAll().ToList();
-            ViewData["Categories"] = categoryDTOs;
-            return View(new CreateProductActionRequest());
+            IEnumerable<SelectListItem> categoriesList = _categoryManager.GetAll()
+                .Select(c => new SelectListItem(c.Name, c.CategoryId.ToString()))
+                .ToList();
+            
+            CreateProductActionRequest productActionRequest = new CreateProductActionRequest()
+            {
+                CategoryList = categoriesList
+            };
+
+            return View(productActionRequest);
         }
 
         [HttpPost]
         public IActionResult Create(CreateProductActionRequest productActionRequest)
         {
-            var uniqueFileName = Guid.NewGuid().ToString() + "_" + productActionRequest.Image.FileName;
-            _filesService.Upload($"wwwroot/Images/{uniqueFileName}", productActionRequest.Image);
-
-            ProductDTO productDTO = new ProductDTO
+            if (ModelState.IsValid)
             {
-                Name = productActionRequest.Name,
-                Image = uniqueFileName,
-                Description = productActionRequest.Description,
-                StockQuantity = productActionRequest.StockQuantity,
-                Price = productActionRequest.Price,
-                CategoryId = productActionRequest.CategoryId
-            };
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + productActionRequest.Image.FileName;
+                _filesService.Upload($"wwwroot/Images/{uniqueFileName}", productActionRequest.Image);
 
-            _productManager.Create(productDTO);
+                ProductDTO productDTO = productActionRequest.ToDto();
+                productDTO.Image = uniqueFileName; 
 
+                _productManager.Create(productDTO);
+
+                return RedirectToAction(nameof(Index));
+            }
+            productActionRequest.CategoryList = _categoryManager.GetAll()
+                .Select(c => new SelectListItem(c.Name, c.CategoryId.ToString()))
+                .ToList();
+            return View(productActionRequest);
+        }
+
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            ProductDTO? product = _productManager.GetById(id);
+            if(product != null)
+            {
+                UpdateProductActionRequest productActionRequest = product.ToActionRequest();
+                productActionRequest.CategoryList = _categoryManager.GetAll()
+                    .Select(c => new SelectListItem(c.Name,c.CategoryId.ToString()))
+                    .ToList();
+
+                return View(productActionRequest);
+            }
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public IActionResult Update(int id,UpdateProductActionRequest request)
+        {
+            request.Id = id;
+            if (ModelState.IsValid)
+            {
+                ProductDTO productDTO = request.ToDto();
+
+                // if user submit a new image file
+                if(request.Image != null)
+                {
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + request.Image.FileName;
+                    _filesService.Upload($"wwwroot/Images/{uniqueFileName}", request.Image);
+
+                    productDTO.Image = uniqueFileName;
+                }
+                else
+                {
+                    productDTO.Image = request.ImageName;
+                }
+
+                _productManager.Update(productDTO);
+                return RedirectToAction(nameof(Index));
+            }
+            request.CategoryList = _categoryManager.GetAll()
+                    .Select(c => new SelectListItem(c.Name, c.CategoryId.ToString()))
+                    .ToList();
+
+            return View(request);
         }
 
         public IActionResult Details(int id)

@@ -43,6 +43,12 @@ namespace BusinessLogicLayer.Managers
             return productDTOs;
         }
 
+        public void Update(ProductDTO productDTO)
+        {
+            _unitOfWork.ProductRepository.Update(productDTO.ToProduct());
+            _unitOfWork.Save();
+        }
+
         public IEnumerable<ProductDTO> GetProductsByFilter(string searchTerm, string searchBy,
             decimal? minPrice, decimal? maxPrice,List<int> selectedCategories, bool all = false)
         {

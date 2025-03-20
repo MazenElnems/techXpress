@@ -48,7 +48,7 @@ namespace PresentationLayer.Controllers
 
             if(categoryDTO != null)
             {
-                return View(categoryDTO.ToVM());
+                return View(categoryDTO.ToActionRequest());
             }
             return RedirectToAction(nameof(Index));
         } 
@@ -56,15 +56,16 @@ namespace PresentationLayer.Controllers
         [HttpPost]
         public IActionResult Update(int id, UpdateCategoryActionRequest request)
         {
-            CategoryDTO? categoryDTO = _categoryManager.GetById(id);
-
-            if (categoryDTO != null) 
+            if (ModelState.IsValid)
             {
-                categoryDTO.Name = request.Name;
+                CategoryDTO categoryDTO = request.ToDto();
+                categoryDTO.CategoryId = id;
                 _categoryManager.Update(categoryDTO);
                 TempData["successNotification"] = "Category Updated Successfully";
+                
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            return View(request);
         }
 
         public IActionResult Delete(int id) 
@@ -78,5 +79,6 @@ namespace PresentationLayer.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

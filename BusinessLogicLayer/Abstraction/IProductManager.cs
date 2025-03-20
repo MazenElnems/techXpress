@@ -12,6 +12,7 @@ namespace BusinessLogicLayer.Abstraction
     {
         ProductDTO? GetById(int id);
         void Create(ProductDTO product);
+        void Update(ProductDTO productDTO);
         IEnumerable<ProductDTO> GetAll();
         IEnumerable<ProductDTO> GetProductsByFilter(string searchTerm, string searchBy,
             decimal? minPrice, decimal? maxPrice, List<int> selectedCategories,bool all);

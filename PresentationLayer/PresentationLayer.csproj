@@ -17,4 +17,8 @@
     <ProjectReference Include="..\BusinessLogicLayer\BusinessLogicLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CustomValidations\" />
+  </ItemGroup>
+
 </Project>

@@ -18,7 +18,10 @@ namespace PresentationLayer
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
-            optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Devlopment_DB")));
+                optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Devlopment_DB"))
+                    .LogTo(Console.WriteLine , LogLevel.Information)
+                    .EnableSensitiveDataLogging()
+            );
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IProductManager, ProductManager>();
             builder.Services.AddTransient<IFilesService, FilesService>(); 

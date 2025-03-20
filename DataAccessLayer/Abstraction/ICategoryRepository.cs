@@ -3,12 +3,8 @@ using System.Collections.Generic;
 
 namespace DataAccessLayer.Abstraction
 {
-    public interface ICategoryRepository
+    public interface ICategoryRepository : IRepository<Category>
     {
-        void Add(Category category);
-        IEnumerable<Category> GetAll();
-        void Update(Category category);
-        void Delete(int id);
-        Category? GetById(int id);
+
     }
 }

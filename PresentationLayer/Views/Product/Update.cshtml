@@ -1,57 +1,63 @@
 ﻿@using BusinessLogicLayer.DTOs.CategoryDTOs
 @using PresentationLayer.ActionRequests
-@model CreateProductActionRequest
+@model UpdateProductActionRequest
 
 @{
     ViewData["Title"] = "Product";
 }
 
 <div class="container mt-4">
-    <h2>Create Product</h2>
-    <form asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data">
+    <h2>Update Product</h2>
+    <form asp-controller="Product" asp-action="Update" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label asp-for="Name" class="form-label">Product Name</label>
-            <input asp-for="Name" class="form-control" placeholder="Enter product's name" >
+            <input asp-for="Name" class="form-control" >
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="Description" class="form-label">Description</label>
-            <textarea asp-for="Description" class="form-control" placeholder="Enter product description" rows="3" ></textarea>
+            <textarea asp-for="Description" class="form-control"  rows="3"></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="Price" class="form-label">Price</label>
-            <input asp-for="Price" class="form-control" step="0.01" placeholder="Enter price"  />
+            <input asp-for="Price" class="form-control" step="0.01" />
             <span asp-validation-for="Price" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="StockQuantity" class="form-label">Stock Quantity</label>
-            <input asp-for="StockQuantity" class="form-control" placeholder="Enter stock quantity" >
+            <input asp-for="StockQuantity" class="form-control" >
             <span asp-validation-for="StockQuantity" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
 
             <select asp-for="CategoryId" asp-items="@Model.CategoryList" class="form-select">
-                <option disabled selected>Select Category</option>
             </select>
             <span asp-validation-for="CategoryId" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
+
+            <div class="card" style="width: 18rem;">
+                <img src="/Images/@Model.ImageName" class="card-img-top" alt="Product Image">
+            </div>
+
+            <input type="hidden" asp-for="ImageName"/>
+
             <label asp-for="Image" class="form-label">Image URL</label>
             <input asp-for="Image" type="file" class="form-control">
             <span asp-validation-for="Image" class="text-danger"></span>
 
         </div>
 
-        <button type="submit" class="btn btn-primary">Create Product</button>
+        <button type="submit" class="btn btn-primary">Update Product</button>
     </form>
 </div>
 
-@section Scripts{
+@section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

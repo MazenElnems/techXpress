@@ -14,5 +14,6 @@ namespace BusinessLogicLayer.Abstraction
         void Create(CategoryCreateDTO categoryCreateDTO);
         void Update(CategoryDTO categoryDTO);
         void Delete(int id);
+        CategoryDTO? GetByName(string name);
     }
 }

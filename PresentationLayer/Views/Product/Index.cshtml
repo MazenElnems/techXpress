@@ -80,14 +80,25 @@
 </form>
 
 <table class="table table-striped">
-    @foreach(var product in Model)
-    {
+    <thead>
         <tr>
-            <td>@product.Name</td>
-            <td>@product.Price</td>
-            <td>@product.Description</td>
-            <td><img src="/Images/@product.Image" style="width:80px;"></img></td>
-            <td><a href="/Product/Details/@product.Id" class="btn btn-success">Details</a></td>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Image</th>
+            <th></th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach(var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+                <td>@product.Description</td>
+                <td><img src="/Images/@product.Image" style="width:80px;"></img></td>
+                <td><a href="/Product/Details/@product.Id" class="btn btn-success">Details</a></td>
+            </tr>
+        }
+    </tbody>
 </table>

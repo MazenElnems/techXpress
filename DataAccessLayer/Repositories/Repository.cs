@@ -53,6 +53,10 @@ namespace DataAccessLayer.Repositories
 
         public void Update(T entity)
         {
+            if (entity is Product p)
+            {
+                p.SellerId = 1;
+            }
             _dbSet.Update(entity);
         }
     }

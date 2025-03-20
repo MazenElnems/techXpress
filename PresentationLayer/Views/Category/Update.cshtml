@@ -1,5 +1,5 @@
-﻿@using PresentationLayer.VMs.Category
-@model CategoryVM
+﻿@using PresentationLayer.ActionRequests
+@model UpdateCategoryActionRequest
 
 @{
     ViewData["Title"] = "Edit Category";
@@ -7,7 +7,7 @@
 
 <h1>Edit Category</h1>
 
-<form asp-controller="Category" asp-action="Update" asp-route-id="@Model.CategoryId" method="post">
+<form asp-controller="Category" asp-action="Update" asp-route-id="@Model.Id" method="post">
     <label asp-for="Name" class="form-label">Category Name</label>
     <input asp-for="Name" class="form-control"></input>
     <span asp-validation-for="Name" class="text-danger"></span>
