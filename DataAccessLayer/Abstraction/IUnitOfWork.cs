@@ -10,6 +10,7 @@ namespace DataAccessLayer.Abstraction
     {
         ICategoryRepository CategoryRepository { get; }
         IProductRepository ProductRepository { get; }
+        IOrderRepository OrderRepository { get; }
         void Save();
     }
 }

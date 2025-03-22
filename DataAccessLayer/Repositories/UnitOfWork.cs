@@ -15,11 +15,14 @@ namespace DataAccessLayer.Repositories
 
         public IProductRepository ProductRepository { get; private set; }
 
+        public IOrderRepository OrderRepository { get; private set; }
+
         public UnitOfWork(AppDbContext db)
         {
             _db = db;
             CategoryRepository = new CategoryRepository(db);
             ProductRepository = new ProductRepository(db);
+            OrderRepository = new OrderRepository(db);
         }
 
         public void Save()
