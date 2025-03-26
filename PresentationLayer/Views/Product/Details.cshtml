@@ -8,7 +8,9 @@
             <h3 class="card-title mb-3 fw-bold text-primary">@Model.Name</h3>
             <p class="card-text text-success fw-bold" style="font-size: 1.2rem;">$@Model.Price</p>
             <p class="card-text text-muted">@Model.Description</p>
-            <button class="btn btn-primary mt-3 w-100">Add to shipping card</button>
+            <a class="btn btn-primary mt-3 w-100" asp-action="Add" asp-controller="ShoppingCart" asp-route-id="@Model.Id">
+                Add to shipping card
+            </a>
         </div>
     </div>
 </div>

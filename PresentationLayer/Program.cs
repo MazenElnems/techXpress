@@ -26,6 +26,18 @@ namespace PresentationLayer
             builder.Services.AddScoped<IProductManager, ProductManager>();
             builder.Services.AddTransient<IFilesService, FilesService>(); 
             builder.Services.AddScoped<ICategoryManager, CategoryManager>();
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromDays(7); 
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.Cookie.MaxAge = TimeSpan.FromDays(7); 
+            });
+
+
             #endregion
 
             #region Configure the HTTP request pipeline.
@@ -41,6 +53,8 @@ namespace PresentationLayer
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.MapStaticAssets();
             app.MapControllerRoute(
