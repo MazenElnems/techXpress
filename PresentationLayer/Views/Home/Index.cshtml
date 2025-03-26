@@ -1,11 +1,44 @@
-﻿@using PresentationLayer.Extensions.Session
-@using PresentationLayer.VMs.ShoppingCart
+﻿@using PresentationLayer.VMs.Products
+@model IEnumerable<ProductVM>
+
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    .card {
+        transition: transform 0.2s;
+    }
 
+    .card:hover {
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="row pb-3">
+    @foreach(var product in Model)
+    {
+        <div class="col-lg-3 col-sm-6">
+            <div class="row p-2">
+                <div class="col-12 p-1">
+                    <div class="card border-0 p-3 shadow border-top rounded">
+                        <img src="/Images/@product.Image" class="card-img-top">
+                        <div class="card-body p-0">
+                            <div class="card-title text-center h5">
+                                @product.Name
+                            </div>
+                            <p class="text-dark text-center">Price: @product.Price</p>
+                        </div>
+                        <div class="card-footer border-0 bg-white">
+                            <a class="btn btn-primary form-control" asp-action="Details" asp-controller="Home" asp-route-id="@product.Id">
+                                Details
+                            </a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+

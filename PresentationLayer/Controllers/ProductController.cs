@@ -147,16 +147,5 @@ namespace PresentationLayer.Controllers
 
             return View(request);
         }
-
-        public IActionResult Details(int id)
-        {
-            ProductDTO? productDTO = _productManager.GetById(id);
-
-            if(productDTO != null)
-            {
-                return View(productDTO.ToProductVM());
-            }
-            return RedirectToAction(nameof(Index));
-        }
     }
 }
