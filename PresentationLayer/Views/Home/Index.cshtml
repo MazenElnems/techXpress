@@ -5,40 +5,48 @@
     ViewData["Title"] = "Home";
 }
 
-<style>
-    .card {
-        transition: transform 0.2s;
-    }
+<main id="Container">
+    <partial name="_ProductsListPartialView" model="@Model" />
+</main>
 
-    .card:hover {
-        transform: scale(1.05);
-    }
-</style>
+@section Scripts
+{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            var dropDownItems = document.querySelectorAll('.dropdown-item');
 
-<div class="row pb-3">
-    @foreach(var product in Model)
-    {
-        <div class="col-lg-3 col-sm-6">
-            <div class="row p-2">
-                <div class="col-12 p-1">
-                    <div class="card border-0 p-3 shadow border-top rounded">
-                        <img src="/Images/@product.Image" class="card-img-top">
-                        <div class="card-body p-0">
-                            <div class="card-title text-center h5">
-                                @product.Name
-                            </div>
-                            <p class="text-dark text-center">Price: @product.Price</p>
-                        </div>
-                        <div class="card-footer border-0 bg-white">
-                            <a class="btn btn-primary form-control" asp-action="Details" asp-controller="Home" asp-route-id="@product.Id">
-                                Details
-                            </a>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-</div>
+            dropDownItems.forEach(btn => {
 
+                btn.addEventListener('click', async function(){
+
+                var categoryId = btn.getAttribute('data-id');
+
+                try{
+                    var response = await fetch(`/Home/ProductsByCategory?categoryId=${categoryId}`,{
+                        method:'GET'
+                    });
+
+                    if(!response.ok){
+                        alert('Something went wrong');
+
+                    }
+                    else{
+                        var content = await response.text();
+                        var container = document.getElementById('Container');
+                        container.innerHTML = content;
+                    }
+
+                }
+                catch(error){
+                    console.error(error);
+                }
+            });
+            
+            });
+
+
+
+        });
+    </script>
+}

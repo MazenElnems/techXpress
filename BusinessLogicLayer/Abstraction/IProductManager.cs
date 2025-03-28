@@ -16,5 +16,6 @@ namespace BusinessLogicLayer.Abstraction
         IEnumerable<ProductDTO> GetAll();
         IEnumerable<ProductDTO> GetProductsByFilter(string searchTerm, string searchBy,
             decimal? minPrice, decimal? maxPrice, List<int> selectedCategories,bool all);
+        IEnumerable<ProductDTO> GetProductsByCategory(int categoryId);
     }
 }

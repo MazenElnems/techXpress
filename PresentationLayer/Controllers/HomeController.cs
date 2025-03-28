@@ -3,6 +3,7 @@ using BusinessLogicLayer.Abstraction;
 using BusinessLogicLayer.DTOs.Products;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Models;
+using PresentationLayer.VMs.Category;
 using PresentationLayer.VMs.Products;
 
 namespace PresentationLayer.Controllers
@@ -11,20 +12,36 @@ namespace PresentationLayer.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IProductManager _productManager;
+        private readonly ICategoryManager _categoryManager;
 
-        public HomeController(ILogger<HomeController> logger, IProductManager productManager)
+        public HomeController(ILogger<HomeController> logger, IProductManager productManager , ICategoryManager categoryManager)
         {
             _logger = logger;
             _productManager = productManager;
+            _categoryManager = categoryManager;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<ProductVM>? products = _productManager
-                .GetAll()
-                .Select(p => p.ToProductVM());
+            IEnumerable<CategoryVM> categories = _categoryManager.GetAll()
+                .Select(c => c.ToVM());
+
+            ViewData["Categories"] = categories;
+
+            IEnumerable<ProductVM> products = _productManager.GetAll()
+                .Select(p => p.ToProductVM())
+                .ToList();
 
             return View(products);
+        }
+
+        [HttpGet]
+        public IActionResult ProductsByCategory(int categoryId)
+        {
+            IEnumerable<ProductVM> products = _productManager.GetProductsByCategory(categoryId)
+                .Select(p => p.ToProductVM())
+                .ToList();
+            return PartialView("_ProductsListPartialView", products);
         }
 
         public IActionResult Details(int id)

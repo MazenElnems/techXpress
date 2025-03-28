@@ -62,5 +62,11 @@ namespace BusinessLogicLayer.Managers
             return products.Select(p => p.ToDto());
 
         }
+
+        public IEnumerable<ProductDTO> GetProductsByCategory(int categoryId)
+        {
+            IEnumerable<Product> products = _unitOfWork.ProductRepository.GetProductsByCategory(categoryId);
+            return products.Select(p => p.ToDto());
+        }
     }
 }
