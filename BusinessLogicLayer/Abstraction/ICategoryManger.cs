@@ -9,7 +9,7 @@ namespace BusinessLogicLayer.Abstraction
 {
     public interface ICategoryManager
     {
-        IEnumerable<CategoryDTO> GetAll();
+        IEnumerable<CategoryDTO> GetAll(params string[]? Includes);
         CategoryDTO? GetById(int id);
         void Create(CategoryCreateDTO categoryCreateDTO);
         void Update(CategoryDTO categoryDTO);

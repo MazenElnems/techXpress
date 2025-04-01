@@ -8,6 +8,9 @@
 
 <div class="container mt-4">
     <h2>Update Product</h2>
+
+    <partial name="_NotificationPartial">
+
     <form asp-controller="Product" asp-action="Update" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label asp-for="Name" class="form-label">Product Name</label>
@@ -15,11 +18,12 @@
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Description" class="form-label">Description</label>
-            <textarea asp-for="Description" class="form-control"  rows="3"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
 
         <div class="mb-3">
             <label asp-for="Price" class="form-label">Price</label>
@@ -43,10 +47,10 @@
         <div class="mb-3">
 
             <div class="card" style="width: 18rem;">
-                <img src="/Images/@Model.ImageName" class="card-img-top" alt="Product Image">
+                <img src="/Images/@Model.ImageUrl" class="card-img-top" alt="Product Image">
             </div>
 
-            <input type="hidden" asp-for="ImageName"/>
+            <input type="hidden" asp-for="ImageUrl" />
 
             <label asp-for="Image" class="form-label">Image URL</label>
             <input asp-for="Image" type="file" class="form-control">

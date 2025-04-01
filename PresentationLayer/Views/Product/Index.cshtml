@@ -3,102 +3,116 @@
 @model IEnumerable<ProductVM>
 
 @{
-    var searchBy = ViewData["SearchBy"] as string ?? "name";
-    var searchTerm = ViewData["SearchTerm"] as string ?? "";
-    var minPrice = ViewData["MinPrice"] as string ?? "";
-    var maxPrice = ViewData["MaxPrice"] as string ?? "";
-    var all = ViewData["all"] as bool? ?? false;
-    var selectedCategories = ViewData["selectedCategories"] as List<int> ?? new List<int>();
-    var categories = ViewData["Categories"] as IEnumerable<CategoryVM> ?? new List<CategoryVM>();
+    List<CategoryVM> categories = ViewBag.Categories as List<CategoryVM> ?? new();
 }
 
+<h1>Products</h1>
 
-<h2>Products</h2>
+<partial name="_NotificationPartial">
 
-<a asp-action="Create" asp-controller="Product" class="btn btn-dark">Create Product</a>
-<form method="post" action="/Product/" class="mb-3">
-    <div class="row">
-        <div class="col-md-4">
-            <input type="text" name="searchTerm" class="form-control" placeholder="Search..."
-                   value="@searchTerm">
-        </div>
+<main class="Content">
+    <button class="btn btn-outline-primary categoryBtn" data-categoryId="@null">All</button>
+    @foreach (var category in categories)
+    {
+        <button class='btn btn-outline-primary categoryBtn' data-categoryId="@category.CategoryId">@category.Name</button>
+    }
 
-        <div class="col-md-4">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="searchBy" value="name" id="searchByName"
-                @(searchBy == "name" ? "checked" : "")>
-                <label class="form-check-label" for="searchByName">Name</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="searchBy" value="description" id="searchByDescription"
-                @(searchBy == "description" ? "checked" : "")>
-                <label class="form-check-label" for="searchByDescription">Description</label>
-            </div>
-        </div>
+    <br />
 
-        <div class="col-md-2">
-            <input type="number" name="minPrice" class="form-control" placeholder="Min Price"
-                   value="@minPrice">
-        </div>
-        <div class="col-md-2">
-            <input type="number" name="maxPrice" class="form-control" placeholder="Max Price"
-                   value="@maxPrice">
-        </div>
+    <label for="SearchBy">Search By</label>
+    
+    <input type="radio" value="name" name="searchBy" id="name" checked/>
+    <label for="name" >Name</label>
 
-        <div class="col-md-12 mt-3">
-            <label>Filter by Categories:</label><br>
+    <input type="radio" value="description" name="searchBy" id="description" />
+    <label for="description">Description</label>
 
-            <div class="form-check form-check-inline">
-                <input type="checkbox" class="form-check-input" value="true" name = "all" id = "All"
-                @(all ? "checked" : "") />
-                <label class="form-check-label" for="All">All</label>
 
-            </div>
+    <input type="number" name="minPrice" placeholder="min price" />
+    <input type="number" name="maxPrice" placeholder="max price"  />
 
-            @foreach (var category in categories)
-            {
-                <div class="form-check form-check-inline">
-                    <input type="checkbox"
-                           class="form-check-input"
-                           name="SelectedCategories"
-                           value="@category.CategoryId"
-                           id="category_@category.CategoryId"
-                           @(selectedCategories.Contains(category.CategoryId) ? "checked" : "")>
+    <input type="text" placeholder="search ..."/>
 
-                    <label class="form-check-label" for="category_@category.CategoryId">@category.Name</label>
-                </div>
+
+    <div class="productList">
+        <partial name="_ProductFilterListViewPartial" model="@Model" />
+    </div>
+
+</main>
+
+@section Scripts {
+
+    <script>
+        document.addEventListener('DOMContentLoaded' , function (){
+
+
+            // select elements
+            const categoryButtons = document.querySelectorAll("button[data-categoryId]");
+            const searchInput = document.querySelector("input[type='text']");
+            const minPriceInput = document.querySelector("input[name='minPrice']");
+            const maxPriceInput = document.querySelector("input[name='maxPrice']");
+            const productListContainer = document.querySelector(".productList");    
+
+            // add events to input before trigger an AJAX Call
+            searchInput.addEventListener('input' , filterProductList);
+            minPriceInput.addEventListener('input' , filterProductList);
+            maxPriceInput.addEventListener('input' , filterProductList);
+
+            categoryButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    categoryButtons.forEach(b => b.classList.remove("active"));
+                    this.classList.add("active");
+                    filterProductList();
+                });
+            });
+            
+            async function filterProductList(){
+
+                const searchTerm = searchInput.value;
+                const minPrice = minPriceInput.value || null;
+                const maxPrice = maxPriceInput.value || null;
+                const searchBy = document.querySelector("input[name='searchBy']:checked").value;
+                const categoryIdRaw = document.querySelector("button.active")?.dataset.categoryid;
+                const categoryId = categoryIdRaw === "null" || categoryIdRaw === undefined ? null : categoryIdRaw;
+
+                var filterProduct = JSON.stringify({
+                    searchTerm: searchTerm,
+                    minPrice: minPrice ? parseFloat(minPrice) : 0,
+                    maxPrice: maxPrice ? parseFloat(maxPrice) : 0,
+                    searchBy: searchBy,
+                    categoryId: categoryId ? parseInt(categoryId) : null
+                });
+
+
+                console.log(filterProduct);
+
+                try{
+                    var response = await fetch("/products/filter", {
+                        method: "POST",
+                        headers:{
+                            "Content-Type": "application/json"
+                        },
+                        body: filterProduct
+                    });
+
+                    if(!response.ok)
+                        throw new Error("an error ocurred while trying to retrive data");
+                
+                    var html = await response.text();
+
+                    productListContainer.innerHTML = html;
+
+                }
+                catch(error){
+                    console.log(error);
+                }
+
             }
 
 
-        </div>
 
-
-        <div class="col-md-12 mt-2">
-            <button type="submit" class="btn btn-dark">Search</button>
-        </div>
-    </div>
-</form>
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Description</th>
-            <th>Image</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var product in Model)
-        {
-            <tr>
-                <td>@product.Name</td>
-                <td>@product.Price</td>
-                <td>@product.Description</td>
-                <td><img src="/Images/@product.Image" style="width:80px;"></img></td>
-                <td><a href="/Product/Details/@product.Id" class="btn btn-success">Details</a></td>
-            </tr>
-        }
-    </tbody>
-</table>
+        });
+    
+    </script>
+    
+}

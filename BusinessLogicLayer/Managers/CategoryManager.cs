@@ -13,9 +13,9 @@ namespace BusinessLogicLayer.Managers
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<CategoryDTO> GetAll()
+        public IEnumerable<CategoryDTO> GetAll(params string[]? Includes)
         {
-            IEnumerable<CategoryDTO> categories = _unitOfWork.CategoryRepository.GetAll()
+            IEnumerable<CategoryDTO> categories = _unitOfWork.CategoryRepository.GetAll(Includes)
                 .Select(c => c.ToDTO());
             
             return categories;

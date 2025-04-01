@@ -15,7 +15,7 @@ namespace PresentationLayer.ActionRequests
         public decimal Price { get; set; }
         [Range(0 , int.MaxValue)]
         public int StockQuantity { get; set; }
-        public IFormFile Image { get; set; }
+        public IFormFile ImageUrl { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem> CategoryList { get; set; }
         public int CategoryId { get; set; }

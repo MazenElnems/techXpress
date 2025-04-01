@@ -7,6 +7,9 @@
 }
 
 <div class="container mt-4">
+
+    <partial name="_NotificationPartial">
+
     <h2>Create Product</h2>
     <form asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="mb-3">
@@ -15,11 +18,12 @@
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Description" class="form-label">Description</label>
-            <textarea asp-for="Description" class="form-control" placeholder="Enter product description" rows="3" ></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
 
         <div class="mb-3">
             <label asp-for="Price" class="form-label">Price</label>
@@ -42,16 +46,17 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="Image" class="form-label">Image URL</label>
-            <input asp-for="Image" type="file" class="form-control">
-            <span asp-validation-for="Image" class="text-danger"></span>
-
+            <label asp-for="ImageUrl" class="form-label">Image URL</label>
+            <input asp-for="ImageUrl" type="file" class="form-control">
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-primary">Create Product</button>
+
     </form>
 </div>
 
-@section Scripts{
+@section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
 }

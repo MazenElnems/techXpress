@@ -36,9 +36,18 @@ namespace DataAccessLayer.Repositories
             _dbSet.Remove(entity);
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(params string[]? Includes)
         {
-            return _dbSet;
+            IQueryable<T> query = _dbSet;
+            if(Includes != null)
+            {
+                foreach (var item in Includes)
+                {
+                    query = query.Include(item);
+                }
+            }
+
+            return query;
         }
 
         public IEnumerable<T> GetAllWhere(Expression<Func<T, bool>> predicate)

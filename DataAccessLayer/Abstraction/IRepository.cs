@@ -9,7 +9,7 @@ namespace DataAccessLayer.Abstraction
 {
     public interface IRepository <T> where T : class
     {
-        IEnumerable<T> GetAll();
+        IEnumerable<T> GetAll(params string[]? Includes);
         IEnumerable<T> GetAllWhere(Expression<Func<T, bool>> predicate);
         T? GetById(Expression<Func<T, bool>> predicate);
         void Create(T entity);

@@ -1,4 +1,4 @@
-﻿using BusinessLogicLayer.DTOs.Products;
+﻿ using BusinessLogicLayer.DTOs.Products;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
@@ -17,7 +17,7 @@ namespace PresentationLayer.ActionRequests
         public int StockQuantity { get; set; }
         public IFormFile? Image { get; set; }
         [ValidateNever]
-        public string ImageName { get; set; }
+        public string ImageUrl { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem> CategoryList { get; set; }
         public int CategoryId { get; set; }
@@ -37,7 +37,7 @@ namespace PresentationLayer.ActionRequests
                 Description = request.Description
             };
         }
-        
+
         public static UpdateProductActionRequest ToActionRequest(this ProductDTO product)
         {
             return new UpdateProductActionRequest
@@ -48,7 +48,7 @@ namespace PresentationLayer.ActionRequests
                 Price = product.Price,
                 StockQuantity = product.StockQuantity,
                 Description = product.Description,
-                ImageName = product.Image
+                ImageUrl = product.Image
             };
         }
 
