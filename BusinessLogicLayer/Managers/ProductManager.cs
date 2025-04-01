@@ -37,9 +37,9 @@ namespace BusinessLogicLayer.Managers
             _unitOfWork.Save();
         }
 
-        public IEnumerable<ProductDTO> GetAll() 
+        public IEnumerable<ProductDTO> GetAll(params string[]? Includes) 
         {
-            var productDTOs = _unitOfWork.ProductRepository.GetAll().Select(p => p.ToDto());
+            var productDTOs = _unitOfWork.ProductRepository.GetAll(Includes).Select(p => p.ToDto());
             return productDTOs;
         }
 
@@ -49,19 +49,22 @@ namespace BusinessLogicLayer.Managers
             _unitOfWork.Save();
         }
 
-        public IEnumerable<ProductDTO> GetProductsByFilter(string searchTerm, string searchBy,
-            decimal? minPrice, decimal? maxPrice,List<int> selectedCategories, bool all = false)
+        public IEnumerable<ProductDTO> GetProductsWhere(string? searchTerm, string? searchBy,
+            decimal minPrice, decimal maxPrice, int? categoryId)
         {
-            IEnumerable<Product> products = _unitOfWork.ProductRepository.GetAllWhere(p =>
-                (string.IsNullOrEmpty(searchTerm) || (searchBy == "name" ? p.Name.ToLower().Contains(searchTerm.Trim().ToLower()) : p.Description.ToLower().Contains(searchTerm.Trim().ToLower()))) &&
-                (!minPrice.HasValue || p.Price >= minPrice.Value) &&
-                (!maxPrice.HasValue || p.Price <= maxPrice.Value) &&
-                all || selectedCategories.Contains(p.CategoryId)
-            );
+            IEnumerable<ProductDTO> products = _unitOfWork.ProductRepository.GetAllWhere(p =>
+                (string.IsNullOrEmpty(searchTerm) ||
+                    (searchBy == "name" ? p.Name.ToLower().Contains(searchTerm.ToLower().Trim())
+                                         : p.Description.ToLower().Contains(searchTerm.ToLower().Trim())))
+                && (minPrice == default || p.Price >= minPrice)
+                && (maxPrice == default || p.Price <= maxPrice)
+                && (categoryId == null || p.CategoryId == categoryId)
+            )
+            .Select(p => p.ToDto());
 
-            return products.Select(p => p.ToDto());
-
+            return products;
         }
+
 
         public IEnumerable<ProductDTO> GetProductsByCategory(int categoryId)
         {

@@ -7,6 +7,7 @@ using PresentationLayer.ActionRequests;
 using PresentationLayer.VMs.Category;
 using PresentationLayer.VMs.Products;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace PresentationLayer.Controllers
 {
@@ -15,54 +16,47 @@ namespace PresentationLayer.Controllers
         private readonly IProductManager _productManager;
         private readonly ICategoryManager _categoryManager;
         private readonly IFilesService _filesService;
-        public ProductController(IProductManager productManager, IFilesService filesService, ICategoryManager categoryManager)
+        public ProductController(IProductManager productManager,
+            IFilesService filesService,
+            ICategoryManager categoryManager)
         {
             _productManager = productManager;
             _filesService = filesService;
             _categoryManager = categoryManager;
         }
 
-        [HttpGet]
+        [HttpGet("/products")]
         public IActionResult Index()
         {
-            IEnumerable<ProductVM> productVMs = _productManager
-                .GetAll()
+            IEnumerable<ProductVM> products = _productManager.GetAll()
                 .Select(p => p.ToProductVM())
                 .ToList();
 
-            IEnumerable<CategoryVM> categoryVMs = _categoryManager
-                .GetAll()
+            IEnumerable<CategoryVM> categories = _categoryManager.GetAll()
                 .Select(c => c.ToVM())
                 .ToList();
 
-            ViewData["Categories"] = categoryVMs;
-            ViewData["all"] = true;
 
-            return View(productVMs);
+            ViewBag.Categories = categories;
+            return View(products);
         }
 
-        [HttpPost]
-        public IActionResult Index(string searchTerm, string searchBy,
-            decimal? minPrice, decimal? maxPrice,bool all ,List<int> selectedCategories)
+        [HttpPost("/products/filter")]
+        public IActionResult Filter([FromBody] ProductFilterVM productFilter)
         {
-            IEnumerable<ProductVM> productVMs = _productManager
-                .GetProductsByFilter(searchTerm,searchBy,minPrice,maxPrice, selectedCategories,all)
-                .Select(p => p.ToProductVM());
+            if (productFilter == null)
+                return BadRequest("Invalid filter data");
 
-            ViewData["SearchTerm"] = searchTerm;
-            ViewData["SearchBy"] = searchBy;
-            ViewData["MinPrice"] = $"{minPrice}";
-            ViewData["MaxPrice"] = $"{maxPrice}";
-            ViewData["selectedCategories"] = selectedCategories;
-            ViewData["all"] = all;
+            var products = _productManager.GetProductsWhere(
+                productFilter.SearchTerm,
+                productFilter.SearchBy,
+                productFilter.MinPrice,
+                productFilter.MaxPrice,
+                productFilter.CategoryId
+            ).Select(p => p.ToProductVM())
+            .ToList();
 
-            IEnumerable<CategoryVM> categoryVMs = _categoryManager
-            .GetAll()
-            .Select(c => c.ToVM());
-
-            ViewData["Categories"] = categoryVMs;
-
-            return View(productVMs);
+            return PartialView("_ProductFilterListViewPartial", products);
         }
 
         [HttpGet]
@@ -71,7 +65,7 @@ namespace PresentationLayer.Controllers
             IEnumerable<SelectListItem> categoriesList = _categoryManager.GetAll()
                 .Select(c => new SelectListItem(c.Name, c.CategoryId.ToString()))
                 .ToList();
-            
+
             CreateProductActionRequest productActionRequest = new CreateProductActionRequest()
             {
                 CategoryList = categoriesList
@@ -85,19 +79,22 @@ namespace PresentationLayer.Controllers
         {
             if (ModelState.IsValid)
             {
-                var uniqueFileName = Guid.NewGuid().ToString() + "_" + productActionRequest.Image.FileName;
-                _filesService.Upload($"wwwroot/Images/{uniqueFileName}", productActionRequest.Image);
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + productActionRequest.ImageUrl.FileName;
+                _filesService.Upload($"wwwroot/Images/{uniqueFileName}", productActionRequest.ImageUrl);
 
                 ProductDTO productDTO = productActionRequest.ToDto();
-                productDTO.Image = uniqueFileName; 
+                productDTO.Image = uniqueFileName;
 
                 _productManager.Create(productDTO);
+
+                TempData["successNotification"] = "Product created successfully";
 
                 return RedirectToAction(nameof(Index));
             }
             productActionRequest.CategoryList = _categoryManager.GetAll()
                 .Select(c => new SelectListItem(c.Name, c.CategoryId.ToString()))
                 .ToList();
+            TempData["errorNotification"] = "Product creation failed";
             return View(productActionRequest);
         }
 
@@ -105,11 +102,11 @@ namespace PresentationLayer.Controllers
         public IActionResult Update(int id)
         {
             ProductDTO? product = _productManager.GetById(id);
-            if(product != null)
+            if (product != null)
             {
                 UpdateProductActionRequest productActionRequest = product.ToActionRequest();
                 productActionRequest.CategoryList = _categoryManager.GetAll()
-                    .Select(c => new SelectListItem(c.Name,c.CategoryId.ToString()))
+                    .Select(c => new SelectListItem(c.Name, c.CategoryId.ToString()))
                     .ToList();
 
                 return View(productActionRequest);
@@ -118,34 +115,50 @@ namespace PresentationLayer.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(int id,UpdateProductActionRequest request)
+        public IActionResult Update(int id, UpdateProductActionRequest request)
         {
             request.Id = id;
+
             if (ModelState.IsValid)
             {
                 ProductDTO productDTO = request.ToDto();
 
-                // if user submit a new image file
-                if(request.Image != null)
+                // user submits a new image file
+                if (request.Image != null)
                 {
-                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + request.Image.FileName;
-                    _filesService.Upload($"wwwroot/Images/{uniqueFileName}", request.Image);
+                    // delete old image
+                    if(System.IO.File.Exists($"wwwroot/Images/{request.ImageUrl}"))
+                    {
+                        System.IO.File.Delete($"wwwroot/Images/{request.ImageUrl}");
+                    }
 
+                    // save new image
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + request.Image.FileName;
+                    _filesService.Upload($"wwwroot/Images/{uniqueFileName}", request.Image);
                     productDTO.Image = uniqueFileName;
                 }
                 else
                 {
-                    productDTO.Image = request.ImageName;
+                    productDTO.Image = request.ImageUrl;
                 }
 
                 _productManager.Update(productDTO);
+                TempData["successNotification"] = "Product updated successfully";
                 return RedirectToAction(nameof(Index));
             }
-            request.CategoryList = _categoryManager.GetAll()
-                    .Select(c => new SelectListItem(c.Name, c.CategoryId.ToString()))
-                    .ToList();
 
+            request.CategoryList = _categoryManager.GetAll()
+                .Select(c => new SelectListItem(c.Name, c.CategoryId.ToString()))
+                .ToList();
+            TempData["errorNotification"] = "Product update failed";
             return View(request);
         }
+
+
+
+
+
+
+
     }
 }

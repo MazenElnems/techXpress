@@ -3,4 +3,9 @@
     {
         <h2>@TempData["successNotification"]</h2>
     }
+
+    if (TempData.ContainsKey("errorNotification"))
+    {
+        <h2>@TempData["errorNotification"]</h2>
+    }
 }

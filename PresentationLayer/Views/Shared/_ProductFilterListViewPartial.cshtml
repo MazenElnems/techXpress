@@ -1,0 +1,29 @@
+﻿@using PresentationLayer.VMs.Products
+@model IEnumerable<ProductVM>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Image</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+                <td>@product.Description</td>
+                <td>
+                    <div class="card-img">
+                        <img src="/Images/@product.Image" alt="Product Image" class="object-fit-contain w-25 h-50"/>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
