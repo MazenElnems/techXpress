@@ -1,12 +1,17 @@
 ﻿@using PresentationLayer.VMs.Category
-@using PresentationLayer.VMs.Products
-@model IEnumerable<ProductVM>
 
 @{
     List<CategoryVM> categories = ViewBag.Categories as List<CategoryVM> ?? new();
 }
 
 <h1>Products</h1>
+
+<div class="row">
+    <div class="col-12 d-flex justify-content-end">
+        <a asp-action="Create" asp-controller="Product" class="btn btn-dark m-1">Create New Product</a>
+        <a asp-action="Index" asp-controller="Home" class="btn btn-dark m-1">Back To Home</a>
+    </div>
+</div>
 
 <partial name="_NotificationPartial">
 
@@ -17,102 +22,30 @@
         <button class='btn btn-outline-primary categoryBtn' data-categoryId="@category.CategoryId">@category.Name</button>
     }
 
-    <br />
 
-    <label for="SearchBy">Search By</label>
-    
-    <input type="radio" value="name" name="searchBy" id="name" checked/>
-    <label for="name" >Name</label>
+    <table id="productTable" class="table table-bordered table-striped" width="100%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th></th>
 
-    <input type="radio" value="description" name="searchBy" id="description" />
-    <label for="description">Description</label>
+            </tr>
+        </thead>
+
+        <tbody>
 
 
-    <input type="number" name="minPrice" placeholder="min price" />
-    <input type="number" name="maxPrice" placeholder="max price"  />
+        </tbody>
 
-    <input type="text" placeholder="search ..."/>
+    </table>
 
-
-    <div class="productList">
-        <partial name="_ProductFilterListViewPartial" model="@Model" />
-    </div>
 
 </main>
 
 @section Scripts {
 
-    <script>
-        document.addEventListener('DOMContentLoaded' , function (){
-
-
-            // select elements
-            const categoryButtons = document.querySelectorAll("button[data-categoryId]");
-            const searchInput = document.querySelector("input[type='text']");
-            const minPriceInput = document.querySelector("input[name='minPrice']");
-            const maxPriceInput = document.querySelector("input[name='maxPrice']");
-            const productListContainer = document.querySelector(".productList");    
-
-            // add events to input before trigger an AJAX Call
-            searchInput.addEventListener('input' , filterProductList);
-            minPriceInput.addEventListener('input' , filterProductList);
-            maxPriceInput.addEventListener('input' , filterProductList);
-
-            categoryButtons.forEach(btn => {
-                btn.addEventListener('click', function () {
-                    categoryButtons.forEach(b => b.classList.remove("active"));
-                    this.classList.add("active");
-                    filterProductList();
-                });
-            });
-            
-            async function filterProductList(){
-
-                const searchTerm = searchInput.value;
-                const minPrice = minPriceInput.value || null;
-                const maxPrice = maxPriceInput.value || null;
-                const searchBy = document.querySelector("input[name='searchBy']:checked").value;
-                const categoryIdRaw = document.querySelector("button.active")?.dataset.categoryid;
-                const categoryId = categoryIdRaw === "null" || categoryIdRaw === undefined ? null : categoryIdRaw;
-
-                var filterProduct = JSON.stringify({
-                    searchTerm: searchTerm,
-                    minPrice: minPrice ? parseFloat(minPrice) : 0,
-                    maxPrice: maxPrice ? parseFloat(maxPrice) : 0,
-                    searchBy: searchBy,
-                    categoryId: categoryId ? parseInt(categoryId) : null
-                });
-
-
-                console.log(filterProduct);
-
-                try{
-                    var response = await fetch("/products/filter", {
-                        method: "POST",
-                        headers:{
-                            "Content-Type": "application/json"
-                        },
-                        body: filterProduct
-                    });
-
-                    if(!response.ok)
-                        throw new Error("an error ocurred while trying to retrive data");
-                
-                    var html = await response.text();
-
-                    productListContainer.innerHTML = html;
-
-                }
-                catch(error){
-                    console.log(error);
-                }
-
-            }
-
-
-
-        });
-    
-    </script>
-    
+    <script src="/js/productDataTable.js"></script>
 }

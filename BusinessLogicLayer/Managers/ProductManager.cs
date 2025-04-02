@@ -65,11 +65,23 @@ namespace BusinessLogicLayer.Managers
             return products;
         }
 
-
         public IEnumerable<ProductDTO> GetProductsByCategory(int categoryId)
         {
             IEnumerable<Product> products = _unitOfWork.ProductRepository.GetProductsByCategory(categoryId);
             return products.Select(p => p.ToDto());
+        }
+
+        public void Delete(ProductDTO productDTO)
+        {
+            try
+            {
+                _unitOfWork.ProductRepository.Delete(productDTO.ToProduct());
+                _unitOfWork.Save();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Product deletion failed", ex);
+            }
         }
     }
 }

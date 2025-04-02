@@ -26,22 +26,11 @@ namespace PresentationLayer.Controllers
             IEnumerable<CategoryVM> categories = _categoryManager.GetAll()
                 .Select(c => c.ToVM());
 
-            ViewData["Categories"] = categories;
-
             IEnumerable<ProductVM> products = _productManager.GetAll()
                 .Select(p => p.ToProductVM())
                 .ToList();
 
             return View(products);
-        }
-
-        [HttpGet]
-        public IActionResult ProductsByCategory(int categoryId)
-        {
-            IEnumerable<ProductVM> products = _productManager.GetProductsByCategory(categoryId)
-                .Select(p => p.ToProductVM())
-                .ToList();
-            return PartialView("_ProductsListPartialView", products);
         }
 
         public IActionResult Details(int id)

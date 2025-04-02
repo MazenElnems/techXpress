@@ -25,39 +25,26 @@ namespace PresentationLayer.Controllers
             _categoryManager = categoryManager;
         }
 
-        [HttpGet("/products")]
         public IActionResult Index()
+        {
+            IEnumerable<CategoryVM> categories = _categoryManager.GetAll()
+                .Select(c => c.ToVM())
+                .ToList();
+
+            ViewBag.Categories = categories;
+            return View();
+        }
+
+        [HttpGet("api/products")]
+        public IActionResult GetAllProducts()
         {
             IEnumerable<ProductVM> products = _productManager.GetAll()
                 .Select(p => p.ToProductVM())
                 .ToList();
 
-            IEnumerable<CategoryVM> categories = _categoryManager.GetAll()
-                .Select(c => c.ToVM())
-                .ToList();
-
-
-            ViewBag.Categories = categories;
-            return View(products);
+            return Json(new {data= products });
         }
 
-        [HttpPost("/products/filter")]
-        public IActionResult Filter([FromBody] ProductFilterVM productFilter)
-        {
-            if (productFilter == null)
-                return BadRequest("Invalid filter data");
-
-            var products = _productManager.GetProductsWhere(
-                productFilter.SearchTerm,
-                productFilter.SearchBy,
-                productFilter.MinPrice,
-                productFilter.MaxPrice,
-                productFilter.CategoryId
-            ).Select(p => p.ToProductVM())
-            .ToList();
-
-            return PartialView("_ProductFilterListViewPartial", products);
-        }
 
         [HttpGet]
         public IActionResult Create()
@@ -154,9 +141,24 @@ namespace PresentationLayer.Controllers
             return View(request);
         }
 
+        [HttpDelete("api/delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            ProductDTO? product = _productManager.GetById(id);
+            
+            if(product != null)
+            {
+                _productManager.Delete(product);
 
+                if (System.IO.File.Exists($"wwwroot/Images/{product.Image}"))
+                {
+                    System.IO.File.Delete($"wwwroot/Images/{product.Image}");
+                }
 
-
+                return Json(new { success = true, message = "Product deleted successfully" });
+            }
+            return Json(new { success = false, message = "Product deletion failed" });
+        }
 
 
 

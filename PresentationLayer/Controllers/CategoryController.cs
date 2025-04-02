@@ -38,6 +38,7 @@ namespace PresentationLayer.Controllers
                 TempData["successNotification"] = "Category Created Successfully";
                 return RedirectToAction(nameof(Index));
             }
+            TempData["errorNotification"] = "Category Creation Failed";
             return View();
         }
 
@@ -64,6 +65,7 @@ namespace PresentationLayer.Controllers
                 
                 return RedirectToAction(nameof(Index));
             }
+            TempData["errorNotification"] = "Category Update Failed";
             return View(request);
         }
 
@@ -75,6 +77,10 @@ namespace PresentationLayer.Controllers
             {
                 _categoryManager.Delete(id);
                 TempData["successNotification"] = "Category Deleted Successfully";
+            }
+            else
+            {
+                TempData["errorNotification"] = "Category Not Found";
             }
             return RedirectToAction(nameof(Index));
         }
