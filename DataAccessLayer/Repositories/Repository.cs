@@ -57,7 +57,7 @@ namespace DataAccessLayer.Repositories
 
         public T? GetById(Expression<Func<T, bool>> predicate)
         {
-            return _dbSet.FirstOrDefault(predicate);
+            return _dbSet.AsNoTracking().FirstOrDefault(predicate);
         }
 
         public void Update(T entity)
