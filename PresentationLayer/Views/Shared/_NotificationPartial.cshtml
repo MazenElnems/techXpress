@@ -1,37 +1,26 @@
 ﻿<script src="/lib/jquery/dist/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-<script>
-        toastr.options = {
-          "closeButton": true,
-          "debug": false,
-          "newestOnTop": false,
-          "progressBar": false,
-          "positionClass": "toast-top-right",
-          "preventDuplicates": false,
-          "onclick": null,
-          "showDuration": "300",
-          "hideDuration": "1000",
-          "timeOut": "5000",
-          "extendedTimeOut": "1000",
-          "showEasing": "swing",
-          "hideEasing": "linear",
-          "showMethod": "fadeIn",
-          "hideMethod": "fadeOut"
-    }
-</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @{
     if (TempData.ContainsKey("successNotification"))
     {
         <script>
-            toastr.success('@TempData["successNotification"]', 'Success');
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: '@TempData["successNotification"]'
+            });
         </script>
     }
 
     if (TempData.ContainsKey("errorNotification"))
     {
         <script>
-            toastr.error('@TempData["errorNotification"]', 'Error');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '@TempData["errorNotification"]'
+            });
         </script>
     }
 }
