@@ -36,9 +36,10 @@ namespace PresentationLayer.Controllers
         }
 
         [HttpGet("api/products")]
-        public IActionResult GetAllProducts()
+        public IActionResult GetAllProducts(int? categoryId)
         {
             IEnumerable<ProductVM> products = _productManager.GetAll()
+                .Where(p => categoryId == null || p.CategoryId == categoryId)
                 .Select(p => p.ToProductVM())
                 .ToList();
 

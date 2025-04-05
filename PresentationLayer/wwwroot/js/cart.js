@@ -3,36 +3,6 @@
     var minusBtns = document.querySelectorAll('.minus');
     var quantityInputs = document.querySelectorAll('.quantity-input');
 
-    function validateQuantity(quantity, stockQuantity) {
-        if (quantity < 1) return 1;
-        if (quantity > stockQuantity) return stockQuantity;
-        return quantity;
-    }
-
-    function updateQuantityInput(input, newValue, stockQuantity) {
-        const validatedQuantity = validateQuantity(newValue, stockQuantity);
-        input.value = validatedQuantity;
-        return validatedQuantity;
-    }
-
-    quantityInputs.forEach(function (input) {
-        input.addEventListener('change', function () {
-            const id = this.getAttribute('data-productId');
-            const stockQuantity = parseInt(this.getAttribute('data-stockQuantity'));
-            const newQuantity = updateQuantityInput(this, parseInt(this.value), stockQuantity);
-            
-            if (newQuantity !== parseInt(this.value)) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Invalid Quantity',
-                    text: `Quantity must be between 1 and ${stockQuantity}`
-                });
-            }
-            
-            updateQuantity(`/cart-item/update/${id}?quantity=${newQuantity}`, id);
-        });
-    });
-
     async function updateQuantity(url, id) {
         try {
             var response = await fetch(url, {
@@ -67,7 +37,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'An error occurred while updating the cart'
+                text: 'An error occurred while updating the quantity'
             });
         }
     }
@@ -75,43 +45,39 @@
     plusBtns.forEach(function (btn) {
         btn.addEventListener('click', function () {
             var id = btn.getAttribute('data-productId');
-            var stockQuantity = parseInt(btn.getAttribute('data-stockQuantity'));
-            var quantityInput = document.querySelector('.quantity-input[data-productId="' + id + '"]');
-            var currentQuantity = parseInt(quantityInput.value);
-            
-            if (currentQuantity < stockQuantity) {
-                updateQuantity(`/cart-item/plus/${id}`, id);
-            } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Stock Limit',
-                    text: `Only ${stockQuantity} items available in stock`
-                });
-            }
+            updateQuantity(`/cart-item/plus/${id}`, id);
         });
     });
 
     minusBtns.forEach(function (btn) {
         btn.addEventListener('click', function () {
             var id = btn.getAttribute('data-productId');
-            var quantityInput = document.querySelector('.quantity-input[data-productId="' + id + '"]');
-            var currentQuantity = parseInt(quantityInput.value);
-            
-            if (currentQuantity > 1) {
-                updateQuantity(`/cart-item/minus/${id}`, id);
-            } else {
+            var quantityElement = document.querySelector('.quantity-input[data-productId="' + id + '"]');
+            var currentQuantity = parseInt(quantityElement.value);
+
+            if (currentQuantity <= 1) {
                 Swal.fire({
-                    title: 'Remove Item?',
-                    text: 'Do you want to remove this item from your cart?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, remove it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = `/ShoppingCart/Remove/${id}`;
-                    }
+                    icon: 'warning',
+                    title: 'Invalid Quantity',
+                    text: 'Quantity cannot be less than 1'
+                });
+                return;
+            }
+
+            updateQuantity(`/cart-item/minus/${id}`, id);
+        });
+    });
+
+    // Add input validation for direct quantity changes
+    quantityInputs.forEach(function (input) {
+        input.addEventListener('change', function () {
+            var quantity = parseInt(this.value);
+            if (quantity < 1) {
+                this.value = 1;
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Quantity',
+                    text: 'Quantity cannot be less than 1'
                 });
             }
         });

@@ -51,6 +51,7 @@ namespace PresentationLayer.Controllers
             {
                 return View(categoryDTO.ToActionRequest());
             }
+            TempData["errorNotification"] = "Category Not Found";
             return RedirectToAction(nameof(Index));
         } 
 
@@ -69,7 +70,22 @@ namespace PresentationLayer.Controllers
             return View(request);
         }
 
-        public IActionResult Delete(int id) 
+        //[HttpGet]
+        //public IActionResult Delete(int id)
+        //{
+        //    CategoryDTO? categoryDTO = _categoryManager.GetById(id);
+
+        //    if (categoryDTO != null)
+        //    {
+        //        return View(categoryDTO.ToVM());
+        //    }
+
+        //    TempData["errorNotification"] = "Category Not Found";
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        [HttpPost]
+        public IActionResult Delete(int id, bool confirm)
         {
             CategoryDTO? categoryDTO = _categoryManager.GetById(id);
 
@@ -82,7 +98,21 @@ namespace PresentationLayer.Controllers
             {
                 TempData["errorNotification"] = "Category Not Found";
             }
+            
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpDelete("api/category/delete/{id}")]
+        public IActionResult DeleteApi(int id)
+        {
+            CategoryDTO? category = _categoryManager.GetById(id);
+            
+            if(category != null)
+            {
+                _categoryManager.Delete(id);
+                return Json(new { success = true, message = "Category deleted successfully" });
+            }
+            return Json(new { success = false, message = "Category deletion failed" });
         }
 
         public IActionResult CheckName(string name, int id)
@@ -99,7 +129,5 @@ namespace PresentationLayer.Controllers
                 return Json(false);
             }
         }
-
-
     }
 }
