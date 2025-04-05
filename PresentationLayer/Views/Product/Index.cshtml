@@ -4,48 +4,55 @@
     List<CategoryVM> categories = ViewBag.Categories as List<CategoryVM> ?? new();
 }
 
-<h1>Products</h1>
+<div class="container py-3">
+    <h1 class="mb-4">Products</h1>
 
-<div class="row">
-    <div class="col-12 d-flex justify-content-end">
-        <a asp-action="Create" asp-controller="Product" class="btn btn-dark m-1">Create New Product</a>
-        <a asp-action="Index" asp-controller="Home" class="btn btn-dark m-1">Back To Home</a>
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-end">
+            <a asp-action="Create" asp-controller="Product" class="btn btn-primary me-2">Create New Product</a>
+            <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">Back To Home</a>
+        </div>
+    </div>
+
+    <partial name="_NotificationPartial">
+
+    <div class="card shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-light py-3">
+            <h5 class="mb-0">Product Categories</h5>
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-outline-primary categoryBtn" data-categoryId="@null">All</button>
+                @foreach (var category in categories)
+                {
+                    <button class='btn btn-outline-primary categoryBtn' data-categoryId="@category.CategoryId">@category.Name</button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm rounded-3">
+        <div class="card-header bg-light py-3">
+            <h5 class="mb-0">Product List</h5>
+        </div>
+        <div class="card-body">
+            <table id="productTable" class="table table-hover" width="100%">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-<partial name="_NotificationPartial">
-
-<main class="Content">
-    <button class="btn btn-outline-primary categoryBtn" data-categoryId="@null">All</button>
-    @foreach (var category in categories)
-    {
-        <button class='btn btn-outline-primary categoryBtn' data-categoryId="@category.CategoryId">@category.Name</button>
-    }
-
-
-    <table id="productTable" class="table table-bordered table-striped" width="100%">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th></th>
-
-            </tr>
-        </thead>
-
-        <tbody>
-
-
-        </tbody>
-
-    </table>
-
-
-</main>
-
 @section Scripts {
-
     <script src="/js/productDataTable.js"></script>
 }

@@ -1,5 +1,4 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
     loadData();
 });
 
@@ -7,10 +6,10 @@ function loadData() {
     $('#productTable').DataTable({
         ajax: '/api/products',
         columns: [
-            { data: 'id' , width: "5%"},
-            { data: 'name' , width: "10%"},
+            { data: 'id', width: "5%" },
+            { data: 'name', width: "10%" },
             { data: 'description', width: "30%" },
-            { data: 'price' , width : "15%"},
+            { data: 'price', width: "15%" },
             //{
             //    data: 'image',
             //    width: "20%",
@@ -47,7 +46,7 @@ async function deleteProduct(url) {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!"
-    }).then(async (result) => {  
+    }).then(async (result) => {
         if (result.isConfirmed) {
             try {
                 const response = await fetch(url, {
@@ -62,9 +61,17 @@ async function deleteProduct(url) {
                 if (response.ok) {
                     if (data.success) {
                         $('#productTable').DataTable().ajax.reload();
-                        toastr.success(`${data.message}`, 'Success');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: data.message
+                        });
                     } else {
-                        toastr.error(`${data.message}`, 'Error!');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.message
+                        });
                     }
 
                 } else {

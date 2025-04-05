@@ -10,11 +10,11 @@
         height: 100%;
         justify-content: space-between;
         transition: transform 0.3s;
-        /* margin:  */
+        border-radius: 0.5rem;
     }
 
     .card:hover {
-        transform: scale(1.05);
+        transform: scale(1.03);
     }
 
     .card img {
@@ -22,30 +22,27 @@
         height: 230px;
         object-fit: contain;
     }
-
 </style>
 
 <main id="Container">
-
     <div class="row pb-3">
         @foreach (var product in Model)
         {
             <div class="col-lg-3 col-sm-6 d-flex mt-1">
                 <div class="col-12 p-1">
-                    <div class="card border-0 p-3 shadow border-top rounded w-100">
+                    <div class="card border-0 p-3 shadow-sm rounded-3 w-100">
                         <img src="/Images/@product.Image" class="card-img-top">
                         <div class="card-body p-0 d-flex flex-column">
                             <div class="card-title text-center h5">
                                 @product.Name
                             </div>
-                            <p class="text-dark text-center">Price: @product.Price</p>
+                            <p class="text-muted text-center">Price: $@product.Price.ToString("F2")</p>
                         </div>
                         <div class="card-footer border-0 bg-white">
                             <a class="btn btn-primary form-control" asp-action="Details" asp-controller="Home" asp-route-id="@product.Id">
                                 Details
                             </a>
                         </div>
-
                     </div>
                 </div>
             </div>
