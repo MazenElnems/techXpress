@@ -5,11 +5,22 @@
 function loadData() {
     $('#productTable').DataTable({
         ajax: '/api/products',
+        responsive: true,
         columns: [
             { data: 'id', width: "5%" },
-            { data: 'name', width: "10%" },
-            { data: 'description', width: "30%" },
-            { data: 'price', width: "15%" },
+            { data: 'name', width: "20%" },
+            {
+                data: 'description',
+                width: "30%",
+                className: 'd-none d-lg-table-cell'
+            },
+            {
+                data: 'price',
+                width: "15%",
+                render: function (data) {
+                    return '$' + parseFloat(data).toFixed(2);
+                }
+            },
             //{
             //    data: 'image',
             //    width: "20%",
@@ -22,21 +33,26 @@ function loadData() {
                 width: "20%",
                 render: function (data) {
                     return `
-                            <div class="text-center d-flex align-items-center justify-content-center gap-2">
-                                <a href="/Product/Update/${data}" class="btn btn-success text-white w-50" style="cursor:pointer;">
-                                    Edit
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="/Product/Update/${data}" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-pencil"></i> Edit
                                 </a>
-                                <a onclick="deleteProduct('/api/delete/${data}')" class="btn btn-danger text-white w-50" style="cursor:pointer;">
-                                    Delete
+                                <a onclick="deleteProduct('/api/delete/${data}')" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Delete
                                 </a>
                             </div>`;
-
                 }
             }
-        ]
+        ],
+        language: {
+            emptyTable: "No products found"
+        },
+        order: [[0, 'desc']],
+        pageLength: 10,
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
     });
-
 }
+
 async function deleteProduct(url) {
     Swal.fire({
         title: "Are you sure?",
@@ -73,12 +89,16 @@ async function deleteProduct(url) {
                             text: data.message
                         });
                     }
-
                 } else {
                     throw new Error('Something went wrong');
                 }
             } catch (error) {
                 console.log(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while deleting the product'
+                });
             }
         }
     });
