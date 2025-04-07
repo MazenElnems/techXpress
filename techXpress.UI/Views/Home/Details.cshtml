@@ -1,19 +1,27 @@
 ﻿@using techXpress.UI.VMs.Products
-@model ProductVM
+@model ProductDetailsVM
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <div class="card shadow-sm">
                 <div class="position-relative">
-                    <img src="/Images/@Model.Image" class="card-img-top w-100" alt="@Model.Name"
+                    <img src="/Images/@Model.ImageUrl" class="card-img-top w-100" alt="@Model.Name"
                          style="height: 400px; object-fit: contain; background-color: #f8f9fa; padding: 1rem;">
                 </div>
                 <div class="card-body">
                     <h3 class="card-title mb-3 fw-bold text-primary">@Model.Name</h3>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="h4 text-success mb-0">$@Model.Price.ToString("N2")</span>
-                        <span class="badge bg-primary">In Stock</span>
+
+                        @if (Model.StockQuantity > 0)
+                        {
+                            <span class="badge bg-primary">In Stock</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Out of Stock</span>
+                        }
                     </div>
                     <p class="card-text mb-4">@Model.Description</p>
                     <a class="btn btn-primary w-100" asp-action="Add" asp-controller="ShoppingCart" asp-route-id="@Model.Id">

@@ -1,6 +1,6 @@
-﻿using DataAccessLayer.Abstraction;
-using DataAccessLayer.Data;
-using DataAccessLayer.Entities;
+﻿using techXpress.DataAccess.Abstraction;
+using techXpress.DataAccess.Data;
+using techXpress.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Repositories
+namespace techXpress.DataAccess.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {

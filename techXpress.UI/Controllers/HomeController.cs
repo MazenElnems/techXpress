@@ -39,7 +39,7 @@ namespace techXpress.UI.Controllers
 
             if (productDTO != null)
             {
-                return View(productDTO.ToProductVM());
+                return View(productDTO.ToProductDetailsVM());
             }
             return RedirectToAction(nameof(Index));
         }

@@ -1,7 +1,7 @@
-﻿using DataAccessLayer.Abstraction;
-using DataAccessLayer.Data;
-using DataAccessLayer.Entities.Enums;
-using DataAccessLayer.Entities;
+﻿using techXpress.DataAccess.Abstraction;
+using techXpress.DataAccess.Data;
+using techXpress.DataAccess.Entities.Enums;
+using techXpress.DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccessLayer.Repositories
+namespace techXpress.DataAccess.Repositories
 {
     public class OrderRepository : Repository<Order>, IOrderRepository
     {

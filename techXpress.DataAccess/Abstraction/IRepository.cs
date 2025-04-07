@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Abstraction
+namespace techXpress.DataAccess.Abstraction
 {
     public interface IRepository <T> where T : class
     {

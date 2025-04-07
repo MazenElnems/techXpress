@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataAccessLayer.Entities
+namespace techXpress.DataAccess.Entities
 {
     public class Review
     {

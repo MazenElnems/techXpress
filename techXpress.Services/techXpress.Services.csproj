@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccessLayer\techXpress.DataAccess.csproj" />
+    <ProjectReference Include="..\techXpress.DataAccess\techXpress.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

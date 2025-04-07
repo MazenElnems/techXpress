@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace DataAccessLayer.Migrations
+namespace techXpress.DataAccess.Migrations
 {
     /// <inheritdoc />
     public partial class updateEntitiesConfigurations : Migration

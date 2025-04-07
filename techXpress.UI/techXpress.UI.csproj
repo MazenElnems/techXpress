@@ -7,18 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CustomValidations\**" />
+    <Content Remove="CustomValidations\**" />
+    <EmbeddedResource Remove="CustomValidations\**" />
+    <None Remove="CustomValidations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>    <ProjectReference Include="..\..\Demo\techXpress.Services\techXpress.Services.csproj" />
+  <ItemGroup>        <ProjectReference Include="..\techXpress.Services\techXpress.Services.csproj" />
 
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CustomValidations\" />
   </ItemGroup>
 
 </Project>

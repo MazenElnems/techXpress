@@ -1,4 +1,4 @@
-﻿using DataAccessLayer.Entities;
+﻿using techXpress.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Data.EntityConfigurations
+namespace techXpress.DataAccess.Data.EntityConfigurations
 {
     public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
     {

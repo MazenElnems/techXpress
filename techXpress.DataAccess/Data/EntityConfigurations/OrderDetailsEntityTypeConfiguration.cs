@@ -1,8 +1,8 @@
-﻿using DataAccessLayer.Entities;
+﻿using techXpress.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DataAccessLayer.Data.EntityConfigurations
+namespace techXpress.DataAccess.Data.EntityConfigurations
 {
     public class OrderDetailsEntityTypeConfiguration : IEntityTypeConfiguration<OrderDetail>
     {

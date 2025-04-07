@@ -1,12 +1,12 @@
-﻿using DataAccessLayer.Abstraction;
-using DataAccessLayer.Data;
+﻿using techXpress.DataAccess.Abstraction;
+using techXpress.DataAccess.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Repositories
+namespace techXpress.DataAccess.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Entities.Enums
+namespace techXpress.DataAccess.Entities.Enums
 {
     public enum OrderStatus
     {

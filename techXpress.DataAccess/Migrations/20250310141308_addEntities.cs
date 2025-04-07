@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DataAccessLayer.Migrations
+namespace techXpress.DataAccess.Migrations
 {
     /// <inheritdoc />
     public partial class addEntities : Migration

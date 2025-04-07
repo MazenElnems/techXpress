@@ -1,7 +1,7 @@
-﻿using DataAccessLayer.Entities;
+﻿using techXpress.DataAccess.Entities;
 using System.Collections.Generic;
 
-namespace DataAccessLayer.Abstraction
+namespace techXpress.DataAccess.Abstraction
 {
     public interface ICategoryRepository : IRepository<Category>
     {

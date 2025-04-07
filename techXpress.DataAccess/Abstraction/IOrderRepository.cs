@@ -1,12 +1,12 @@
-﻿using DataAccessLayer.Entities.Enums;
-using DataAccessLayer.Entities;
+﻿using techXpress.DataAccess.Entities.Enums;
+using techXpress.DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Abstraction
+namespace techXpress.DataAccess.Abstraction
 {
     public interface IOrderRepository : IRepository<Order>
     {
