@@ -23,8 +23,11 @@ namespace techXpress.UI
                     .EnableSensitiveDataLogging()
             );
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             builder.Services.AddScoped<IProductManager, ProductManager>();
             builder.Services.AddTransient<IFilesService, FilesService>(); 
+            builder.Services.AddTransient<IOrderManger, OrderManger>(); 
+
             builder.Services.AddScoped<ICategoryManager, CategoryManager>();
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
