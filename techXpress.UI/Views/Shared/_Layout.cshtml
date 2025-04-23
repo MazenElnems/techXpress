@@ -19,7 +19,7 @@
                     <i class="bi bi-shop"></i> techXpress
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
@@ -30,20 +30,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Admin Dashboard
-                            </a>
 
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                                <li><a asp-action="Index" asp-controller="Product" class="dropdown-item">Product Management</a></li>
-                                <li><a asp-action="Index" asp-controller="Category" class="dropdown-item">Category Management</a></li>
-                                <li><a asp-action="Index" asp-controller="Order" class="dropdown-item">Order Management</a></li>
-                                <li><a asp-action="Index" asp-controller="User" class="dropdown-item">User Management</a></li>
-                            </ul>
-                        </li>
                     </ul>
-                    <a asp-action="ViewCart" asp-controller="ShoppingCart" class="text-white"><i class="bi bi-cart fs-3"></i></a>
+
+                    <partial name="_ShoppingCartIcon" />
+                    
                 </div>
             </div>
         </nav>
