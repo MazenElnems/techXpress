@@ -1,0 +1,17 @@
+﻿@using Microsoft.AspNetCore.Http
+@using techXpress.UI.Extensions.Session
+
+@{
+    var cart = ViewContext.HttpContext.Session.Get<ShoppingCartVM>("Cart");
+    var cartCount = cart?.CartItems?.Count ?? 0;
+}
+
+<a asp-action="ViewCart" asp-controller="ShoppingCart" class="text-white"><i class="bi bi-cart fs-3"></i></a>
+
+@if(cartCount > 0)
+{
+    <span class="translate-middle badge rounded-pill bg-danger">
+        (@cartCount)
+    </span>
+}
+
