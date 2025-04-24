@@ -24,6 +24,7 @@ namespace techXpress.UI
                     .LogTo(Console.WriteLine , LogLevel.Information)
                     .EnableSensitiveDataLogging()
             );
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddScoped<IProductManager, ProductManager>();
