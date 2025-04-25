@@ -21,11 +21,8 @@ namespace techXpress.DataAccess.Repositories
             _db = db;
         }
 
-        public IEnumerable<Order> GetOrdersByUser(int userId)
+        public IEnumerable<Order> GetOrdersByUser(Guid userId)
         {
-            if (userId <= 0)
-                throw new ArgumentException("Invalid user ID.", nameof(userId));
-
             try
             {
                 return _db.Orders

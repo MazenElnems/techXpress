@@ -66,7 +66,6 @@ namespace techXpress.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Register()
         {
             return View();
         }
@@ -106,6 +105,7 @@ namespace techXpress.UI.Controllers
             return View(request);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             // it sends set-cookie header with empty value.
@@ -118,5 +118,11 @@ namespace techXpress.UI.Controllers
             return View();
         }
 
+    }
+    public static class UserRole
+    {
+        public const string Admin = "Admin";
+        public const string Seller = "Seller";
+        public const string Customer = "Customer";
     }
 }

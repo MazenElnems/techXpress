@@ -5,6 +5,8 @@ using techXpress.DataAccess.Abstraction;
 using techXpress.DataAccess.Data;
 using techXpress.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using techXpress.DataAccess.Entities;
 
 namespace techXpress.UI
 {
@@ -22,6 +24,7 @@ namespace techXpress.UI
                     .LogTo(Console.WriteLine , LogLevel.Information)
                     .EnableSensitiveDataLogging()
             );
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddScoped<IProductManager, ProductManager>();
@@ -39,7 +42,19 @@ namespace techXpress.UI
                 options.Cookie.SameSite = SameSiteMode.Lax;
                 options.Cookie.MaxAge = TimeSpan.FromDays(7); 
             });
+            builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequireDigit = true;
 
+            }).AddEntityFrameworkStores<AppDbContext>();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.LoginPath = "/Account/Login";
+                options.ExpireTimeSpan = TimeSpan.FromDays(7);
+            });
 
             #endregion
 

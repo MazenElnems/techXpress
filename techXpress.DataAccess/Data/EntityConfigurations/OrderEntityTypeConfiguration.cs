@@ -31,7 +31,8 @@ namespace techXpress.DataAccess.Data.EntityConfigurations
             builder
                 .HasOne(o => o.User)
                 .WithMany(u => u.Orders)
-                .HasForeignKey(o => o.UserId);
+                .HasForeignKey(o => o.UserId)
+                .HasPrincipalKey(u => u.Id);
         }
     }
 }
