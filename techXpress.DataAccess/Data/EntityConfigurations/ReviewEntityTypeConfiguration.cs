@@ -17,7 +17,8 @@ namespace techXpress.DataAccess.Data.EntityConfigurations
             builder
                 .HasOne(r => r.User)
                 .WithMany(u => u.Reviews)
-                .HasForeignKey(r => r.UserId);
+                .HasForeignKey(r => r.UserId)
+                .HasPrincipalKey(u => u.Id);
 
             builder
                 .HasOne(r => r.Product)

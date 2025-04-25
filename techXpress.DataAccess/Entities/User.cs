@@ -1,18 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace techXpress.DataAccess.Entities
 {
-    public class User
+    public class User : IdentityUser<Guid>
     {
-        public int UserId { get; set; }
-        public string Fname { get; set; }
-        public string? Lname { get; set; }
-        public string Email { get; set; }
-        public string Role { get; set; }
-
-        // Navigation properties
-        public ICollection<Order> Orders { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        public List<Order>  Orders { get; set; }
+        public List<Review> Reviews { get; set; }   
     }
 }

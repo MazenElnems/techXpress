@@ -10,7 +10,7 @@ namespace techXpress.DataAccess.Entities
         public DateTime CreatedAt { get; set; }
 
         // Foreign keys
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public int ProductId { get; set; }
 
         // Navigation properties
