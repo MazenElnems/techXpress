@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using techXpress.UI.Models;
 using techXpress.UI.VMs.Category;
 using techXpress.UI.VMs.Products;
+using Microsoft.AspNetCore.Authorization;
 
 namespace techXpress.UI.Controllers
 {

@@ -4,9 +4,12 @@ using techXpress.Services.Managers;
 using Microsoft.AspNetCore.Mvc;
 using techXpress.UI.ActionRequests;
 using techXpress.UI.VMs.Category;
+using Microsoft.AspNetCore.Authorization;
+using techXpress.UI.Models;
 
 namespace techXpress.UI.Controllers
 {
+    [Authorize(Roles = UserRole.Admin)]
     public class CategoryController : Controller
     {
         private readonly ICategoryManager _categoryManager;
@@ -70,20 +73,6 @@ namespace techXpress.UI.Controllers
             return View(request);
         }
 
-        //[HttpGet]
-        //public IActionResult Delete(int id)
-        //{
-        //    CategoryDTO? categoryDTO = _categoryManager.GetById(id);
-
-        //    if (categoryDTO != null)
-        //    {
-        //        return View(categoryDTO.ToVM());
-        //    }
-
-        //    TempData["errorNotification"] = "Category Not Found";
-        //    return RedirectToAction(nameof(Index));
-        //}
-
         [HttpPost]
         public IActionResult Delete(int id, bool confirm)
         {
@@ -103,7 +92,7 @@ namespace techXpress.UI.Controllers
         }
 
         [HttpDelete("api/category/delete/{id}")]
-        public IActionResult DeleteApi(int id)
+        public IActionResult Delete(int id)
         {
             CategoryDTO? category = _categoryManager.GetById(id);
             

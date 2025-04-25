@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using techXpress.Services.Abstraction;
 using techXpress.Services.DTOs.Orders;
@@ -15,6 +16,7 @@ namespace techXpress.UI.Controllers
             _orderManger = orderManger;
         }
 
+        [Authorize]
         public IActionResult Create()
         {
 
@@ -24,28 +26,30 @@ namespace techXpress.UI.Controllers
             //  3) within the service 
                     // 1) 
 
-            var cart = HttpContext.Session.Get<ShoppingCartVM>("Cart");
+            return View();
 
-            if (cart != null)
-            {
-                var productQuantities = cart.CartItems
-                    .ToDictionary(p => p.ProductId, p => p.Quantity);
+            //var cart = HttpContext.Session.Get<ShoppingCartVM>("Cart");
+
+            //if (cart != null)
+            //{
+            //    var productQuantities = cart.CartItems
+            //        .ToDictionary(p => p.ProductId, p => p.Quantity);
                 
-                var productPrices = cart.CartItems
-                    .ToDictionary(p => p.ProductId, p => p.Price);
+            //    var productPrices = cart.CartItems
+            //        .ToDictionary(p => p.ProductId, p => p.Price);
 
-                CreateOrderDTO orderDto = new CreateOrderDTO
-                {
-                    ProductQuantities = productQuantities,
-                    ProductPrices = productPrices,
-                    TotalAmount = cart.Total
-                };
+            //    CreateOrderDTO orderDto = new CreateOrderDTO
+            //    {
+            //        ProductQuantities = productQuantities,
+            //        ProductPrices = productPrices,
+            //        TotalAmount = cart.Total
+            //    };
 
-                _orderManger.PlaceOrder(orderDto);
+            //    _orderManger.PlaceOrder(orderDto);
 
-            }
+            //}
 
-            return RedirectToAction(nameof(Demo));
+            //return RedirectToAction(nameof(Demo));
 
         }
 

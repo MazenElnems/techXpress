@@ -7,7 +7,7 @@
             <div class="card shadow-sm">
                 <div class="position-relative">
                     <img src="/Images/@Model.ImageUrl" class="card-img-top w-100" alt="@Model.Name"
-                         style="height: 400px; object-fit: contain; background-color: #f8f9fa; padding: 1rem;">
+                    style="height: 400px; object-fit: contain; background-color: #f8f9fa; padding: 1rem;">
                 </div>
                 <div class="card-body">
                     <h3 class="card-title mb-3 fw-bold text-primary">@Model.Name</h3>
@@ -24,9 +24,12 @@
                         }
                     </div>
                     <p class="card-text mb-4">@Model.Description</p>
-                    <a class="btn btn-primary w-100" asp-action="Add" asp-controller="ShoppingCart" asp-route-id="@Model.Id">
-                        <i class="bi bi-cart-plus me-2"></i>Add to Cart
-                    </a>
+                    @if (!User.IsInRole(UserRole.Admin))
+                    {
+                        <a class="btn btn-primary w-100" asp-action="Add" asp-controller="ShoppingCart" asp-route-id="@Model.Id">
+                            <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                        </a>
+                    }
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@ using techXpress.Services.DTOs.Products;
 using Microsoft.AspNetCore.Mvc;
 using techXpress.UI.Extensions.Session;
 using techXpress.UI.VMs.ShoppingCart;
+using Microsoft.AspNetCore.Authorization;
 
 namespace techXpress.UI.Controllers
 {

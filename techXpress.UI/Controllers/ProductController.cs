@@ -8,9 +8,12 @@ using techXpress.UI.VMs.Category;
 using techXpress.UI.VMs.Products;
 using System.Collections.Generic;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
+using techXpress.UI.Models;
 
 namespace techXpress.UI.Controllers
 {
+    [Authorize(Roles = UserRole.Admin)]
     public class ProductController : Controller
     {
         private readonly IProductManager _productManager;
