@@ -7,6 +7,7 @@ using techXpress.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using techXpress.DataAccess.Entities;
+using Stripe;
 
 namespace techXpress.UI
 {
@@ -55,6 +56,10 @@ namespace techXpress.UI
                 options.LoginPath = "/Account/Login";
                 options.ExpireTimeSpan = TimeSpan.FromDays(7);
             });
+
+
+            // This is your test secret API key. for stripe payment
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
             #endregion
 

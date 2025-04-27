@@ -15,15 +15,16 @@ namespace techXpress.DataAccess.Entities
         public string? TrackingNumber { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
+        public string RecipientPhoneNumber { get; set; }
 
         // Foreign keys
         public Guid UserId { get; set; }
-        public int PaymentId { get; set; }
+        public int? PaymentId { get; set; }
         public int? CouponId { get; set; }
 
         // Navigation properties
         public User User { get; set; }
-        public Payment Payment { get; set; }
+        public Payment? Payment { get; set; }
         public Coupon? Coupon { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
     }

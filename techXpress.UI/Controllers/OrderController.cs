@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using techXpress.Services.Abstraction;
 using techXpress.Services.DTOs.Orders;
+using techXpress.UI.ActionRequests;
 using techXpress.UI.Extensions.Session;
 using techXpress.UI.VMs.ShoppingCart;
 
@@ -17,43 +18,38 @@ namespace techXpress.UI.Controllers
         }
 
         [Authorize]
+        [HttpGet]
         public IActionResult Create()
         {
-
-
-            //  1) Get the cart from session
-            //  2) create createorderDTO object and send it to the service
-            //  3) within the service 
-                    // 1) 
-
             return View();
-
-            //var cart = HttpContext.Session.Get<ShoppingCartVM>("Cart");
-
-            //if (cart != null)
-            //{
-            //    var productQuantities = cart.CartItems
-            //        .ToDictionary(p => p.ProductId, p => p.Quantity);
-                
-            //    var productPrices = cart.CartItems
-            //        .ToDictionary(p => p.ProductId, p => p.Price);
-
-            //    CreateOrderDTO orderDto = new CreateOrderDTO
-            //    {
-            //        ProductQuantities = productQuantities,
-            //        ProductPrices = productPrices,
-            //        TotalAmount = cart.Total
-            //    };
-
-            //    _orderManger.PlaceOrder(orderDto);
-
-            //}
-
-            //return RedirectToAction(nameof(Demo));
-
         }
 
-        public IActionResult Demo()
+        [HttpPost]
+        public IActionResult Create(CreateOrderActionRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                // 1. get the product in the shopping cart.
+                // 2. assign TotalAmount and ProductQuantities to CreateOrderDTO object
+                // 3. PlaceOrder using orderManager
+
+                ShoppingCartVM? cart = HttpContext.Session.Get<ShoppingCartVM>("Cart");
+                List<ShoppingCartItemVM> products = cart!.CartItems;
+
+                CreateOrderDTO orderDto = request.ToDto();
+                orderDto.TotalAmount = cart.Total;
+                orderDto.ProductQuantities = products
+                    .ToDictionary(p => p.ProductId, p => p.Quantity);
+
+                _orderManger.PlaceOrder(orderDto);
+
+                return RedirectToAction(nameof(CheckOut));
+            }
+            ModelState.AddModelError("Order Data Error", "Can't Place Order");
+            return View(request);
+        }
+
+        public IActionResult CheckOut()
         {
             return View();
         }

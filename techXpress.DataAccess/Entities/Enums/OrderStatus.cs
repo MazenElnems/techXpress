@@ -21,11 +21,6 @@ namespace techXpress.DataAccess.Entities.Enums
         /// <summary>
         /// order is not valid and it will not be processed
         /// </summary>
-        Failed,
-
-        /// <summary>
-        /// the order is being prepared for shipment.
-        /// </summary>
         InProgress,
 
         /// <summary>

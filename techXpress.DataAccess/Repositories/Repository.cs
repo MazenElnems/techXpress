@@ -22,7 +22,7 @@ namespace techXpress.DataAccess.Repositories
             _dbSet = _db.Set<T>();
         }
 
-        public void Create(T entity)
+        public virtual void Create(T entity)
         {
             if(entity is Product p)
             {

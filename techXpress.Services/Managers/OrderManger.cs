@@ -21,23 +21,25 @@ namespace techXpress.Services.Managers
 
         public void PlaceOrder(CreateOrderDTO orderDto)
         {
-            Order order = new Order
-            {
-                OrderDate = DateTime.Now,
-                OrderStatus = OrderStatus.Pending,
-                TotalAmount = orderDto.TotalAmount,
-                OrderDetails = orderDto.ProductQuantities
+            Order order = orderDto.ToOrder();
+
+            // intialize order
+            order.OrderDate = DateTime.Now;
+            order.OrderStatus = OrderStatus.Pending;
+            order.TotalAmount = orderDto.TotalAmount;
+           
+            _unitOfWork.OrderRepository.Create(order);
+            
+            List<OrderDetail> orderDetails = orderDto.ProductQuantities
                 .Select(p => new OrderDetail
                 {
                     ProductId = p.Key,
                     Quantity = p.Value,
-                    UnitPrice = orderDto.ProductPrices[p.Key],
+                    UnitPrice = _unitOfWork.ProductRepository.GetById(product => product.Id == p.Key)!.Price
+                }).ToList();
 
-                }).ToList()
+            order.OrderDetails = orderDetails;
 
-            };
-
-            _unitOfWork.OrderRepository.Create(order);
             _unitOfWork.Save();
         }
     }
