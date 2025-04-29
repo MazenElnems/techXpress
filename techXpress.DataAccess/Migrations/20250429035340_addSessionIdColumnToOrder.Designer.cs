@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using techXpress.DataAccess.Data;
 
@@ -11,9 +12,11 @@ using techXpress.DataAccess.Data;
 namespace techXpress.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250429035340_addSessionIdColumnToOrder")]
+    partial class addSessionIdColumnToOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -225,15 +228,15 @@ namespace techXpress.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PaymentId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("PaymentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("RecipientPhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SessionId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("SessionId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ShippingDate")
                         .HasColumnType("datetime2");
@@ -281,14 +284,21 @@ namespace techXpress.DataAccess.Migrations
 
             modelBuilder.Entity("techXpress.DataAccess.Entities.Payment", b =>
                 {
-                    b.Property<string>("PaymentId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("TransactionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PaymentId");
 

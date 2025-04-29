@@ -58,8 +58,11 @@ namespace techXpress.UI
             });
 
 
-            // This is your test secret API key. for stripe payment
-            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+            // it will inject the stripe settings from appsettings.json into 
+            // the StripeSettings class
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+            StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
             #endregion
 

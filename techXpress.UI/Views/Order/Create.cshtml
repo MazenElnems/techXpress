@@ -1,6 +1,9 @@
 ﻿@using System.Security.Claims
 @model CreateOrderActionRequest
 
+@{
+    ViewData["Title"] = "Create Order";
+}
 
 <form asp-action="Create" asp-controller="Order" method="post">
     <input asp-for="UserId" type="hidden" value="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" />

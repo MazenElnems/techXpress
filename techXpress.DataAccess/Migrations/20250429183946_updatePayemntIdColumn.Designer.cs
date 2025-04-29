@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using techXpress.DataAccess.Data;
 
@@ -11,9 +12,11 @@ using techXpress.DataAccess.Data;
 namespace techXpress.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250429183946_updatePayemntIdColumn")]
+    partial class updatePayemntIdColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,9 +235,6 @@ namespace techXpress.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SessionId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("ShippingDate")
                         .HasColumnType("datetime2");
 
@@ -281,7 +281,7 @@ namespace techXpress.DataAccess.Migrations
 
             modelBuilder.Entity("techXpress.DataAccess.Entities.Payment", b =>
                 {
-                    b.Property<string>("PaymentId")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Amount")
@@ -290,7 +290,7 @@ namespace techXpress.DataAccess.Migrations
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("PaymentId");
+                    b.HasKey("Id");
 
                     b.ToTable("Payments", (string)null);
                 });

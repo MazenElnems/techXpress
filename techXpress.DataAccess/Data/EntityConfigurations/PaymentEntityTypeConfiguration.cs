@@ -14,10 +14,6 @@ namespace techXpress.DataAccess.Data.EntityConfigurations
             builder
                 .HasKey(p => p.PaymentId);
 
-            builder
-                .Property(p => p.TransactionId)
-                .IsRequired(); 
-
         }
     }
 }

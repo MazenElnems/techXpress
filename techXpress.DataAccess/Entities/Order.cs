@@ -19,7 +19,8 @@ namespace techXpress.DataAccess.Entities
 
         // Foreign keys
         public Guid UserId { get; set; }
-        public int? PaymentId { get; set; }
+        public string? PaymentId { get; set; }
+        public string? SessionId { get; set; }
         public int? CouponId { get; set; }
 
         // Navigation properties

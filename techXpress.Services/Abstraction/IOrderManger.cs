@@ -9,6 +9,8 @@ namespace techXpress.Services.Abstraction
 {
     public interface IOrderManger
     {
-        void PlaceOrder(CreateOrderDTO orderDto);
+        int PlaceOrder(CreateOrderDTO orderDto);
+        void UpdateOrder(UpdateOrderDTO orderDto);
+        OrderDto? GetOrderById(int id);
     }
 }

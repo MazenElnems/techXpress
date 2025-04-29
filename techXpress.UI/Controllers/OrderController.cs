@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 using techXpress.Services.Abstraction;
 using techXpress.Services.DTOs.Orders;
 using techXpress.UI.ActionRequests;
@@ -9,6 +9,7 @@ using techXpress.UI.VMs.ShoppingCart;
 
 namespace techXpress.UI.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly IOrderManger _orderManger;
@@ -17,7 +18,6 @@ namespace techXpress.UI.Controllers
             _orderManger = orderManger;
         }
 
-        [Authorize]
         [HttpGet]
         public IActionResult Create()
         {
@@ -32,6 +32,8 @@ namespace techXpress.UI.Controllers
                 // 1. get the product in the shopping cart.
                 // 2. assign TotalAmount and ProductQuantities to CreateOrderDTO object
                 // 3. PlaceOrder using orderManager
+                // 4. stripe payment logic
+                // 5. redirect the user to 
 
                 ShoppingCartVM? cart = HttpContext.Session.Get<ShoppingCartVM>("Cart");
                 List<ShoppingCartItemVM> products = cart!.CartItems;
@@ -41,17 +43,70 @@ namespace techXpress.UI.Controllers
                 orderDto.ProductQuantities = products
                     .ToDictionary(p => p.ProductId, p => p.Quantity);
 
-                _orderManger.PlaceOrder(orderDto);
+                int orderId = _orderManger.PlaceOrder(orderDto);
 
-                return RedirectToAction(nameof(CheckOut));
+                //Stripe payment logic
+
+                var domain = "https://localhost:7294";
+                var options = new SessionCreateOptions
+                {
+
+                    LineItems = products.Select(p => new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = p.ProductName,
+                                //Images = new List<string> { p.ImageUrl },
+                            },
+                            UnitAmountDecimal = (decimal)p.Price * 100,
+                        },
+                        Quantity = p.Quantity,
+                    }).ToList(),
+
+                    Mode = "payment",
+                    SuccessUrl = $"{domain}/Order/Success?id={orderId}",
+                    CancelUrl = $"{domain}/ShoppingCart/ViewCart",
+                };
+
+                var service = new SessionService();
+                Session session = service.Create(options);
+
+                // 6. update order with sessionId
+                _orderManger.UpdateOrder(new UpdateOrderDTO
+                {
+                    Id = orderId,
+                    SessionId = session.Id
+                });
+
+                Response.Headers.Add("Location", session.Url);
+                return new StatusCodeResult(303);
             }
             ModelState.AddModelError("Order Data Error", "Can't Place Order");
             return View(request);
         }
 
-        public IActionResult CheckOut()
+        [HttpGet]
+        public IActionResult Success(int id)
         {
-            return View();
+            OrderDto orderDto = _orderManger.GetOrderById(id)!;
+            
+            SessionService service = new SessionService();
+            Session session = service.Get(orderDto.SessionId);
+            
+            _orderManger.UpdateOrder(new UpdateOrderDTO
+            {
+                Id = id,
+                PaymentId = session.PaymentIntentId
+            });
+
+
+            // clear the cart
+            HttpContext.Session.Remove("Cart");
+
+            return View(id);
         }
     }
 }

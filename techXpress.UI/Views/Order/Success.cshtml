@@ -1,0 +1,24 @@
+﻿@model int
+
+@{
+    ViewData["Title"] = "Order Placement";
+}
+
+<div class="text-center py-5">
+    <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Success" style="width: 120px; margin-bottom: 20px;" />
+    <h2 class="text-success mb-3">Thank You!</h2>
+    <p class="lead">Your order has been placed successfully.</p>
+    <h4 class="mt-4">Order ID: <span class="text-primary">@Model.ToString()</span></h4>
+
+    <a class="btn btn-outline-primary mt-4" href="/">Continue Shopping</a>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .text-success {
+        color: #28a745 !important;
+    }
+</style>

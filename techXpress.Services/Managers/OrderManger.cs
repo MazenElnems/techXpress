@@ -19,11 +19,21 @@ namespace techXpress.Services.Managers
             _unitOfWork = unitOfWork;
         }
 
-        public void PlaceOrder(CreateOrderDTO orderDto)
+        public OrderDto? GetOrderById(int id)
+        {
+            Order? order = _unitOfWork.OrderRepository.GetById(o => o.OrderId == id);
+            if(order != null)
+            {
+                return order.ToDto();
+            }
+            return null;
+        }
+
+        public int PlaceOrder(CreateOrderDTO orderDto)
         {
             Order order = orderDto.ToOrder();
 
-            // intialize order
+            // initialize order
             order.OrderDate = DateTime.Now;
             order.OrderStatus = OrderStatus.Pending;
             order.TotalAmount = orderDto.TotalAmount;
@@ -40,6 +50,36 @@ namespace techXpress.Services.Managers
 
             order.OrderDetails = orderDetails;
 
+            _unitOfWork.Save();
+            return order.OrderId;
+        }
+
+        public void UpdateOrder(UpdateOrderDTO orderDto)
+        {
+            Order? order = _unitOfWork.OrderRepository.GetById(o => o.OrderId == orderDto.Id);
+            if (order == null)
+            {
+                throw new Exception("Order not found");
+            }
+
+            // TODO: Update order properties
+            order.OrderStatus = orderDto.OrderStatus ?? order.OrderStatus;
+            order.SessionId = orderDto.SessionId ?? order.SessionId;
+            order.Carrier = orderDto.Carrier ?? order.Carrier;
+            order.TrackingNumber = orderDto.TrackingNumber ?? order.TrackingNumber;
+            order.ShippingDate = orderDto.ShippingDate ?? order.ShippingDate;
+
+            // add payment row in payment table
+            if(order.PaymentId != null)
+            {
+                order.Payment = new Payment
+                {
+                    PaymentId = orderDto.PaymentId,
+                    Amount = order.TotalAmount,
+                    PaymentDate = DateTime.Now
+                };
+                order.PaymentId = orderDto.PaymentId;
+            }
             _unitOfWork.Save();
         }
     }
