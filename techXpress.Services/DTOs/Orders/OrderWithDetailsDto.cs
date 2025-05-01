@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using techXpress.DataAccess.Entities;
 using techXpress.DataAccess.Entities.Enums;
+using techXpress.DataAccess.Entities;
 
 namespace techXpress.Services.DTOs.Orders
 {
-    public class OrderDto
+    public class OrderWithDetailsDto
     {
         public int OrderId { get; set; }
-        public string OrderStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; }
         public DateTime OrderDate { get; set; }
         public decimal TotalAmount { get; set; }
         public DateTime? ShippingDate { get; set; }
@@ -21,23 +21,27 @@ namespace techXpress.Services.DTOs.Orders
         public string City { get; set; }
         public string RecipientPhoneNumber { get; set; }
 
-        // Foreign keys
         public Guid UserId { get; set; }
         public string? PaymentId { get; set; }
         public string? SessionId { get; set; }
         public int? CouponId { get; set; }
+
+        public User User { get; set; }
+        public Payment? Payment { get; set; }
+        public Coupon? Coupon { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 
-    public static class OrderDtoExtensions
+    public static class OrderWithDetailsDtoExtenstions
     {
-        public static OrderDto ToDto(this Order order)
+        public static OrderWithDetailsDto ToOrderWithDetailsDto(this Order order)
         {
-            return new OrderDto
+            return new OrderWithDetailsDto
             {
                 OrderId = order.OrderId,
-                SessionId = order.SessionId,
-                PaymentId = order.PaymentId,
-                OrderStatus = order.OrderStatus.ToString(),
+                OrderStatus = order.OrderStatus,
+                OrderDate = order.OrderDate,
+                TotalAmount = order.TotalAmount,
                 ShippingDate = order.ShippingDate,
                 Carrier = order.Carrier,
                 TrackingNumber = order.TrackingNumber,
@@ -45,9 +49,13 @@ namespace techXpress.Services.DTOs.Orders
                 City = order.City,
                 RecipientPhoneNumber = order.RecipientPhoneNumber,
                 UserId = order.UserId,
+                PaymentId = order.PaymentId,
+                SessionId = order.SessionId,
                 CouponId = order.CouponId,
-                TotalAmount = order.TotalAmount,
-                OrderDate = order.OrderDate
+                User = order.User,
+                Payment = order.Payment,
+                Coupon = order.Coupon,
+                OrderDetails = order.OrderDetails,
             };
         }
     }

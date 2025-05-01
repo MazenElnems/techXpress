@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Stripe.Checkout;
 using techXpress.Services.Abstraction;
 using techXpress.Services.DTOs.Orders;
@@ -18,12 +19,29 @@ namespace techXpress.UI.Controllers
             _orderManger = orderManger;
         }
 
+        [Authorize(Roles = UserRole.Admin)]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet("api/orders")]
+        public IActionResult GetAllOrders(string? orderStatus)
+        {
+            IEnumerable<GetAllOrdersDto> orders = _orderManger.GetAllOrdersWithUsers()
+                .Where(o => string.IsNullOrEmpty(orderStatus) || o.OrderStatus == orderStatus);
+            return Json(new { data = orders });
+        }
+
+        [Authorize(Roles = $"{UserRole.Seller},{UserRole.Customer}")]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = $"{UserRole.Seller},{UserRole.Customer}")]
         [HttpPost]
         public IActionResult Create(CreateOrderActionRequest request)
         {
@@ -89,10 +107,42 @@ namespace techXpress.UI.Controllers
         }
 
         [HttpGet]
+        public IActionResult Update(int id)
+        {
+            UpdateOrderActionRequest? order = _orderManger.GetOrderByIdWithDetails(id)
+                ?.ToDto();
+
+            ViewBag.OrderStatusOptions = new SelectList(new[]
+            {
+                "Pending", "Approved", "InProgress", "Canceled", "Shipped"
+            });
+            ViewBag.orderId = id;
+
+            return View(order);
+        }
+
+        [HttpPost]
+        public IActionResult Update(int id,UpdateOrderActionRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                UpdateOrderDTO orderDto = request.ToUpdateOrderDto();
+                orderDto.Id = id;
+
+                _orderManger.UpdateOrder(orderDto);
+
+                TempData["successNotification"] = "Order updated successfully";
+                return RedirectToAction(nameof(Index));
+            }
+            ModelState.AddModelError("Order Data Error", "Can't Update Order");
+            return View(request);
+        }
+
+        [HttpGet]
         public IActionResult Success(int id)
         {
-            OrderDto orderDto = _orderManger.GetOrderById(id)!;
-            
+            OrderDto? orderDto = _orderManger.GetOrderById(id);
+
             SessionService service = new SessionService();
             Session session = service.Get(orderDto.SessionId);
             
@@ -101,7 +151,6 @@ namespace techXpress.UI.Controllers
                 Id = id,
                 PaymentId = session.PaymentIntentId
             });
-
 
             // clear the cart
             HttpContext.Session.Remove("Cart");

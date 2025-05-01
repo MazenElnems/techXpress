@@ -1,26 +1,18 @@
-﻿<script src="/lib/jquery/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+﻿<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 
-@{
-    if (TempData.ContainsKey("successNotification"))
-    {
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: '@TempData["successNotification"]'
-            });
-        </script>
-    }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-    if (TempData.ContainsKey("errorNotification"))
+<script>
+    toastr.options.positionClass = 'toast-top-right'; 
+    toastr.options.closeButton = true;
+
+    @if (TempData["successNotification"] != null)
     {
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: '@TempData["errorNotification"]'
-            });
-        </script>
+        <text>toastr.success('@TempData["successNotification"]');</text>
     }
-}
+    @if (TempData["errorNotification"] != null)
+    {
+        <text>toastr.error('@TempData["errorNotification"]');</text>
+    }
+</script>

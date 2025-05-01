@@ -30,7 +30,7 @@
                     <i class="bi bi-tags"></i>
                     <span>Categories</span>
                 </a>
-                <a href="#" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Order" ? "active" : "")">
+                <a asp-controller="Order" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Order" ? "active" : "")">
                     <i class="bi bi-cart"></i>
                     <span>Orders</span>
                 </a>
@@ -42,7 +42,7 @@
                     <i class="bi bi-graph-up"></i>
                     <span>Reports</span>
                 </a>
-                <a href="#" class="sidebar-link">
+                <a asp-action="Logout" asp-controller="Account" class="sidebar-link">
                     <i class="bi bi-box-arrow-right"></i>
                     <span>Logout</span>
                 </a>

@@ -12,5 +12,7 @@ namespace techXpress.Services.Abstraction
         int PlaceOrder(CreateOrderDTO orderDto);
         void UpdateOrder(UpdateOrderDTO orderDto);
         OrderDto? GetOrderById(int id);
+        OrderWithDetailsDto? GetOrderByIdWithDetails(int id);
+        IEnumerable<GetAllOrdersDto> GetAllOrdersWithUsers();
     }
 }

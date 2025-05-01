@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using techXpress.DataAccess.Entities;
-using techXpress.DataAccess.Entities.Enums;
 
 namespace techXpress.Services.DTOs.Orders
 {
-    public class OrderDto
+    public class GetAllOrdersDto
     {
         public int OrderId { get; set; }
         public string OrderStatus { get; set; }
@@ -26,18 +25,19 @@ namespace techXpress.Services.DTOs.Orders
         public string? PaymentId { get; set; }
         public string? SessionId { get; set; }
         public int? CouponId { get; set; }
+        public string UserEmail { get; set; }
     }
 
-    public static class OrderDtoExtensions
+    public static class GetAllOrdersExtenstions
     {
-        public static OrderDto ToDto(this Order order)
+        public static GetAllOrdersDto GetAllOrdersDto(this Order order)
         {
-            return new OrderDto
+            return new GetAllOrdersDto
             {
                 OrderId = order.OrderId,
-                SessionId = order.SessionId,
-                PaymentId = order.PaymentId,
                 OrderStatus = order.OrderStatus.ToString(),
+                OrderDate = order.OrderDate,
+                TotalAmount = order.TotalAmount,
                 ShippingDate = order.ShippingDate,
                 Carrier = order.Carrier,
                 TrackingNumber = order.TrackingNumber,
@@ -45,9 +45,10 @@ namespace techXpress.Services.DTOs.Orders
                 City = order.City,
                 RecipientPhoneNumber = order.RecipientPhoneNumber,
                 UserId = order.UserId,
+                PaymentId = order.PaymentId,
+                SessionId = order.SessionId,
                 CouponId = order.CouponId,
-                TotalAmount = order.TotalAmount,
-                OrderDate = order.OrderDate
+                UserEmail = order.User.Email
             };
         }
     }

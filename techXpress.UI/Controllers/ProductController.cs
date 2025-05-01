@@ -48,7 +48,6 @@ namespace techXpress.UI.Controllers
             return Json(new {data= products });
         }
 
-
         [HttpGet]
         public IActionResult Create()
         {

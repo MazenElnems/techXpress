@@ -19,12 +19,31 @@ namespace techXpress.Services.Managers
             _unitOfWork = unitOfWork;
         }
 
+        public IEnumerable<GetAllOrdersDto> GetAllOrdersWithUsers()
+        {
+            IEnumerable<Order> orders = _unitOfWork.OrderRepository.GetAll("User");
+
+            return orders
+                .Select(o => o.GetAllOrdersDto())
+                .ToList();
+        }
+
         public OrderDto? GetOrderById(int id)
         {
             Order? order = _unitOfWork.OrderRepository.GetById(o => o.OrderId == id);
             if(order != null)
             {
                 return order.ToDto();
+            }
+            return null;
+        }
+
+        public OrderWithDetailsDto? GetOrderByIdWithDetails(int id)
+        {
+            Order? order = _unitOfWork.OrderRepository.GetOrderWithDetails(id);
+            if (order != null)
+            {
+                return order.ToOrderWithDetailsDto();
             }
             return null;
         }
@@ -62,15 +81,18 @@ namespace techXpress.Services.Managers
                 throw new Exception("Order not found");
             }
 
-            // TODO: Update order properties
             order.OrderStatus = orderDto.OrderStatus ?? order.OrderStatus;
             order.SessionId = orderDto.SessionId ?? order.SessionId;
             order.Carrier = orderDto.Carrier ?? order.Carrier;
             order.TrackingNumber = orderDto.TrackingNumber ?? order.TrackingNumber;
             order.ShippingDate = orderDto.ShippingDate ?? order.ShippingDate;
+            order.Address = orderDto.Address ?? order.Address;
+            order.City = orderDto.City ?? order.City;
+            order.RecipientPhoneNumber = orderDto.RecipientPhoneNumber ?? order.RecipientPhoneNumber;
+            order.CouponId = orderDto.CouponId ?? order.CouponId;
 
             // add payment row in payment table
-            if(order.PaymentId != null)
+            if (orderDto.PaymentId != null)
             {
                 order.Payment = new Payment
                 {
