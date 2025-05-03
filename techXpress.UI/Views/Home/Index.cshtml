@@ -1,38 +1,128 @@
-﻿@using techXpress.UI.VMs.Products
-@model IEnumerable<ProductVM>
+﻿@using techXpress.UI.VMs.Category
+@model IEnumerable<CategoryWithProductsVM>
 
 @{
     ViewData["Title"] = "Home";
 }
 
-<div class="container py-4">
-    <div class="card shadow-sm rounded-3">
-        <div class="card-header bg-primary text-white py-3">
-            <h4 class="mb-0">Featured Products</h4>
-        </div>
-        <div class="card-body p-4">
-            <div class="row g-4">
-                @foreach (var product in Model)
-                {
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                        <div class="card h-100 shadow-sm rounded-3 border-0">
-                            <div class="p-3 text-center">
-                                <img src="/Images/@product.Image" class="img-fluid mb-3" style="height: 180px; object-fit: contain;">
-                            </div>
-                            <div class="card-body pt-0">
-                                <h5 class="card-title text-center mb-2">@product.Name</h5>
-                                <p class="text-muted text-center mb-3">$@product.Price.ToString("F2")</p>
-                                <div class="d-grid">
-                                    <a class="btn btn-outline-primary" asp-action="Details" asp-controller="Home" asp-route-id="@product.Id">
+
+<style>
+    .category-header {
+        background-color: #0f172a;
+        border: 1px solid #1e293b;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        padding: 2rem 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .category-header h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #facc15; 
+    }
+
+    .category-header p {
+        font-size: 1rem;
+        color: #cbd5e1;
+        margin: 0;
+    }
+
+
+    .category-title {
+        position: relative;
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        padding-left: 1rem;
+        color: #f8f9fa;
+    }
+
+    .category-title::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 60%;
+        width: 5px;
+        background: linear-gradient(to bottom, #0d6efd, #6610f2);
+        border-radius: 2px;
+    }
+
+    .category-section {
+        margin-bottom: 4rem;
+        animation: fadeInUp 1s ease;
+    }
+</style>
+<link href="~/css/productCard.css" rel="stylesheet" />
+
+<div class="w-100 px-4 py-4">
+
+    @foreach (var category in Model)
+    {
+        <div class="category-section">
+            <div class="category-header w-100 text-center p-3 mb-4 rounded-3 bg-dark border border-white">
+                <h2 class="text-uppercase text-warning fw-bold mb-0">@category.CategoryName</h2>
+                <p class="text-light small">Explore our exclusive selection in <strong>@category.CategoryName</strong></p>
+            </div>
+
+            <div class="product-grid-wrapper border-2 border rounded-4 p-4 bg-dark w-100">
+                <div class="row g-4">
+                    @foreach (var product in category.Products)
+                    {
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="card h-100 product-card shadow-sm border-0 rounded-3">
+                                <div class="p-3 text-center position-relative">
+                                    <img src="/Images/@product.Image" class="img-fluid mb-3" style="height: 180px; object-fit: contain;" alt="@product.Name">
+
+                                    <!-- Heart Button positioned on the top right of the card with padding -->
+                                    <button class="heart-btn" onclick="toggleWishList(@product.Id)">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body pt-0 text-center">
+                                    <h5 class="card-title mb-2">@product.Name</h5>
+                                    <p class="text-muted mb-3">$@product.Price.ToString("F2")</p>
+                                    <a class="btn btn-view-details" asp-action="Details" asp-controller="Home" asp-route-id="@product.Id">
                                         View Details
                                     </a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                }
+
+
+                    }
+                </div>
             </div>
         </div>
-    </div>
+    }
+
 </div>
 
+@section scripts {
+    <script>
+            function toggleWishList(productId) {
+                var heartButton = document.querySelector(`button[onclick="toggleWishList(${productId})"]`);
+                var isLiked = heartButton.classList.contains('liked');
+
+                // Toggle the "liked" class on click
+                heartButton.classList.toggle('liked');
+
+                // Optional: Send an AJAX request to update the wish list on the server
+                // You can implement this AJAX call based on your application's wish list logic
+              
+                /*
+                $.ajax({
+                    url: '/Home/AddToWishList', 
+                    type: 'POST',
+                    data: { productId: productId, addToWishList: !isLiked },
+                    success: function (response) {
+              
+                    }
+                });
+                */
+        }
+
+    </script>
+}

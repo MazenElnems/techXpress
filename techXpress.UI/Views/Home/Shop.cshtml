@@ -1,0 +1,148 @@
+﻿@using techXpress.UI.VMs.Products
+@model PagedProductListVM
+
+@{
+    ViewBag.Title = "Shop";
+}
+
+<style>
+    .filter-bar {
+        background-color: #212529;
+        border-radius: 1rem;
+        padding: 1.25rem 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        color: #f8f9fa;
+    }
+
+    .filter-bar input,
+    .filter-bar select {
+       background-color: #212529;
+        color: #f8f9fa;
+        border: 1px solid #334155;
+        border-radius: 0.75rem;
+        padding: 0.5rem 1rem;
+        margin-right: 0.75rem;
+    }
+
+    .filter-bar input::placeholder {
+        color: #94a3b8;
+    }
+
+    .pagination .page-link {
+        background-color: #1e293b;
+        color: #facc15;
+        border: 1px solid #334155;
+        border-radius: 0.5rem;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #facc15;
+        color: #0f172a;
+        font-weight: bold;
+    }
+
+    .page-item.active .page-link {
+        background-color: #facc15;
+        color: #0f172a;
+        font-weight: bold;
+        border-color: transparent;
+    }
+
+    #productList {
+        margin-top: 2rem;
+    }
+
+    .items-per-page-label {
+        color: #f8f9fa;
+        margin-right: 0.5rem;
+    }
+
+    .items-per-page select {
+        background-color: #0f172a;
+        color: #facc15;
+        border: 1px solid #334155;
+        border-radius: 0.75rem;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="search d-flex justify-content-center">
+        <input id="searchInput" class="form-control w-50 w-md-50 mb-3 mb-md-0" type="text" placeholder="Search for products..." />
+    </div>
+
+    <div class="filter d-flex justify-content-end m-3">
+        <select id="categoryFilter" class="rounded-2 p-2 me-2 mb-2 mb-md-0 text-center" asp-items="@ViewBag.Categories">
+            <option value="">All Categories</option>
+        </select>
+
+        <select id="sortSelect" class="rounded-2 me-2 mb-2 mb-md-0 text-center">
+            <option value="Name">Sort by Name</option>
+            <option value="PriceAsc">Price: Low to High</option>
+            <option value="PriceDesc">Price: High to Low</option>
+        </select>
+    </div>
+
+    <div class="items-per-page d-flex align-items-center">
+        <span class="items-per-page-label">Items per page:</span>
+        <select id="pageSizeSelect" class="form-select w-auto">
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="12" selected>12</option>
+            <option value="24">24</option>
+        </select>
+    </div>
+
+    <div id="productList">
+        <!-- Make an AJAX Call and add the HTML here-->
+    </div>
+
+
+</div>
+
+@section Scripts {
+    <script>
+
+        function loadProducts(pageNo = 1) {
+
+            const searchTerm = $('#searchInput').val();
+            const categoryId = $('#categoryFilter').val();
+            const sortBy = $('#sortSelect').val();
+            const pageSize = $('#pageSizeSelect').val();
+
+            $.ajax({
+                url: `/api/productFilter`,
+                data: {
+                    searchTerm: searchTerm,
+                    categoryId: categoryId,
+                    sortBy: sortBy,
+                    pageNo: pageNo,
+                    pageSize: pageSize
+                },
+                success: function (data) {
+                    $('#productList').html(data);
+                }
+            });
+        }
+
+        function setupEvents() {
+            $('#searchInput, #categoryFilter, #sortSelect, #pageSizeSelect').on('change keyup', function () {
+                loadProducts();
+            });
+
+            $(document).on('click', '.page-link:not(:disabled)', function () {
+                const page = $(this).data('page');
+                // const totalPages = $('#Total').data('page');
+
+                // if (page >= 1 && page <= totalPages) {
+                    loadProducts(page);
+                // }
+            });
+
+        }
+
+        $(document).ready(function () {
+            setupEvents();
+            loadProducts();
+        });
+    </script>
+}
