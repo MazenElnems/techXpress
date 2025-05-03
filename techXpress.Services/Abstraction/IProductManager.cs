@@ -14,8 +14,7 @@ namespace techXpress.Services.Abstraction
         void Create(ProductDTO product);
         void Update(ProductDTO productDTO);
         IEnumerable<ProductDTO> GetAll(params string[]? Includes);
-        IEnumerable<ProductDTO> GetProductsWhere(string? searchTerm, string? searchBy,
-                    decimal minPrice, decimal maxPrice, int? categoryId);
+        IEnumerable<ProductDTO> GetProductsWhere(ProductQueryDTO productQuery);
         IEnumerable<ProductDTO> GetProductsByCategory(int categoryId);
         void Delete(ProductDTO productDTO);
     }

@@ -49,18 +49,24 @@ namespace techXpress.Services.Managers
             _unitOfWork.Save();
         }
 
-        public IEnumerable<ProductDTO> GetProductsWhere(string? searchTerm, string? searchBy,
-            decimal minPrice, decimal maxPrice, int? categoryId)
+        public IEnumerable<ProductDTO> GetProductsWhere(ProductQueryDTO productQuery)
         {
-            IEnumerable<ProductDTO> products = _unitOfWork.ProductRepository.GetAllWhere(p =>
-                (string.IsNullOrEmpty(searchTerm) ||
-                    (searchBy == "name" ? p.Name.ToLower().Contains(searchTerm.ToLower().Trim())
-                                         : p.Description.ToLower().Contains(searchTerm.ToLower().Trim())))
-                && (minPrice == default || p.Price >= minPrice)
-                && (maxPrice == default || p.Price <= maxPrice)
-                && (categoryId == null || p.CategoryId == categoryId)
-            )
-            .Select(p => p.ToDto());
+            IEnumerable<ProductDTO> products = _unitOfWork.ProductRepository.GetAllWhere(p => (productQuery.CategoryId == null || p.CategoryId == productQuery.CategoryId) &&
+                     (string.IsNullOrEmpty(productQuery.SearchTerm) || p.Name.Contains(productQuery.SearchTerm)))
+                     .Select(p => p.ToDto());
+
+            if (productQuery.SortBy == "PriceAsc")
+            {
+                products = products.OrderBy(p => p.Price);
+            }
+            else if (productQuery.SortBy == "PriceDesc")
+            {
+                products = products.OrderByDescending(p => p.Price);
+            }
+            else if (productQuery.SortBy == "Name")
+            {
+                products = products.OrderBy(p => p.Name);
+            }
 
             return products;
         }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using techXpress.Services.DTOs.Products;
 
 namespace techXpress.Services.DTOs.CategoryDTOs
 {
@@ -11,6 +12,7 @@ namespace techXpress.Services.DTOs.CategoryDTOs
     {
         public int CategoryId { get; set; }
         public string Name { get; set; }
+        public IEnumerable<ProductDTO>? ProductDTOs { get; set; } = new List<ProductDTO>();
     }
 
     public static class CategoryDTOMapping
@@ -28,7 +30,8 @@ namespace techXpress.Services.DTOs.CategoryDTOs
             return new CategoryDTO
             {
                 CategoryId = category.CategoryId,
-                Name = category.Name
+                Name = category.Name,
+                ProductDTOs = category.Products?.Select(p => p.ToDto()) ?? new List<ProductDTO>()
             };
         }
 

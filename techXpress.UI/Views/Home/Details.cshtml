@@ -1,37 +1,147 @@
 ﻿@using techXpress.UI.VMs.Products
 @model ProductDetailsVM
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card shadow-sm">
-                <div class="position-relative">
-                    <img src="/Images/@Model.ImageUrl" class="card-img-top w-100" alt="@Model.Name"
-                    style="height: 400px; object-fit: contain; background-color: #f8f9fa; padding: 1rem;">
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title mb-3 fw-bold text-primary">@Model.Name</h3>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="h4 text-success mb-0">$@Model.Price.ToString("N2")</span>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
 
-                        @if (Model.StockQuantity > 0)
+<style>
+    .product-details-card {
+        background-color: #0f172a;
+        color: #f8f9fa;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5);
+    }
+
+        .product-details-card h1 {
+            color: #facc15;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+    .price-container span {
+        font-size: 1.25rem;
+    }
+
+    .price-container .old-price {
+        text-decoration: line-through;
+        color: #9ca3af;
+        margin-right: 1rem;
+    }
+
+    .price-container .new-price {
+        color: #22c55e;
+        font-weight: bold;
+    }
+
+    .product-details-card .badge {
+        font-size: 0.9rem;
+        padding: 0.5em 0.75em;
+    }
+
+    .btn-custom-primary {
+        background-color: #facc15;
+        border: none;
+        color: #0f172a;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border-radius: 30px;
+        padding: 10px 20px;
+    }
+
+        .btn-custom-primary:hover {
+            background-color: #e4a800;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+    .wishlist-btn {
+        background: none;
+        border: none;
+        font-size: 1.75rem;
+        color: #6c757d;
+        transition: all 0.3s ease;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+    }
+
+        .wishlist-btn:hover,
+        .wishlist-btn.liked {
+            color: #f44336;
+            transform: scale(1.1);
+        }
+
+</style>
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-lg-10 product-details-card p-4 position-relative">
+
+                <!-- Wishlist Heart -->
+                <button class="wishlist-btn" onclick="toggleWishList(@Model.Id)">
+                    <i class="fas fa-heart"></i>
+                </button>
+
+                <div class="row gx-4 gx-lg-5 align-items-center">
+                    <div class="col-md-6 text-center">
+                        <img src="/Images/@Model.ImageUrl"
+                             alt="@Model.Name"
+                             class="img-fluid rounded bg-light p-3"
+                             style="height: 400px; object-fit: contain;" />
+                    </div>
+                    <div class="col-md-6">
+                        <h1 class="display-6">@Model.Name</h1>
+
+                        <div class="price-container my-3">
+                            <span class="old-price">$@Model.Price.ToString("N2")</span>
+                            <span class="new-price">$@Model.Price.ToString("N2")</span>
+                        </div>
+
+                        <div class="mb-3">
+                            @if (Model.StockQuantity > 0)
+                            {
+                                <span class="badge bg-primary">In Stock</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Out of Stock</span>
+                            }
+                        </div>
+
+                        <p class="lead mb-4">@Model.Description</p>
+
+                        @if (!User.IsInRole(UserRole.Admin) && Model.StockQuantity > 0)
                         {
-                            <span class="badge bg-primary">In Stock</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger">Out of Stock</span>
+                            <div class="d-flex">
+                                <a class="btn btn-custom-primary w-100"
+                                   asp-action="Add"
+                                   asp-controller="ShoppingCart"
+                                   asp-route-id="@Model.Id">
+                                    <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                                </a>
+                            </div>
                         }
                     </div>
-                    <p class="card-text mb-4">@Model.Description</p>
-                    @if (!User.IsInRole(UserRole.Admin))
-                    {
-                        <a class="btn btn-primary w-100" asp-action="Add" asp-controller="ShoppingCart" asp-route-id="@Model.Id">
-                            <i class="bi bi-cart-plus me-2"></i>Add to Cart
-                        </a>
-                    }
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+@section scripts {
+    <script>
+        function toggleWishList(productId) {
+            const heartBtn = document.querySelector(`button[onclick="toggleWishList(${productId})"]`);
+            heartBtn.classList.toggle('liked');
+
+            // Optional AJAX logic to persist
+            /*
+            $.post('/Wishlist/Toggle', { id: productId }, function(response) {
+                // handle server response
+            });
+            */
+        }
+    </script>
+}

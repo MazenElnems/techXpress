@@ -1,0 +1,102 @@
+@using techXpress.UI.VMs.Products
+@model PagedProductListVM
+<link href="~/css/productCard.css" rel="stylesheet" />
+
+<div class="row g-4">
+    @foreach (var product in Model.Products)
+    {
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 my-2">
+            <div class="card h-100 product-card shadow-sm border-0 rounded-3">
+                <div class="p-3 text-center position-relative">
+                    <img src="/Images/@product.Image" style="height: 180px; object-fit: contain" class="card-img-top" alt="@product.Name" />
+
+                    <!-- Wishlist Heart Button -->
+                    <button class="heart-btn" onclick="toggleWishList(@product.Id)">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+                <div class="card-body pt-0 text-center">
+                    <h5 class="card-title mb-2">@product.Name</h5>
+                    <p class="text-muted mb-3">$@product.Price.ToString("F2")</p>
+                    <a class="btn btn-view-details" asp-action="Details" asp-controller="Home" asp-route-id="@product.Id">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@{
+    var totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+    var startItem = ((Model.PageNo - 1) * Model.PageSize) + 1;
+    var endItem = Math.Min(Model.TotalCount, Model.PageNo * Model.PageSize);
+}
+
+<div class="d-flex justify-content-between align-items-center mt-4">
+    <div class="text-light">
+        Showing <strong>@startItem–@endItem</strong> of <strong>@Model.TotalCount</strong> products
+    </div>
+
+    <nav>
+        <ul class="pagination mb-0">
+            <!-- First Page -->
+            <li class="page-item @(Model.PageNo == 1 ? "disabled" : "")">
+                <button class="page-link" data-page="1" title="First Page" @(Model.PageNo == 1 ? "disabled" : "")>«</button>
+            </li>
+
+            <!-- Previous Page -->
+            <li class="page-item @(Model.PageNo == 1 ? "disabled" : "")">
+                <button class="page-link" data-page="@(Model.PageNo - 1)" title="Previous Page" @(Model.PageNo == 1 ? "disabled" : "")>‹</button>
+            </li>
+
+            <!-- Page Info -->
+            <li class="page-item disabled">
+                <span class="page-link bg-dark text-warning border-0">
+                    Page @Model.PageNo of @totalPages
+                </span>
+            </li>
+
+            <!-- Next Page -->
+            <li class="page-item @(Model.PageNo == totalPages ? "disabled" : "")">
+                <button class="page-link" data-page="@(Model.PageNo + 1)" title="Next Page" @(Model.PageNo == totalPages ? "disabled" : "")>›</button>
+            </li>
+
+            <!-- Last Page -->
+            <li class="page-item @(Model.PageNo == totalPages ? "disabled" : "")">
+                <button class="page-link" id="Total" data-page="@totalPages" title="Last Page" @(Model.PageNo == totalPages ? "disabled" : "")>»</button>
+            </li>
+        </ul>
+
+    </nav>
+</div>
+
+
+@section scripts {
+
+    <script>
+            function toggleWishList(productId) {
+                var heartButton = document.querySelector(`button[onclick="toggleWishList(${productId})"]`);
+                var isLiked = heartButton.classList.contains('liked');
+
+                // Toggle the "liked" class on click
+                heartButton.classList.toggle('liked');
+
+                // Optional: Send an AJAX request to update the wish list on the server
+                // You can implement this AJAX call based on your application's wish list logic
+
+                /*
+                $.ajax({
+                    url: '/Home/AddToWishList',
+                    type: 'POST',
+                    data: { productId: productId, addToWishList: !isLiked },
+                    success: function (response) {
+
+                    }
+                });
+                */
+        }
+
+    </script>
+}

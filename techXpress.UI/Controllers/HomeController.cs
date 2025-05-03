@@ -6,6 +6,8 @@ using techXpress.UI.Models;
 using techXpress.UI.VMs.Category;
 using techXpress.UI.VMs.Products;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
 
 namespace techXpress.UI.Controllers
 {
@@ -24,14 +26,59 @@ namespace techXpress.UI.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<CategoryVM> categories = _categoryManager.GetAll()
-                .Select(c => c.ToVM());
 
-            IEnumerable<ProductVM> products = _productManager.GetAll()
-                .Select(p => p.ToProductVM())
+            IEnumerable<CategoryWithProductsVM> categoryWithProductsVMs = _categoryManager.GetAll("Products")
+                .Select(c => new CategoryWithProductsVM
+                {
+                    CategoryId = c.CategoryId,
+                    CategoryName = c.Name,
+                    Products = c.ProductDTOs!.Select(p => p.ToProductVM()).Take(8).ToList()
+                }).ToList();
+
+            ViewData["TakeFullWidth"] = true;
+
+            return View(categoryWithProductsVMs);
+        }
+
+        public IActionResult Shop()
+        {
+            var categoriesSelectList = _categoryManager.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Value = c.CategoryId.ToString(),
+                    Text = c.Name
+                }).ToList();
+
+            ViewBag.Categories = categoriesSelectList;
+            ViewData["TakeFullWidth"] = true;
+
+            return View();
+        }
+
+        [HttpGet("api/productFilter")]
+        public IActionResult GetProducts(string? searchTerm,int? categoryId,
+            string? sortBy,int? pageNo,int? pageSize)
+        {
+            IEnumerable<ProductVM> products = _productManager.GetProductsWhere(new ProductQueryDTO
+            {
+                CategoryId = categoryId,
+                SearchTerm = searchTerm,
+                SortBy = sortBy
+            }).Select(p => p.ToProductVM());
+
+            PagedProductListVM pagedProductList = new PagedProductListVM
+            {
+                PageNo = pageNo ?? 1,
+                PageSize = pageSize ?? 12,
+                TotalCount = products.Count(),
+            };
+
+            pagedProductList.Products = products
+                .Skip((pagedProductList.PageNo - 1) * pagedProductList.PageSize)
+                .Take(pagedProductList.PageSize)
                 .ToList();
 
-            return View(products);
+            return PartialView("_ProductListPartial", pagedProductList);
         }
 
         public IActionResult Details(int id)

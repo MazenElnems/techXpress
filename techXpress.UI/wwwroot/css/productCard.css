@@ -1,0 +1,71 @@
+﻿.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+}
+
+.product-card img {
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.05);
+}
+
+
+.heart-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1.5rem;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: none;
+    border: none;
+    padding: 0;
+    z-index: 999;
+}
+
+.btn-view-details {
+    background-color: #facc15;
+    border: none;
+    color: #0f172a;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-view-details:hover {
+    background-color: #e4a800;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-view-details:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.4);
+}
+
+.heart-btn.liked {
+    color: #f44336;
+}
+
+.heart-btn:hover {
+    transform: scale(1.1);
+}
+
+.product-card {
+    position: relative;
+}
+
+.heart-btn:hover {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+}
