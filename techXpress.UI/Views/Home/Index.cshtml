@@ -54,6 +54,18 @@
         margin-bottom: 4rem;
         animation: fadeInUp 1s ease;
     }
+
+    .contact-us-section {
+        background-color: #f8fafc;
+    }
+
+    .underline {
+        width: 50px;
+        height: 4px;
+        background-color: #facc15;
+        border-radius: 2px;
+    }
+
 </style>
 <link href="~/css/productCard.css" rel="stylesheet" />
 
@@ -76,10 +88,6 @@
                                 <div class="p-3 text-center position-relative">
                                     <img src="/Images/@product.Image" class="img-fluid mb-3" style="height: 180px; object-fit: contain;" alt="@product.Name">
 
-                                    <!-- Heart Button positioned on the top right of the card with padding -->
-                                    <button class="heart-btn" onclick="toggleWishList(@product.Id)">
-                                        <i class="fas fa-heart"></i>
-                                    </button>
                                 </div>
                                 <div class="card-body pt-0 text-center">
                                     <h5 class="card-title mb-2">@product.Name</h5>
@@ -100,29 +108,26 @@
 
 </div>
 
-@section scripts {
-    <script>
-            function toggleWishList(productId) {
-                var heartButton = document.querySelector(`button[onclick="toggleWishList(${productId})"]`);
-                var isLiked = heartButton.classList.contains('liked');
+<!-- Contact Us Section -->
+<section class="contact-us-section py-5 px-4 bg-light mt-5 rounded-3 shadow-sm">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-dark">Contact Us</h2>
+        <div class="underline mx-auto mb-2"></div>
+        <p class="text-muted">Feel free to reach out with any questions or feedback — we're here to help!</p>
+    </div>
 
-                // Toggle the "liked" class on click
-                heartButton.classList.toggle('liked');
+    <form class="contact-form mx-auto" style="max-width: 600px;">
+        <div class="mb-3">
+            <label for="email" class="form-label fw-bold text-dark">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Your Email">
+        </div>
+        <div class="mb-3">
+            <label for="message" class="form-label fw-bold text-dark">Message</label>
+            <textarea class="form-control" id="message" rows="5" placeholder="Your Message"></textarea>
+        </div>
+        <button type="submit" class="btn btn-dark px-4 py-2">Send Message <i class="fas fa-paper-plane ms-2"></i></button>
+    </form>
+</section>
 
-                // Optional: Send an AJAX request to update the wish list on the server
-                // You can implement this AJAX call based on your application's wish list logic
-              
-                /*
-                $.ajax({
-                    url: '/Home/AddToWishList', 
-                    type: 'POST',
-                    data: { productId: productId, addToWishList: !isLiked },
-                    success: function (response) {
-              
-                    }
-                });
-                */
-        }
 
-    </script>
-}
+

@@ -13,6 +13,7 @@ namespace techXpress.Services.Abstraction
         void UpdateOrder(UpdateOrderDTO orderDto);
         OrderDto? GetOrderById(int id);
         OrderWithDetailsDto? GetOrderByIdWithDetails(int id);
-        IEnumerable<GetAllOrdersDto> GetAllOrdersWithUsers();
+        IEnumerable<OrderVM> GetAllOrdersWithUsers();
+        IEnumerable<OrderVM> GetAllOrdersByUserId(Guid userId);
     }
 }

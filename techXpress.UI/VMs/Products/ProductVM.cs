@@ -24,5 +24,16 @@ namespace techXpress.UI.VMs.Products
                 Name = dto.Name
             };
         }
+        public static ProductDTO ToProductDTO(this ProductVM vm)
+        {
+            return new ProductDTO
+            {
+                Id = vm.Id,
+                Price = vm.Price,
+                Description = vm.Description,
+                Image = vm.Image,
+                Name = vm.Name
+            };
+        }
     }
 }
