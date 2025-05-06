@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using techXpress.DataAccess.Entities;
+using techXpress.Services.Abstraction;
+using techXpress.Services.DTOs.Orders;
 using techXpress.UI.ActionRequests;
 using techXpress.UI.Models;
+using techXpress.UI.VMs.Account;
 
 namespace techXpress.UI.Controllers
 {
@@ -13,13 +18,15 @@ namespace techXpress.UI.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+        private readonly IOrderManger _orderManger;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager
-            , RoleManager<IdentityRole<Guid>> roleManager)
+            , RoleManager<IdentityRole<Guid>> roleManager, IOrderManger orderManger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _orderManger = orderManger;
         }
 
         [HttpGet]
@@ -114,12 +121,144 @@ namespace techXpress.UI.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Profile()
+        [Authorize(Roles = UserRole.Customer)]
+        [HttpGet]
+        public async Task<IActionResult> Profile(string userId)
         {
-            return View();
+            User? user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            IEnumerable<OrderVM> orderHistory = _orderManger.GetAllOrdersByUserId(Guid.Parse(userId));
+
+            UserProfileVM userProfileVM = new UserProfileVM
+            {
+                UserId = userId,
+                UserName = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                OrderHistory = orderHistory.Select(o => new OrderVM
+                {
+                    Address = o.Address,
+                    Carrier = o.Carrier,
+                    City = o.City,
+                    OrderDate = o.OrderDate,
+                    OrderId = o.OrderId,
+                    OrderStatus = o.OrderStatus,
+                    RecipientPhoneNumber = o.RecipientPhoneNumber,
+                    ShippingDate = o.ShippingDate,
+                    TotalAmount = o.TotalAmount,
+                    TrackingNumber = o.TrackingNumber,
+                    UserEmail = o.UserEmail,
+                    UserId = o.UserId,
+                    PaymentId = o.PaymentId,
+                    SessionId = o.SessionId,
+                    CouponId = o.CouponId
+                }).ToList()
+            };
+
+            return View(userProfileVM);
+        }
+
+        [Authorize(Roles = UserRole.Customer)]
+        [HttpGet]
+        public async Task<IActionResult> Settings(string userId)
+        {
+            User? user = await _userManager.FindByIdAsync(userId);
+            if(user == null)
+            {
+                return NotFound();
+            }
+            UserSettingsVM userSettingsVM = new UserSettingsVM
+            {
+                UserId = userId,
+                UserName = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber
+            };
+
+            return View(userSettingsVM);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = UserRole.Customer)]
+        public async Task<IActionResult> Settings(UserSettingsVM userSettingsVM)
+        {
+            if (ModelState.IsValid)
+            {
+                User? user = await _userManager.FindByIdAsync(userSettingsVM.UserId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                user.UserName = userSettingsVM.UserName;
+                user.Email = userSettingsVM.Email;
+                user.PhoneNumber = userSettingsVM.PhoneNumber;
+                IdentityResult result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    // User Enter New Password
+                    if (userSettingsVM.NewPassword != null)
+                    {
+                        IdentityResult identityResult = await _userManager.ChangePasswordAsync(user, userSettingsVM.CurrentPassword!, userSettingsVM.NewPassword!);
+                        if (identityResult.Succeeded)
+                        {
+                            TempData["Success"] = "Password changed successfully.";
+                        }
+                        else
+                        {
+                            foreach (var error in identityResult.Errors)
+                            {
+                                ModelState.AddModelError(error.Code, error.Description);
+                            }
+                            return View(userSettingsVM); // Return to same view if model is invalid
+                        }
+                    }
+                    return RedirectToAction(nameof(Profile), new { userId = userSettingsVM.UserId });
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.Code, error.Description);
+                }
+            }
+            return View(userSettingsVM);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = UserRole.Customer)]
+        public async Task<IActionResult> ChangePassword(UserSettingsVM userSettingsVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Settings", userSettingsVM); // Return to same view if model is invalid
+            }
+
+            User? user = await _userManager.FindByIdAsync(userSettingsVM.UserId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            IdentityResult result = await _userManager.ChangePasswordAsync(user, userSettingsVM.CurrentPassword!, userSettingsVM.NewPassword!);
+            if (result.Succeeded)
+            {
+                TempData["Success"] = "Password changed successfully.";
+                return RedirectToAction(nameof(Profile), new { userId = userSettingsVM.UserId });
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View("Settings", userSettingsVM);
         }
 
     }
+
     public static class UserRole
     {
         public const string Admin = "Admin";
