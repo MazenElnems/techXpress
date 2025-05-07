@@ -1,0 +1,51 @@
+﻿@model techXpress.UI.ActionRequests.UpdateUserActionRequest
+
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<h2>Edit User</h2>
+
+<form asp-action="EditUser" method="post" novalidate="novalidate">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group mb-3">
+        <label asp-for="UserName" class="form-label"></label>
+        <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="PhoneNumber" class="form-label"></label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label for="Role" class="form-label">Role</label>
+        <select name="Role" class="form-control">
+            <option value="">Select a role</option>
+            @foreach (var role in ViewBag.Roles)
+            {
+                <option value="@role" selected="@(role == Model.Role)">@role</option>
+            }
+        </select>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="NewPassword" class="form-label">New Password (optional)</label>
+        <input asp-for="NewPassword" class="form-control" type="password" />
+        <span asp-validation-for="NewPassword" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="ConfirmNewPassword" class="form-label">Confirm New Password (optional)</label>
+        <input asp-for="ConfirmNewPassword" class="form-control" type="password" />
+        <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+}

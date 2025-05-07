@@ -29,6 +29,28 @@ namespace techXpress.UI.Controllers
             _orderManger = orderManger;
         }
 
+
+        [Authorize(Roles = UserRole.Admin)]
+        [HttpGet]
+        public async Task<IActionResult> ManageUsers()
+        {
+            // Get all users
+            var users = await _userManager.Users.ToListAsync();
+
+            // Create a list to hold user data along with their roles
+            var userList = new List<(User User, IList<string> Roles)>();
+
+            // For each user, get their roles
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userList.Add((user, roles));
+            }
+
+            // Pass the list to the view
+            return View(userList);
+        }
+
         [HttpGet]
         public IActionResult Login([FromQuery] string? ReturnUrl)
         {
@@ -50,7 +72,7 @@ namespace techXpress.UI.Controllers
             {
                 User? user = await _userManager.FindByEmailAsync(request.Email);
 
-                if(user != null)
+                if (user != null)
                 {
                     bool isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
 
@@ -59,7 +81,7 @@ namespace techXpress.UI.Controllers
                         // it will send set-cookie header in the next response.
                         await _signInManager.SignInAsync(user, request.RememberMe);
 
-                        if(ReturnUrl != null)
+                        if (ReturnUrl != null)
                         {
                             return Redirect(ReturnUrl);
                         }
@@ -81,7 +103,7 @@ namespace techXpress.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(CreateUserActionRequest request)
         {
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
                 User user = new User
                 {
@@ -117,7 +139,7 @@ namespace techXpress.UI.Controllers
         public async Task<IActionResult> Logout()
         {
             // it sends set-cookie header with empty value.
-            await _signInManager.SignOutAsync();  
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
@@ -168,7 +190,7 @@ namespace techXpress.UI.Controllers
         public async Task<IActionResult> Settings(string userId)
         {
             User? user = await _userManager.FindByIdAsync(userId);
-            if(user == null)
+            if (user == null)
             {
                 return NotFound();
             }

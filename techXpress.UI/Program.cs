@@ -22,33 +22,34 @@ namespace techXpress.UI
 
             builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
                 optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Devlopment_DB"))
-                    .LogTo(Console.WriteLine , LogLevel.Information)
+                    .LogTo(Console.WriteLine, LogLevel.Information)
                     .EnableSensitiveDataLogging()
             );
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddScoped<IProductManager, ProductManager>();
-            builder.Services.AddTransient<IFilesService, FilesService>(); 
-            builder.Services.AddTransient<IOrderManger, OrderManger>(); 
+            builder.Services.AddTransient<IFilesService, FilesService>();
+            builder.Services.AddTransient<IOrderManger, OrderManger>();
 
             builder.Services.AddScoped<ICategoryManager, CategoryManager>();
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromDays(7); 
+                options.IdleTimeout = TimeSpan.FromDays(7);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.SameSite = SameSiteMode.Lax;
-                options.Cookie.MaxAge = TimeSpan.FromDays(7); 
+                options.Cookie.MaxAge = TimeSpan.FromDays(7);
             });
             builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
             {
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireDigit = true;
 
-            }).AddEntityFrameworkStores<AppDbContext>();
+            }).AddEntityFrameworkStores<AppDbContext>()
+              .AddDefaultTokenProviders(); // Added to fix the NotSupportedException
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -56,7 +57,6 @@ namespace techXpress.UI
                 options.LoginPath = "/Account/Login";
                 options.ExpireTimeSpan = TimeSpan.FromDays(7);
             });
-
 
             // it will inject the stripe settings from appsettings.json into 
             // the StripeSettings class
@@ -88,7 +88,7 @@ namespace techXpress.UI
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
-            app.Run(); 
+            app.Run();
             #endregion
         }
     }

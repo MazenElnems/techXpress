@@ -12,10 +12,16 @@
     <link href="//cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css" rel="stylesheet" />
 
     <style>
+        body {
+            background-color: #121212; /* Darker background for modern look */
+            color: #e0e0e0; /* Light text for contrast */
+        }
+
         .sidebar {
             min-height: 100vh;
             padding-top: 1rem;
-            background-color: #1e1e2f; /* darker sidebar */
+            background: linear-gradient(180deg, #1a237e 0%, #283593 100%); /* Indigo gradient for sidebar */
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
         }
 
         .sidebar-link {
@@ -23,43 +29,113 @@
             align-items: center;
             gap: 10px;
             padding: 10px 15px;
-            color: #ccc;
+            color: #b0bec5; /* Light gray-blue text */
             text-decoration: none;
             border-radius: 8px;
-            transition: background 0.2s, color 0.2s;
+            transition: background 0.3s, color 0.3s, transform 0.2s;
         }
 
             .sidebar-link:hover,
             .sidebar-link.active {
-                background-color: #2a2a40;
-                color: #f1c40f;
+                background: rgba(255, 255, 255, 0.1); /* Subtle white overlay on hover/active */
+                color: #42a5f5; /* Bright blue accent */
+                transform: translateX(5px); /* Slight shift on hover */
             }
 
         .admin-top-nav {
             padding: 1rem;
-            background-color: #2c2f3e;
-            color: #fff;
-            border-bottom: 1px solid #444;
+            background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%); /* Blue gradient for top nav */
+            color: #ffffff;
+            border-bottom: 1px solid #0d47a1; /* Darker blue border */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .sidebar-toggle {
-            border-color: #888;
-            color: #ccc;
+            border-color: #90caf9; /* Light blue border */
+            color: #90caf9;
+            transition: color 0.3s;
         }
+
+            .sidebar-toggle:hover {
+                color: #42a5f5; /* Brighter blue on hover */
+            }
 
         .admin-footer {
             padding: 1rem 0;
             font-size: 0.9rem;
+            background-color: #0d1a26; /* Very dark footer */
+            border-top: 1px solid #1e88e5; /* Blue border for footer */
         }
+
+        main {
+            background-color: #1e1e1e; /* Slightly lighter dark background for main content */
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .table {
+            background-color: #2c2c2c; /* Darker table background */
+            color: #e0e0e0;
+        }
+
+            .table th {
+                background-color: #1976d2; /* Blue header */
+                color: #ffffff;
+            }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #252525; /* Slightly lighter odd rows */
+        }
+
+        .btn-primary {
+            background-color: #42a5f5;
+            border-color: #42a5f5;
+            transition: background-color 0.3s;
+        }
+
+            .btn-primary:hover {
+                background-color: #2196f3;
+                border-color: #2196f3;
+            }
+
+        .btn-danger {
+            background-color: #ef5350;
+            border-color: #ef5350;
+        }
+
+            .btn-danger:hover {
+                background-color: #e53935;
+                border-color: #e53935;
+            }
+
+        .btn-success {
+            background-color: #66bb6a;
+            border-color: #66bb6a;
+        }
+
+            .btn-success:hover {
+                background-color: #4caf50;
+                border-color: #4caf50;
+            }
+
+        .btn-secondary {
+            background-color: #757575;
+            border-color: #757575;
+        }
+
+            .btn-secondary:hover {
+                background-color: #616161;
+                border-color: #616161;
+            }
     </style>
 </head>
-<body style="background-color: #212529;">
+<body>
     <div class="container-fluid">
         <!-- Sidebar -->
         <div class="row">
             <nav class="col-md-3 col-lg-2 sidebar">
                 <div class="p-3 mb-4">
-                    <h4 class="text-warning">Admin Dashboard</h4>
+                    <h4 class="text-white">Admin Dashboard</h4>
                 </div>
                 <div class="nav flex-column">
                     <a asp-controller="Home" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" ? "active" : "")">
@@ -78,7 +154,7 @@
                         <i class="bi bi-cart"></i>
                         <span>Orders</span>
                     </a>
-                    <a href="#" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "User" ? "active" : "")">
+                    <a asp-controller="Admin" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" ? "active" : "")">
                         <i class="bi bi-people"></i>
                         <span>Users</span>
                     </a>
@@ -96,7 +172,7 @@
             <!-- Main Content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
                 <!-- Top navbar -->
-                <div class="admin-top-nav navbar-light bg-light text-dark">
+                <div class="admin-top-nav navbar-light text-white">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <button class="sidebar-toggle me-3 btn btn-sm btn-outline-light">
@@ -121,9 +197,9 @@
     </div>
 
     <!-- Footer -->
-    <footer class="admin-footer text-center bg-dark text-light mt-4 border-top border-secondary">
+    <footer class="admin-footer text-center text-light mt-4 border-top">
         <div class="container">
-            &copy; 2025 - techXpress - <a class="text-warning text-decoration-none" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            © 2025 - techXpress - <a class="text-primary text-decoration-none" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 

@@ -2,8 +2,10 @@
 
 namespace techXpress.UI.ActionRequests
 {
-    public class CreateUserActionRequest
+    public class UpdateUserActionRequest
     {
+        public Guid Id { get; set; }
+
         [Required]
         public string UserName { get; set; }
 
@@ -12,18 +14,17 @@ namespace techXpress.UI.ActionRequests
         public string Email { get; set; }
 
         [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-
-        [Required]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string PasswordConfirmation { get; set; }
-
-        [Required]
         [DataType(DataType.PhoneNumber)]
         [Length(11, 11, ErrorMessage = "Phone number must be exactly 11 digits.")]
         public string PhoneNumber { get; set; }
 
-        public string Role { get; set; } // Added Role property
+        public string Role { get; set; }
+
+        // Password fields are optional
+        [DataType(DataType.Password)]
+        public string NewPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        public string ConfirmNewPassword { get; set; }
     }
 }
