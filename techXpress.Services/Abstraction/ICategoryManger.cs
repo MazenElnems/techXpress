@@ -11,9 +11,9 @@ namespace techXpress.Services.Abstraction
     {
         IEnumerable<CategoryDTO> GetAll(params string[]? Includes);
         CategoryDTO? GetById(int id);
-        void Create(CategoryCreateDTO categoryCreateDTO);
-        void Update(CategoryDTO categoryDTO);
-        void Delete(int id);
+        Task CreateCategoryAsync(CategoryCreateDTO categoryCreateDTO);
+        Task UpdateCategoryAsync(CategoryDTO categoryDTO);
+        Task DeleteCategoryAsync(int id);
         CategoryDTO? GetByName(string name);
     }
 }

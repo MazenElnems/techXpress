@@ -13,7 +13,6 @@ using techXpress.UI.Models;
 
 namespace techXpress.UI.Controllers
 {
-    [Authorize(Roles = UserRole.Admin)]
     public class ProductController : Controller
     {
         private readonly IProductManager _productManager;
@@ -28,6 +27,7 @@ namespace techXpress.UI.Controllers
             _categoryManager = categoryManager;
         }
 
+        [Authorize(Roles = UserRole.Admin)]
         public IActionResult Index()
         {
             IEnumerable<CategoryVM> categories = _categoryManager.GetAll()
@@ -37,6 +37,7 @@ namespace techXpress.UI.Controllers
             return View(categories);
         }
 
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet("api/products")]
         public IActionResult GetAllProducts(int? categoryId)
         {
@@ -48,6 +49,7 @@ namespace techXpress.UI.Controllers
             return Json(new {data= products });
         }
 
+        [Authorize(Roles = UserRole.Admin)]
         [HttpGet]
         public IActionResult Create()
         {
@@ -63,8 +65,9 @@ namespace techXpress.UI.Controllers
             return View(productActionRequest);
         }
 
+        [Authorize(Roles = UserRole.Admin)]
         [HttpPost]
-        public IActionResult Create(CreateProductActionRequest productActionRequest)
+        public async Task<IActionResult> Create(CreateProductActionRequest productActionRequest)
         {
             if (ModelState.IsValid)
             {
@@ -74,7 +77,7 @@ namespace techXpress.UI.Controllers
                 ProductDTO productDTO = productActionRequest.ToDto();
                 productDTO.Image = uniqueFileName;
 
-                _productManager.Create(productDTO);
+                await _productManager.CreateProductAsync(productDTO);
 
                 TempData["successNotification"] = "Product created successfully";
 
@@ -88,6 +91,7 @@ namespace techXpress.UI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = UserRole.Admin)]
         public IActionResult Update(int id)
         {
             ProductDTO? product = _productManager.GetById(id);
@@ -104,7 +108,8 @@ namespace techXpress.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(int id, UpdateProductActionRequest request)
+        [Authorize(Roles = UserRole.Admin)]
+        public async Task<IActionResult> Update(int id, UpdateProductActionRequest request)
         {
             request.Id = id;
 
@@ -131,7 +136,7 @@ namespace techXpress.UI.Controllers
                     productDTO.Image = request.ImageUrl;
                 }
 
-                _productManager.Update(productDTO);
+                await _productManager.UpdateProductAsync(productDTO);
                 TempData["successNotification"] = "Product updated successfully";
                 return RedirectToAction(nameof(Index));
             }
@@ -143,14 +148,25 @@ namespace techXpress.UI.Controllers
             return View(request);
         }
 
+        [Authorize(Roles = UserRole.Customer)]
+        [HttpPost]
+        public async Task<IActionResult> AddReview(int id, ProductReviewVM reviewVM)
+        {
+            reviewVM.CreatedAt = DateTime.Now;
+            await _productManager.AddReviewAsync(id, reviewVM.ToDto());
+            TempData["successNotification"] = "Review added successfully";
+            return RedirectToAction("Details", "Home", new { id = id });
+        }
+
         [HttpDelete("api/delete/{id}")]
-        public IActionResult Delete(int id)
+        [Authorize(Roles = UserRole.Admin)]
+        public async Task<IActionResult> Delete(int id)
         {
             ProductDTO? product = _productManager.GetById(id);
             
             if(product != null)
             {
-                _productManager.Delete(product);
+                await _productManager.UpdateProductAsync(product);
 
                 if (System.IO.File.Exists($"wwwroot/Images/{product.Image}"))
                 {
@@ -161,8 +177,6 @@ namespace techXpress.UI.Controllers
             }
             return Json(new { success = false, message = "Product deletion failed" });
         }
-
-
 
     }
 }

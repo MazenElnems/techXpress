@@ -4,45 +4,111 @@
     ViewData["Title"] = "Login";
 }
 
-<form asp-action="Login" asp-controller="Account" method="post">
+<style>
+    .login-container {
+        background-color: #0f172a;
+        color: #f1f5f9;
+        max-width: 450px;
+        margin: 4rem auto;
+        padding: 3rem;
+        border-radius: 1rem;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+    }
 
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #facc15;
+            font-weight: 700;
+        }
 
-    <div data-mdb-input-init class="form-outline mb-4">
-        <label asp-for="Email" class="form-label">Email</label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
+    .form-label {
+        color: #e2e8f0;
+        font-weight: 500;
+    }
 
-    <div data-mdb-input-init class="form-outline mb-4">
-        <label asp-for="Password" class="form-label">Password</label>
-        <input asp-for="Password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
+    .form-control {
+        background-color: #1e293b;
+        color: #f1f5f9;
+        border: 1px solid #334155;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+    }
 
-    </div>
+        .form-control:focus {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 0.15rem rgba(34, 197, 94, 0.25);
+        }
 
-    <div class="row mb-4">
-        <div class="col-md-6 d-flex justify-content-center">
-            <div class="form-check mb-3 mb-md-0">
-                <input class="form-check-input" asp-for="RememberMe" />
-                <label class="form-check-label" asp-for="RememberMe"> Remember me </label>
-            </div>
+    .form-check-input {
+        background-color: #1e293b;
+        border: 1px solid #475569;
+    }
+
+    .btn-primary {
+        background-color: #22c55e;
+        border: none;
+        width: 100%;
+        padding: 0.75rem;
+        font-weight: bold;
+        border-radius: 0.5rem;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #16a34a;
+        }
+
+    .text-center a {
+        color: #3b82f6;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+        .text-center a:hover {
+            text-decoration: underline;
+        }
+
+    .text-danger {
+        font-size: 0.875rem;
+    }
+</style>
+
+<div class="login-container">
+    <h2>Welcome Back</h2>
+
+    <form asp-action="Login" asp-controller="Account" method="post">
+        <div class="mb-4">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
+        <div class="mb-4">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
 
-    </div>
+        <div class="form-check mb-4">
+            <input class="form-check-input" asp-for="RememberMe" />
+            <label class="form-check-label" asp-for="RememberMe">Remember me</label>
+        </div>
 
-    <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+        <button type="submit" class="btn btn-primary">Sign In</button>
 
-    <div class="text-center">
-        <p>Create new Account <a asp-action="Register" asp-controller="Account">Register</a></p>
-    </div>
+        <div class="text-center mt-4">
+            <p>
+                Don't have an account?
+                <a asp-action="Register" asp-controller="Account">Register</a>
+            </p>
+        </div>
+    </form>
 
-
-</form>
-<div asp-validation-summary="All"></div>
-
+    <div asp-validation-summary="All" class="text-danger"></div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-

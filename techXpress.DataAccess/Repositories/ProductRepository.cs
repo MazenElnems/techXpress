@@ -21,6 +21,20 @@ namespace techXpress.DataAccess.Repositories
             _db = db;
         }
 
+        public async Task AddReviewAsync(int id,Review review)
+        {
+            Product? productToUpdate = await _db.Products
+                .Include(p => p.Reviews)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if(productToUpdate == null)
+            {
+                throw new ArgumentException("Product not found.", nameof(id));
+            }
+
+            productToUpdate.Reviews.Add(review);   
+        }
+
         public IEnumerable<Product> GetProductsByCategory(int categoryId)
         {
             if (categoryId <= 0)
@@ -51,19 +65,19 @@ namespace techXpress.DataAccess.Repositories
             }
         }
 
-        public Product? GetProductWithDetails(int productId)
+        public async Task<Product?> GetProductWithDetailsAsync(int productId)
         {
             if (productId <= 0)
                 throw new ArgumentException("Invalid product ID.", nameof(productId));
 
             try
             {
-                return _db.Products
+                return await _db.Products
                     .Include(p => p.Category)
                     .Include(p => p.Seller)
                     .Include(p => p.Reviews)
                     .ThenInclude(r => r.User)
-                    .FirstOrDefault(p => p.Id == productId);
+                    .FirstOrDefaultAsync(p => p.Id == productId);
             }
             catch (Exception ex)
             {

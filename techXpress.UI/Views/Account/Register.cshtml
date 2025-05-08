@@ -1,41 +1,106 @@
 ﻿@model CreateUserActionRequest
 
-<form asp-controller="Account" asp-action="Register" method="post">
-    <div class="mb-3">
-        <label asp-for="UserName" class="form-label"></label>
-        <input asp-for="UserName" class="form-control" />
-        <span asp-validation-for="UserName" class="text-danger"></span>
-    </div>
+@{
+    ViewData["Title"] = "Register";
+}
 
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
+<style>
+    .register-container {
+        background-color: #0f172a;
+        color: #f1f5f9;
+        max-width: 500px;
+        margin: 4rem auto;
+        padding: 3rem;
+        border-radius: 1rem;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+    }
 
-    <div class="mb-3">
-        <label asp-for="Password" class="form-label"></label>
-        <input asp-for="Password" class="form-control" type="password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
+        .register-container h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #facc15;
+            font-weight: 700;
+        }
 
-    <div class="mb-3">
-        <label asp-for="PasswordConfirmation" class="form-label"></label>
-        <input asp-for="PasswordConfirmation" class="form-control" type="password" />
-        <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
-    </div>
+    .form-label {
+        color: #e2e8f0;
+        font-weight: 500;
+    }
 
-    <div class="mb-3">
-        <label asp-for="PhoneNumber" class="form-label"></label>
-        <input asp-for="PhoneNumber" class="form-control" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
+    .form-control {
+        background-color: #1e293b;
+        color: #f1f5f9;
+        border: 1px solid #334155;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+    }
 
-    <button type="submit" class="btn btn-primary">Register</button>
-</form>
+        .form-control:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 0.15rem rgba(59, 130, 246, 0.25);
+        }
 
-<div asp-validation-summary="All" class="text-danger"></div>
+    .btn-primary {
+        background-color: #22c55e;
+        border: none;
+        width: 100%;
+        padding: 0.75rem;
+        font-weight: bold;
+        border-radius: 0.5rem;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #16a34a;
+        }
+
+    .text-danger {
+        font-size: 0.875rem;
+    }
+
+</style>
+
+<div class="register-container">
+    <h2>Create Your Account</h2>
+
+    <form asp-controller="Account" asp-action="Register" method="post">
+        <div class="mb-3">
+            <label asp-for="UserName" class="form-label">Username</label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" class="form-control" type="password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="PasswordConfirmation" class="form-label">Confirm Password</label>
+            <input asp-for="PasswordConfirmation" class="form-control" type="password" />
+            <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+
+    <div asp-validation-summary="All" class="text-danger mt-3"></div>
+</div>
 
 @section Scripts {
-        <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }

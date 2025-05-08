@@ -33,11 +33,11 @@ namespace techXpress.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateCategoryActionRequest request) 
+        public async Task<IActionResult> Create(CreateCategoryActionRequest request) 
         {
             if(ModelState.IsValid)
             {
-                _categoryManager.Create(request.ToDto());
+                await _categoryManager.CreateCategoryAsync(request.ToDto());
                 TempData["successNotification"] = "Category Created Successfully";
                 return RedirectToAction(nameof(Index));
             }
@@ -59,12 +59,12 @@ namespace techXpress.UI.Controllers
         } 
 
         [HttpPost]
-        public IActionResult Update(UpdateCategoryActionRequest request)
+        public async Task<IActionResult> Update(UpdateCategoryActionRequest request)
         {
             if (ModelState.IsValid)
             {
                 CategoryDTO categoryDTO = request.ToDto();
-                _categoryManager.Update(categoryDTO);
+                await _categoryManager.UpdateCategoryAsync(categoryDTO);
                 TempData["successNotification"] = "Category Updated Successfully";
                 
                 return RedirectToAction(nameof(Index));
@@ -74,13 +74,13 @@ namespace techXpress.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(int id, bool confirm)
+        public async Task<IActionResult> Delete(int id, bool confirm)
         {
             CategoryDTO? categoryDTO = _categoryManager.GetById(id);
 
             if (categoryDTO != null)
             {
-                _categoryManager.Delete(id);
+                await _categoryManager.DeleteCategoryAsync(id);
                 TempData["successNotification"] = "Category Deleted Successfully";
             }
             else
@@ -92,13 +92,13 @@ namespace techXpress.UI.Controllers
         }
 
         [HttpDelete("api/category/delete/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             CategoryDTO? category = _categoryManager.GetById(id);
             
             if(category != null)
             {
-                _categoryManager.Delete(id);
+                await _categoryManager.DeleteCategoryAsync(id);
                 return Json(new { success = true, message = "Category deleted successfully" });
             }
             return Json(new { success = false, message = "Category deletion failed" });

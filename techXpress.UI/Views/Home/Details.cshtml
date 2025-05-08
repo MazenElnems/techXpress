@@ -1,79 +1,131 @@
-﻿@using techXpress.UI.VMs.Products
+﻿@using System.Security.Claims
+@using techXpress.UI.VMs.Products
 @model ProductDetailsVM
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
 
 <style>
-    .product-details-card {
-        background-color: #0f172a;
-        color: #f8f9fa;
-        border-radius: 1rem;
-        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5);
+    /* existing styles... */
+
+    .reviews-section {
+    background-color: #1e293b;
+    color: #f8f9fa;
+    border-radius: 1rem;
+    margin-top: 2rem;
+    padding: 2rem;
     }
 
-        .product-details-card h1 {
-            color: #facc15;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
+    .review-card {
+    background-color: #0f172a;
+    border-radius: 0.75rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+    }
+
+    .review-stars i {
+    color: #facc15;
+    margin-right: 2px;
+    }
+
+    .leave-review-form .form-control,
+    .leave-review-form .form-select {
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    color: #f8f9fa;
+    }
+
+    .leave-review-form .form-control:focus {
+    border-color: #facc15;
+    box-shadow: none;
+    }
+
+    .star-rating .fa-star {
+    cursor: pointer;
+    transition: color 0.2s;
+    }
+
+    .star-rating .fa-star:hover,
+    .star-rating .fa-star.hovered,
+    .star-rating .fa-star.selected {
+    color: #facc15;
+    }
+
+    .product-details-card {
+    background-color: #0f172a;
+    color: #f8f9fa;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5);
+    }
+
+    .product-details-card h1 {
+    color: #facc15;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    }
 
     .price-container span {
-        font-size: 1.25rem;
+    font-size: 1.25rem;
     }
 
     .price-container .old-price {
-        text-decoration: line-through;
-        color: #9ca3af;
-        margin-right: 1rem;
+    text-decoration: line-through;
+    color: #9ca3af;
+    margin-right: 1rem;
     }
 
     .price-container .new-price {
-        color: #22c55e;
-        font-weight: bold;
+    color: #22c55e;
+    font-weight: bold;
     }
 
     .product-details-card .badge {
-        font-size: 0.9rem;
-        padding: 0.5em 0.75em;
+    font-size: 0.9rem;
+    padding: 0.5em 0.75em;
     }
 
     .btn-custom-primary {
-        background-color: #facc15;
-        border: none;
-        color: #0f172a;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border-radius: 30px;
-        padding: 10px 20px;
+    background-color: #facc15;
+    border: none;
+    color: #0f172a;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-radius: 30px;
+    padding: 10px 20px;
     }
 
-        .btn-custom-primary:hover {
-            background-color: #e4a800;
-            color: #000;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
+    .btn-custom-primary:hover {
+    background-color: #e4a800;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
 
     .wishlist-btn {
-        background: none;
-        border: none;
-        font-size: 1.75rem;
-        color: #6c757d;
-        transition: all 0.3s ease;
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        z-index: 10;
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    color: #6c757d;
+    transition: all 0.3s ease;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
     }
 
-        .wishlist-btn:hover,
-        .wishlist-btn.liked {
-            color: #f44336;
-            transform: scale(1.1);
-        }
-
+    .wishlist-btn:hover,
+    .wishlist-btn.liked {
+    color: #f44336;
+    transform: scale(1.1);
+    }
 </style>
 
+@{
+    var AverageRating = Model.Reviews.Any() ? Model.Reviews.Average(r => r.Rating) : 0;
+    ViewData["Title"] = "Details";
+    var userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+}
+<!-- Product Details Section -->
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -87,12 +139,25 @@
                 <div class="row gx-4 gx-lg-5 align-items-center">
                     <div class="col-md-6 text-center">
                         <img src="/Images/@Model.ImageUrl"
-                             alt="@Model.Name"
-                             class="img-fluid rounded bg-light p-3"
-                             style="height: 400px; object-fit: contain;" />
+                        alt="@Model.Name"
+                        class="img-fluid rounded bg-light p-3"
+                        style="height: 400px; object-fit: contain;" />
                     </div>
                     <div class="col-md-6">
                         <h1 class="display-6">@Model.Name</h1>
+
+                        <!-- Rating & Review Button -->
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="fas fa-star @(i <= AverageRating ? "text-warning" : "text-secondary")"></i>
+                                }
+                            </div>
+                            <a href="#reviewsCollapse" class="btn btn-sm btn-outline-warning" data-bs-toggle="collapse" role="button">
+                                Reviews (@(Model.Reviews?.Count() ?? 0))
+                            </a>
+                        </div>
 
                         <div class="price-container my-3">
                             <span class="old-price">$@Model.Price.ToString("N2")</span>
@@ -116,9 +181,9 @@
                         {
                             <div class="d-flex">
                                 <a class="btn btn-custom-primary w-100"
-                                   asp-action="Add"
-                                   asp-controller="ShoppingCart"
-                                   asp-route-id="@Model.Id">
+                                asp-action="Add"
+                                asp-controller="ShoppingCart"
+                                asp-route-id="@Model.Id">
                                     <i class="bi bi-cart-plus me-2"></i>Add to Cart
                                 </a>
                             </div>
@@ -130,16 +195,83 @@
     </div>
 </section>
 
-<div id="Reviews">
-
-    <div id="leaveReview">
-        <!-- Add Review Form Here -->
+<!-- Reviews Section -->
+<div class="container">
+    <div class="text-center mt-5">
+        <button class="btn btn-custom-primary" type="button" data-bs-toggle="collapse" data-bs-target="#reviewsCollapse" aria-expanded="false" aria-controls="reviewsCollapse">
+            Reviews
+        </button>
     </div>
 
-    <div id="productReviews">
-        <!-- Display Users Reviews about that product with a beautiful style -->
-    </div>
+    <div class="collapse" id="reviewsCollapse">
+        <div class="reviews-section">
+            @if (Model.Reviews.Any(r => r.UserId.ToString() == userId))
+            {
+                <div class="alert alert-info">
+                    <strong>Thank you!</strong> You have already submitted a review for this product.
+                </div>
+            }
+            else
+            {
+                <!-- Leave Review Form -->
+                <div class="mb-5 leave-review-form">
+                    <h3 class="mb-3">Leave a Review</h3>
+                    <form asp-action="AddReview" asp-controller="Product" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <input type="hidden" name="userName" value='@(User?.Identity?.Name ?? "UnKnown")' />
+                        <input type="hidden" name="userId" value='@userId' />
 
+                        <div class="mb-3">
+                            <label class="form-label">Rating</label>
+                            <div class="star-rating" id="ratingStars">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="fas fa-star" data-value="@i"></i>
+                                }
+                            </div>
+                            <input type="hidden" name="Rating" id="RatingInput" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Comment" class="form-label">Comment</label>
+                            <textarea class="form-control" id="Comment" name="Comment" rows="4"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-custom-primary">Submit Review</button>
+                    </form>
+                </div>
+            }
+
+            <!-- Existing Reviews -->
+            <div class="reviews-list">
+                <h3 class="mb-4">What others are saying</h3>
+                @if (Model.Reviews != null && Model.Reviews.Any())
+                {
+                    @foreach (var review in Model.Reviews)
+                    {
+                        <div class="review-card">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="mb-0">@review.UserName</h5>
+                                <small class="text-light">@review.CreatedAt.ToString("MMMM dd, yyyy hh:mm tt")</small>
+                            </div>
+                            <div class="review-stars mb-2">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="fas fa-star @(i <= review.Rating ? "" : "text-secondary")"></i>
+                                }
+                            </div>
+                            <p>@review.Comment</p>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-info">No reviews yet. Be the first to review!</p>
+                }
+            </div>
+
+        </div>
+    </div>
 </div>
 
 @section scripts {
@@ -147,13 +279,34 @@
         function toggleWishList(productId) {
             const heartBtn = document.querySelector(`button[onclick="toggleWishList(${productId})"]`);
             heartBtn.classList.toggle('liked');
-
-            // Optional AJAX logic to persist
-            /*
-            $.post('/Wishlist/Toggle', { id: productId }, function(response) {
-                // handle server response
-            });
-            */
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const stars = document.querySelectorAll("#ratingStars .fa-star");
+            const ratingInput = document.getElementById("RatingInput");
+
+            stars.forEach(star => {
+                star.addEventListener("mouseover", function () {
+                    const value = parseInt(this.getAttribute("data-value"));
+                    stars.forEach((s, i) => {
+                        s.classList.toggle("hovered", i < value);
+                    });
+                });
+
+                star.addEventListener("mouseout", function () {
+                    stars.forEach(s => s.classList.remove("hovered"));
+                });
+
+                star.addEventListener("click", function () {
+                    const value = parseInt(this.getAttribute("data-value"));
+                    ratingInput.value = value;
+                    stars.forEach((s, i) => {
+                        s.classList.toggle("selected", i < value);
+                    });
+                });
+            });
+        });
     </script>
+
+    <partial name="_NotificationPartial" />
 }

@@ -6,49 +6,6 @@
 }
 
 <link href="//cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css" rel="stylesheet" />
-
-<style>
-    .card {
-        background-color: #1f1f1f;
-        color: #f5f5f5;
-    }
-
-    .card-header {
-        background-color: #1f1f1f;
-        color: #f5f5f5;
-    }
-
-    .btn-outline-light {
-        color: #f5f5f5;
-        border-color: #f5f5f5;
-    }
-
-    .btn-outline-light:hover {
-        background-color: #f5f5f5;
-        color: #121212;
-    }
-
-    .btn-light {
-        background-color: #2a2a2a;
-        color: #f5f5f5;
-        border: 1px solid #444;
-    }
-
-    .btn-light:hover {
-        background-color: #f5f5f5;
-        color: #121212;
-    }
-
-    .table thead th {
-        background-color: #2a2a2a;
-        color: #f5f5f5;
-    }
-
-    .table tbody tr:hover {
-        background-color: #2a2a2a;
-    }
-</style>
-
 <div class="container-fluid py-4">
     <div class="card shadow-sm rounded-3">
         <div class="card-header bg-primary text-white py-3">
@@ -149,16 +106,15 @@
         document.addEventListener('DOMContentLoaded' , function(){
 
             var categoryBtns = document.querySelectorAll('.categoryBtn');
-            
+
             categoryBtns.forEach(function(btn) {
                 btn.addEventListener('click', function() {
                     var categoryId = this.getAttribute('data-categoryId');
-                    
+
                     $('#productTable').DataTable().ajax.url('/api/products?categoryId=' + categoryId).load();
                 });
             });
 
         });
     </script>
-}
-
+ }

@@ -10,11 +10,12 @@ namespace techXpress.UI.VMs.Products
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
         public int StockQuantity { get; set; }
+        public IEnumerable<ProductReviewVM> Reviews { get; set; } = new List<ProductReviewVM>();
     }
 
     public static class ProductDetailsMapping
     {
-        public static ProductDetailsVM ToProductDetailsVM(this ProductDTO product)
+        public static ProductDetailsVM ToVM(this ProductDetailsDto product)
         {
             return new ProductDetailsVM
             {
@@ -23,7 +24,15 @@ namespace techXpress.UI.VMs.Products
                 Description = product.Description,
                 ImageUrl = product.Image,
                 StockQuantity = product.StockQuantity,
-                Price = product.Price
+                Price = product.Price,
+                Reviews = product.Reviews.Select(r => new ProductReviewVM
+                {
+                    Comment = r.Comment,
+                    CreatedAt = r.CreatedAt,
+                    Rating = r.Rating,
+                    UserName = r.UserName,
+                    UserId = r.UserId
+                })
             };
         }
     }

@@ -12,6 +12,7 @@ namespace techXpress.DataAccess.Abstraction
     {
         IEnumerable<Product> GetProductsByCategory(int categoryId);
         IEnumerable<Product> GetProductsBySeller(int sellerId);
-        Product? GetProductWithDetails(int productId);
+        Task<Product?> GetProductWithDetailsAsync(int productId);
+        Task AddReviewAsync(int id, Review review);
     }
 }

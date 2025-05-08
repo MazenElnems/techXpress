@@ -9,8 +9,8 @@ namespace techXpress.Services.Abstraction
 {
     public interface IOrderManger
     {
-        int PlaceOrder(CreateOrderDTO orderDto);
-        void UpdateOrder(UpdateOrderDTO orderDto);
+        Task<int> PlaceOrderAsync(CreateOrderDTO orderDto);
+        Task UpdateOrderAsync(UpdateOrderDTO orderDto);
         OrderDto? GetOrderById(int id);
         OrderWithDetailsDto? GetOrderByIdWithDetails(int id);
         IEnumerable<OrderVM> GetAllOrdersWithUsers();

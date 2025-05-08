@@ -30,23 +30,23 @@ namespace techXpress.Services.Managers
             return category.ToDTO();
         }
 
-        public void Create(CategoryCreateDTO categoryCreateDTO)
+        public async Task CreateCategoryAsync(CategoryCreateDTO categoryCreateDTO)
         {
             if(categoryCreateDTO == null)
                 throw new ArgumentNullException(nameof(categoryCreateDTO));
 
             Category category = categoryCreateDTO.ToCategory();
             _unitOfWork.CategoryRepository.Create(category);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
 
-        public void Update(CategoryDTO categoryDTO)
+        public async Task UpdateCategoryAsync(CategoryDTO categoryDTO)
         {
             if (categoryDTO == null)
                 throw new ArgumentNullException(nameof(categoryDTO));
 
             _unitOfWork.CategoryRepository.Update(categoryDTO.ToCategory());
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
 
         public CategoryDTO? GetByName(string name)
@@ -58,13 +58,13 @@ namespace techXpress.Services.Managers
             return categoryDTO;    
         }
 
-        public void Delete(int id) 
+        public async Task DeleteCategoryAsync(int id) 
         {
             Category? category = _unitOfWork.CategoryRepository.GetById(c => c.CategoryId == id);
             if(category != null)
             {
                 _unitOfWork.CategoryRepository.Delete(category);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
             }
         }
     }

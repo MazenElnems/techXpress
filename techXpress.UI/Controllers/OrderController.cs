@@ -43,7 +43,7 @@ namespace techXpress.UI.Controllers
 
         [Authorize(Roles = $"{UserRole.Seller},{UserRole.Customer}")]
         [HttpPost]
-        public IActionResult Create(CreateOrderActionRequest request)
+        public async Task<IActionResult> Create(CreateOrderActionRequest request)
         {
             if (ModelState.IsValid)
             {
@@ -61,7 +61,7 @@ namespace techXpress.UI.Controllers
                 orderDto.ProductQuantities = products
                     .ToDictionary(p => p.ProductId, p => p.Quantity);
 
-                int orderId = _orderManger.PlaceOrder(orderDto);
+                int orderId = await _orderManger.PlaceOrderAsync(orderDto);
 
                 //Stripe payment logic
 
@@ -93,7 +93,7 @@ namespace techXpress.UI.Controllers
                 Session session = service.Create(options);
 
                 // 6. update order with sessionId
-                _orderManger.UpdateOrder(new UpdateOrderDTO
+                await _orderManger.UpdateOrderAsync(new UpdateOrderDTO
                 {
                     Id = orderId,
                     SessionId = session.Id
@@ -122,14 +122,14 @@ namespace techXpress.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(int id,UpdateOrderActionRequest request)
+        public async Task<IActionResult> Update(int id,UpdateOrderActionRequest request)
         {
             if (ModelState.IsValid)
             {
                 UpdateOrderDTO orderDto = request.ToUpdateOrderDto();
                 orderDto.Id = id;
 
-                _orderManger.UpdateOrder(orderDto);
+                await _orderManger.UpdateOrderAsync(orderDto);
 
                 TempData["successNotification"] = "Order updated successfully";
                 return RedirectToAction(nameof(Index));
@@ -139,14 +139,14 @@ namespace techXpress.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Success(int id)
+        public async Task<IActionResult> Success(int id)
         {
             OrderDto? orderDto = _orderManger.GetOrderById(id);
 
             SessionService service = new SessionService();
             Session session = service.Get(orderDto.SessionId);
             
-            _orderManger.UpdateOrder(new UpdateOrderDTO
+            await _orderManger.UpdateOrderAsync(new UpdateOrderDTO
             {
                 Id = id,
                 PaymentId = session.PaymentIntentId

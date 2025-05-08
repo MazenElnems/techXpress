@@ -25,9 +25,9 @@ namespace techXpress.DataAccess.Repositories
             OrderRepository = new OrderRepository(db);
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
     }
 }

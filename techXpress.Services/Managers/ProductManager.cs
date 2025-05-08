@@ -30,11 +30,21 @@ namespace techXpress.Services.Managers
             return null;
         }
 
-        public void Create(ProductDTO productDTO)
+        public async Task<ProductDetailsDto?> GetProductDetailsAsync(int id)
+        {
+            Product? product = await _unitOfWork.ProductRepository.GetProductWithDetailsAsync(id);
+            if (product != null)
+            {
+                return product.ToProductDetailsDto();
+            }
+            return null;
+        }
+
+        public async Task CreateProductAsync(ProductDTO productDTO)
         {
             Product product = productDTO.ToProduct();
             _unitOfWork.ProductRepository.Create(product);
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
 
         public IEnumerable<ProductDTO> GetAll(params string[]? Includes) 
@@ -43,10 +53,16 @@ namespace techXpress.Services.Managers
             return productDTOs;
         }
 
-        public void Update(ProductDTO productDTO)
+        public async Task UpdateProductAsync(ProductDTO productDTO)
         {
             _unitOfWork.ProductRepository.Update(productDTO.ToProduct());
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task AddReviewAsync(int productId, ProductReviewDTO reviewDTO)
+        {
+            await _unitOfWork.ProductRepository.AddReviewAsync(productId, reviewDTO.ToReview());
+            await _unitOfWork.SaveAsync();
         }
 
         public IEnumerable<ProductDTO> GetProductsWhere(ProductQueryDTO productQuery)
@@ -77,12 +93,12 @@ namespace techXpress.Services.Managers
             return products.Select(p => p.ToDto());
         }
 
-        public void Delete(ProductDTO productDTO)
+        public async Task DeleteProductAsync(ProductDTO productDTO)
         {
             try
             {
                 _unitOfWork.ProductRepository.Delete(productDTO.ToProduct());
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
             }
             catch(Exception ex)
             {

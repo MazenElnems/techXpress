@@ -56,7 +56,7 @@ namespace techXpress.Services.Managers
             return null;
         }
 
-        public int PlaceOrder(CreateOrderDTO orderDto)
+        public async Task<int> PlaceOrderAsync(CreateOrderDTO orderDto)
         {
             Order order = orderDto.ToOrder();
 
@@ -77,11 +77,11 @@ namespace techXpress.Services.Managers
 
             order.OrderDetails = orderDetails;
 
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
             return order.OrderId;
         }
 
-        public void UpdateOrder(UpdateOrderDTO orderDto)
+        public async Task UpdateOrderAsync(UpdateOrderDTO orderDto)
         {
             Order? order = _unitOfWork.OrderRepository.GetById(o => o.OrderId == orderDto.Id);
             if (order == null)
@@ -110,7 +110,7 @@ namespace techXpress.Services.Managers
                 };
                 order.PaymentId = orderDto.PaymentId;
             }
-            _unitOfWork.Save();
+            await _unitOfWork.SaveAsync();
         }
     }
 }

@@ -81,15 +81,20 @@ namespace techXpress.UI.Controllers
             return PartialView("_ProductListPartial", pagedProductList);
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            ProductDTO? productDTO = _productManager.GetById(id);
-
-            if (productDTO != null)
+            ProductDetailsDto? productDetails = await _productManager.GetProductDetailsAsync(id);
+            if (productDetails == null)
             {
-                return View(productDTO.ToProductDetailsVM());
+                return NotFound();
             }
-            return RedirectToAction(nameof(Index));
+            ProductDetailsVM productDetailsVM = productDetails.ToVM();
+            return View(productDetailsVM);
+        }
+
+        public IActionResult AboutUs()
+        {
+            return View();
         }
 
         public IActionResult Privacy()
