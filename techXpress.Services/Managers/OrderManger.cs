@@ -75,6 +75,17 @@ namespace techXpress.Services.Managers
                     UnitPrice = _unitOfWork.ProductRepository.GetById(product => product.Id == p.Key)!.Price
                 }).ToList();
 
+            // update order stock
+            orderDetails.ForEach(o =>
+            {
+                var product = _unitOfWork.ProductRepository.GetById(p => p.Id == o.ProductId);
+                if (product != null)
+                {
+                    product.StockQuantity -= o.Quantity;
+                    _unitOfWork.ProductRepository.Update(product);
+                }
+            });
+
             order.OrderDetails = orderDetails;
 
             await _unitOfWork.SaveAsync();

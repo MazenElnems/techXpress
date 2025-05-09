@@ -15,12 +15,19 @@ namespace techXpress.Services.DTOs.Products
         public int StockQuantity { get; set; }
         public string Image { get; set; }
         public int CategoryId { get; set; }
+        public double AverageRating { get; set; } = 0;
     }
 
     public static class ProductDTOMapping 
     {
         public static ProductDTO ToDto(this Product product)
         {
+            double avgRating = 0;
+            if (product.Reviews != null && product.Reviews.Any())
+            {
+                avgRating = Math.Round(product.Reviews.Average(r => r.Rating), 1);
+            }
+
             return new ProductDTO
             {
                 Id = product.Id,
@@ -29,7 +36,8 @@ namespace techXpress.Services.DTOs.Products
                 Price = product.Price,
                 StockQuantity = product.StockQuantity,
                 Image = product.Image,
-                CategoryId = product.CategoryId
+                CategoryId = product.CategoryId,
+                AverageRating = avgRating
             };
         }
 

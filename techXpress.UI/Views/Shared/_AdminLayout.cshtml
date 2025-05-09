@@ -78,7 +78,11 @@
                         <i class="bi bi-cart"></i>
                         <span>Orders</span>
                     </a>
-                    <a href="#" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "User" ? "active" : "")">
+                    <a asp-action="Index" asp-controller="Role" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Role" ? "active" : "")">
+                        <i class="bi bi-people"></i>
+                        <span>Roles</span>
+                    </a>
+                    <a asp-action="Index" asp-controller="User" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "User" ? "active" : "")">
                         <i class="bi bi-people"></i>
                         <span>Users</span>
                     </a>

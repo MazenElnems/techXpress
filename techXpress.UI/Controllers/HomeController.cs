@@ -26,8 +26,7 @@ namespace techXpress.UI.Controllers
 
         public IActionResult Index()
         {
-
-            IEnumerable<CategoryWithProductsVM> categoryWithProductsVMs = _categoryManager.GetAll("Products")
+            IEnumerable<CategoryWithProductsVM> categoryWithProductsVMs = _categoryManager.GetAll("Products.Reviews")
                 .Select(c => new CategoryWithProductsVM
                 {
                     CategoryId = c.CategoryId,
@@ -40,14 +39,16 @@ namespace techXpress.UI.Controllers
             return View(categoryWithProductsVMs);
         }
 
-        public IActionResult Shop()
+        public IActionResult Shop(int? categoryId)
         {
             var categoriesSelectList = _categoryManager.GetAll()
                 .Select(c => new SelectListItem
                 {
                     Value = c.CategoryId.ToString(),
-                    Text = c.Name
-                }).ToList();
+                    Text = c.Name,
+                    Selected = c.CategoryId == categoryId
+                })
+                .ToList();
 
             ViewBag.Categories = categoriesSelectList;
             ViewData["TakeFullWidth"] = true;
@@ -98,6 +99,16 @@ namespace techXpress.UI.Controllers
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult FAQ()
+        {
+            return View();
+        }
+
+        public IActionResult Contact()
         {
             return View();
         }

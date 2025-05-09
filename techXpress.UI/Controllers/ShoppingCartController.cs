@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace techXpress.UI.Controllers
 {
+    [Authorize(Roles = UserRole.Customer)]
     public class ShoppingCartController : Controller
     {
         private readonly IProductManager _productManager;

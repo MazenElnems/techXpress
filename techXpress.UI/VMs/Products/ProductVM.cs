@@ -9,6 +9,8 @@ namespace techXpress.UI.VMs.Products
         public string Description { get; set; }
         public decimal Price { get; set; }
         public string Image { get; set; }
+        public int StockQuantity { get; set; }
+        public double AverageRating { get; set; } = 0;
     }
 
     public static class ProductDtoToProductVM
@@ -21,7 +23,9 @@ namespace techXpress.UI.VMs.Products
                 Price = dto.Price,
                 Description = dto.Description,
                 Image = dto.Image,
-                Name = dto.Name
+                Name = dto.Name,
+                StockQuantity = dto.StockQuantity,
+                AverageRating = dto.AverageRating
             };
         }
         public static ProductDTO ToProductDTO(this ProductVM vm)
@@ -32,7 +36,9 @@ namespace techXpress.UI.VMs.Products
                 Price = vm.Price,
                 Description = vm.Description,
                 Image = vm.Image,
-                Name = vm.Name
+                Name = vm.Name,
+                StockQuantity = vm.StockQuantity,
+                AverageRating = vm.AverageRating
             };
         }
     }
