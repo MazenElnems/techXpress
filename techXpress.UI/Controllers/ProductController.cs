@@ -166,7 +166,7 @@ namespace techXpress.UI.Controllers
             
             if(product != null)
             {
-                await _productManager.UpdateProductAsync(product);
+                await _productManager.DeleteProductAsync(product);
 
                 if (System.IO.File.Exists($"wwwroot/Images/{product.Image}"))
                 {

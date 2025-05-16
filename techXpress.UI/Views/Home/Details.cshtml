@@ -634,9 +634,9 @@
                         </button>
                     }
                     
-                    <button class="btn-secondary-action" onclick="toggleWishList(@Model.Id)" title="Add to Wishlist">
+                    <a class="btn-secondary-action add-to-wishlist" data-product-id="@Model.Id" title="Add to Wishlist">
                         <i class="bi bi-heart"></i>
-                    </button>
+                    </a>
                     
                     <button class="btn-secondary-action" title="Compare">
                         <i class="bi bi-arrow-left-right"></i>
@@ -787,21 +787,8 @@
 
 @section scripts {
     <script>
-        function toggleWishList(productId) {
-            const wishlistBtn = event.currentTarget;
-            wishlistBtn.classList.toggle('liked');
-            
-            const icon = wishlistBtn.querySelector('i');
-            if (wishlistBtn.classList.contains('liked')) {
-                icon.classList.remove('bi-heart');
-                icon.classList.add('bi-heart-fill');
-            } else {
-                icon.classList.remove('bi-heart-fill');
-                icon.classList.add('bi-heart');
-            }
-        }
-
         document.addEventListener("DOMContentLoaded", function () {
+            // Star rating functionality
             const stars = document.querySelectorAll("#ratingStars .star");
             const ratingInput = document.getElementById("RatingInput");
 
@@ -840,6 +827,73 @@
                 e.preventDefault();
                 document.querySelector('#reviews').scrollIntoView({
                     behavior: 'smooth'
+                });
+            });
+            
+            // Add to wishlist functionality
+            $('.add-to-wishlist').on('click', function(e) {
+                e.preventDefault();
+                const productId = $(this).data('product-id');
+                const heartIcon = $(this).find('i');
+                
+                $.ajax({
+                    url: '/Wishlist/Add',
+                    type: 'GET',
+                    data: { id: productId },
+                    success: function(response) {
+                        if (response.success) {
+                            // Change heart icon to filled
+                            heartIcon.removeClass('bi-heart').addClass('bi-heart-fill');
+                            
+                            // Show success notification
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                icon: 'success',
+                                title: response.success,
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
+                        } else if (response.info) {
+                            // Item already in wishlist
+                            heartIcon.removeClass('bi-heart').addClass('bi-heart-fill');
+                            
+                            // Show info notification
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                icon: 'info',
+                                title: response.info,
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
+                        } else if (response.error) {
+                            // Show error notification
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                icon: 'error',
+                                title: response.error,
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
+                        }
+                    },
+                    error: function() {
+                        // Show error notification
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Failed to add item to wishlist',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    }
                 });
             });
         });

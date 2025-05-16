@@ -132,7 +132,7 @@ namespace techXpress.UI.Controllers
                 return NotFound();
             }
 
-            IEnumerable<OrderVM> orderHistory = _orderManger.GetAllOrdersByUserId(Guid.Parse(userId));
+            IEnumerable<GetAllOrdersDto> orderHistory = _orderManger.GetAllOrdersByUserId(Guid.Parse(userId));
 
             UserProfileVM userProfileVM = new UserProfileVM
             {
@@ -140,7 +140,7 @@ namespace techXpress.UI.Controllers
                 UserName = user.UserName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                OrderHistory = orderHistory.Select(o => new OrderVM
+                OrderHistory = orderHistory.Select(o => new GetAllOrdersDto
                 {
                     Address = o.Address,
                     Carrier = o.Carrier,
@@ -255,6 +255,12 @@ namespace techXpress.UI.Controllers
             }
 
             return View("Settings", userSettingsVM);
+        }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
 
     }

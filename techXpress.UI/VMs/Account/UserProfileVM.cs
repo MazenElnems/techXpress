@@ -8,6 +8,6 @@ namespace techXpress.UI.VMs.Account
         public string UserName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public IEnumerable<OrderVM> OrderHistory { get; set; }
+        public IEnumerable<GetAllOrdersDto> OrderHistory { get; set; }
     }
 }

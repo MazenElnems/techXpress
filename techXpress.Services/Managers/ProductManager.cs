@@ -93,7 +93,7 @@ namespace techXpress.Services.Managers
             return products.Select(p => p.ToDto());
         }
 
-        public async Task DeleteProductAsync(ProductDTO productDTO)
+        public async Task DeleteProductAsync(int id)
         {
             try
             {

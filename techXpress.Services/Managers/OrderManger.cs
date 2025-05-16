@@ -19,7 +19,7 @@ namespace techXpress.Services.Managers
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<OrderVM> GetAllOrdersWithUsers()
+        public IEnumerable<GetAllOrdersDto> GetAllOrdersWithUsers()
         {
             IEnumerable<Order> orders = _unitOfWork.OrderRepository.GetAll("User");
 
@@ -28,7 +28,7 @@ namespace techXpress.Services.Managers
                 .ToList();
         }
 
-        public IEnumerable<OrderVM> GetAllOrdersByUserId(Guid userId)
+        public IEnumerable<GetAllOrdersDto> GetAllOrdersByUserId(Guid userId)
         {
             IEnumerable<Order> orders = _unitOfWork.OrderRepository.GetOrdersByUser(userId);
             return orders

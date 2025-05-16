@@ -20,13 +20,16 @@ namespace techXpress.DataAccess.Data.EntityConfigurations
 
             builder
                 .HasOne(o => o.Payment)
-                .WithMany()
-                .HasForeignKey(o => o.PaymentId);
+                .WithOne()
+                .HasForeignKey<Order>(o => o.PaymentId)
+                .HasPrincipalKey<Payment>(p => p.PaymentId);
+                
 
             builder
                 .HasOne(o => o.Coupon)
-                .WithMany()
-                .HasForeignKey(o => o.CouponId);
+                .WithOne()
+                .HasForeignKey<Order>(o => o.CouponId)
+                .HasPrincipalKey<Coupon>(c => c.CouponId);
 
             builder
                 .HasOne(o => o.User)

@@ -14,9 +14,9 @@
                         <div class="p-3 text-center">
                             <img src="/Images/@product.Image" style="height: 180px; object-fit: contain;" class="card-img-top" alt="@product.Name" />
                         </div>
-                        <button class="heart-btn" data-product-id="@product.Id">
+                        <a class="heart-btn add-to-wishlist" data-product-id="@product.Id">
                             <i class="bi bi-heart"></i>
-                        </button>
+                        </a>
                     </div>
                     <div class="card-body pt-0 text-center d-flex flex-column">
                         <h5 class="card-title mb-2 flex-grow-1">@product.Name</h5>
@@ -135,13 +135,70 @@
     // Heart button click event
     $(document).on('click', '.heart-btn', function(e) {
         e.preventDefault();
-        $(this).toggleClass('liked');
-        const icon = $(this).find('i');
+        const $this = $(this);
+        const productId = $this.data('product-id');
+        const icon = $this.find('i');
         
-        if ($(this).hasClass('liked')) {
-            icon.removeClass('bi-heart').addClass('bi-heart-fill');
-        } else {
-            icon.removeClass('bi-heart-fill').addClass('bi-heart');
-        }
+        $.ajax({
+            url: '/Wishlist/Add',
+            type: 'GET',
+            data: { id: productId },
+            success: function(response) {
+                if (response.success) {
+                    // Change heart icon to filled
+                    icon.removeClass('bi-heart').addClass('bi-heart-fill');
+                    $this.addClass('liked');
+                    
+                    // Show success notification
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: response.success,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                } else if (response.info) {
+                    // Item already in wishlist
+                    icon.removeClass('bi-heart').addClass('bi-heart-fill');
+                    $this.addClass('liked');
+                    
+                    // Show info notification
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'info',
+                        title: response.info,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                } else if (response.error) {
+                    // Show error notification
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'error',
+                        title: response.error,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                }
+            },
+            error: function() {
+                // Show error notification
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Failed to add item to wishlist',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            }
+        });
     });
 </script>

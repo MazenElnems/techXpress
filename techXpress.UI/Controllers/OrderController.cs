@@ -29,7 +29,7 @@ namespace techXpress.UI.Controllers
         [HttpGet("api/orders")]
         public IActionResult GetAllOrders(string? orderStatus)
         {
-            IEnumerable<OrderVM> orders = _orderManger.GetAllOrdersWithUsers()
+            IEnumerable<GetAllOrdersDto> orders = _orderManger.GetAllOrdersWithUsers()
                 .Where(o => string.IsNullOrEmpty(orderStatus) || o.OrderStatus == orderStatus);
             return Json(new { data = orders });
         }

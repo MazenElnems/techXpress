@@ -7,7 +7,7 @@ using techXpress.DataAccess.Entities;
 
 namespace techXpress.Services.DTOs.Orders
 {
-    public class OrderVM
+    public class GetAllOrdersDto
     {
         public int OrderId { get; set; }
         public string OrderStatus { get; set; }
@@ -30,9 +30,9 @@ namespace techXpress.Services.DTOs.Orders
 
     public static class GetAllOrdersExtenstions
     {
-        public static OrderVM GetAllOrdersDto(this Order order)
+        public static GetAllOrdersDto GetAllOrdersDto(this Order order)
         {
-            return new OrderVM
+            return new GetAllOrdersDto
             {
                 OrderId = order.OrderId,
                 OrderStatus = order.OrderStatus.ToString(),

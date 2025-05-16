@@ -43,6 +43,7 @@ namespace techXpress.UI
                 options.Cookie.SameSite = SameSiteMode.Lax;
                 options.Cookie.MaxAge = TimeSpan.FromDays(7); 
             });
+
             builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
             {
                 options.User.RequireUniqueEmail = true;
