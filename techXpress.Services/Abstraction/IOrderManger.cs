@@ -11,7 +11,7 @@ namespace techXpress.Services.Abstraction
     {
         Task<int> PlaceOrderAsync(CreateOrderDTO orderDto);
         Task UpdateOrderAsync(UpdateOrderDTO orderDto);
-        OrderDto? GetOrderById(int id);
+        Task<OrderDto?> GetOrderById(int id);
         OrderWithDetailsDto? GetOrderByIdWithDetails(int id);
         IEnumerable<GetAllOrdersDto> GetAllOrdersWithUsers();
         IEnumerable<GetAllOrdersDto> GetAllOrdersByUserId(Guid userId);

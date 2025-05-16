@@ -6,6 +6,7 @@ using techXpress.UI.ActionRequests;
 using techXpress.UI.VMs.Category;
 using Microsoft.AspNetCore.Authorization;
 using techXpress.UI.Models;
+using System.Threading.Tasks;
 
 namespace techXpress.UI.Controllers
 {
@@ -46,9 +47,9 @@ namespace techXpress.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Update(int id)
+        public async Task<IActionResult> Update(int id)
         {
-            CategoryDTO? categoryDTO = _categoryManager.GetById(id);
+            CategoryDTO? categoryDTO = await _categoryManager.GetByIdAsync(id);
 
             if(categoryDTO != null)
             {
@@ -76,7 +77,7 @@ namespace techXpress.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id, bool confirm)
         {
-            CategoryDTO? categoryDTO = _categoryManager.GetById(id);
+            CategoryDTO? categoryDTO = await _categoryManager.GetByIdAsync(id);
 
             if (categoryDTO != null)
             {
@@ -94,7 +95,7 @@ namespace techXpress.UI.Controllers
         [HttpDelete("api/category/delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            CategoryDTO? category = _categoryManager.GetById(id);
+            CategoryDTO? category =  await _categoryManager.GetByIdAsync(id);
             
             if(category != null)
             {

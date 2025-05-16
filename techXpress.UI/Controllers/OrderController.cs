@@ -141,7 +141,7 @@ namespace techXpress.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Success(int id)
         {
-            OrderDto? orderDto = _orderManger.GetOrderById(id);
+            OrderDto? orderDto = await _orderManger.GetOrderById(id);
 
             SessionService service = new SessionService();
             Session session = service.Get(orderDto.SessionId);

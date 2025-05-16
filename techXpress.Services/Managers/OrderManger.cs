@@ -36,9 +36,9 @@ namespace techXpress.Services.Managers
                 .ToList();
         }
 
-        public OrderDto? GetOrderById(int id)
+        public async Task<OrderDto?> GetOrderById(int id)
         {
-            Order? order = _unitOfWork.OrderRepository.GetById(o => o.OrderId == id);
+            Order? order = await _unitOfWork.OrderRepository.GetByIdAsync(o => o.OrderId == id);
             if(order != null)
             {
                 return order.ToDto();
@@ -72,13 +72,13 @@ namespace techXpress.Services.Managers
                 {
                     ProductId = p.Key,
                     Quantity = p.Value,
-                    UnitPrice = _unitOfWork.ProductRepository.GetById(product => product.Id == p.Key)!.Price
+                    UnitPrice = _unitOfWork.ProductRepository.GetByIdAsync(product => product.Id == p.Key).Result!.Price
                 }).ToList();
 
             // update order stock
-            orderDetails.ForEach(o =>
+            orderDetails.ForEach(async o =>
             {
-                var product = _unitOfWork.ProductRepository.GetById(p => p.Id == o.ProductId);
+                var product = await _unitOfWork.ProductRepository.GetByIdAsync(p => p.Id == o.ProductId);
                 if (product != null)
                 {
                     product.StockQuantity -= o.Quantity;
@@ -94,7 +94,7 @@ namespace techXpress.Services.Managers
 
         public async Task UpdateOrderAsync(UpdateOrderDTO orderDto)
         {
-            Order? order = _unitOfWork.OrderRepository.GetById(o => o.OrderId == orderDto.Id);
+            Order? order = await _unitOfWork.OrderRepository.GetByIdAsync(o => o.OrderId == orderDto.Id);
             if (order == null)
             {
                 throw new Exception("Order not found");

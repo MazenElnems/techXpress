@@ -2,6 +2,7 @@ using techXpress.Services.Abstraction;
 using techXpress.Services.DTOs.CategoryDTOs;
 using techXpress.DataAccess.Abstraction;
 using techXpress.DataAccess.Entities;
+using System.Threading.Tasks;
 
 namespace techXpress.Services.Managers
 {
@@ -21,9 +22,9 @@ namespace techXpress.Services.Managers
             return categories;
         }
 
-        public CategoryDTO? GetById(int id)
+        public async Task<CategoryDTO?> GetByIdAsync(int id)
         {
-            var category = _unitOfWork.CategoryRepository.GetById(c => c.CategoryId == id);
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(c => c.CategoryId == id);
             if (category == null)
                 return null;
 
@@ -60,7 +61,7 @@ namespace techXpress.Services.Managers
 
         public async Task DeleteCategoryAsync(int id) 
         {
-            Category? category = _unitOfWork.CategoryRepository.GetById(c => c.CategoryId == id);
+            Category? category = await _unitOfWork.CategoryRepository.GetByIdAsync(c => c.CategoryId == id);
             if(category != null)
             {
                 _unitOfWork.CategoryRepository.Delete(category);

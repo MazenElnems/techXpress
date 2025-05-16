@@ -16,7 +16,7 @@ namespace techXpress.UI.Controllers
             _productManager = productManager;
         }
 
-        public IActionResult Add(int id)
+        public async Task<IActionResult> Add(int id)
         {
             ShoppingCartVM? cart = HttpContext.Session.Get<ShoppingCartVM>("Cart");
 
@@ -29,7 +29,7 @@ namespace techXpress.UI.Controllers
 
             if (cartItem == null)
             {
-                ProductDTO? product = _productManager.GetById(id);
+                ProductDTO? product = await _productManager.GetByIdAsync(id);
 
                 cartItem = new ShoppingCartItemVM
                 {

@@ -10,7 +10,7 @@ namespace techXpress.Services.Abstraction
     public interface ICategoryManager
     {
         IEnumerable<CategoryDTO> GetAll(params string[]? Includes);
-        CategoryDTO? GetById(int id);
+        Task<CategoryDTO?> GetByIdAsync(int id);
         Task CreateCategoryAsync(CategoryCreateDTO categoryCreateDTO);
         Task UpdateCategoryAsync(CategoryDTO categoryDTO);
         Task DeleteCategoryAsync(int id);

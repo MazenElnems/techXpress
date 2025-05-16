@@ -20,9 +20,9 @@ namespace techXpress.Services.Managers
             _unitOfWork = unitOfWork;
         }
 
-        public ProductDTO? GetById(int id)
+        public async Task<ProductDTO?> GetByIdAsync(int id)
         {
-            Product? product = _unitOfWork.ProductRepository.GetById(p => p.Id == id);
+            Product? product = await _unitOfWork.ProductRepository.GetByIdAsync(p => p.Id == id);
 
             if(product != null) 
                 return product.ToDto();
@@ -97,7 +97,8 @@ namespace techXpress.Services.Managers
         {
             try
             {
-                _unitOfWork.ProductRepository.Delete(productDTO.ToProduct());
+                Product? product = await _unitOfWork.ProductRepository.GetByIdAsync(p => p.Id == id);
+                _unitOfWork.ProductRepository.Delete(product);
                 await _unitOfWork.SaveAsync();
             }
             catch(Exception ex)

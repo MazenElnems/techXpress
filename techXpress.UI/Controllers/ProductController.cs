@@ -92,9 +92,9 @@ namespace techXpress.UI.Controllers
 
         [HttpGet]
         [Authorize(Roles = UserRole.Admin)]
-        public IActionResult Update(int id)
+        public async Task<IActionResult> Update(int id)
         {
-            ProductDTO? product = _productManager.GetById(id);
+            ProductDTO? product = await _productManager.GetByIdAsync(id);
             if (product != null)
             {
                 UpdateProductActionRequest productActionRequest = product.ToActionRequest();
@@ -162,11 +162,11 @@ namespace techXpress.UI.Controllers
         [Authorize(Roles = UserRole.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
-            ProductDTO? product = _productManager.GetById(id);
+            ProductDTO? product = await _productManager.GetByIdAsync(id);
             
             if(product != null)
             {
-                await _productManager.DeleteProductAsync(product);
+                await _productManager.DeleteProductAsync(id);
 
                 if (System.IO.File.Exists($"wwwroot/Images/{product.Image}"))
                 {

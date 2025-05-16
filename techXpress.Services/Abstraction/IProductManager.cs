@@ -10,14 +10,14 @@ namespace techXpress.Services.Abstraction
 {
     public interface IProductManager
     {
-        ProductDTO? GetById(int id);
+        Task<ProductDTO?> GetByIdAsync(int id);
         Task CreateProductAsync(ProductDTO productDTO);
         Task UpdateProductAsync(ProductDTO productDTO);
         IEnumerable<ProductDTO> GetAll(params string[]? Includes);
         IEnumerable<ProductDTO> GetProductsWhere(ProductQueryDTO productQuery);
         IEnumerable<ProductDTO> GetProductsByCategory(int categoryId);
         Task<ProductDetailsDto?> GetProductDetailsAsync(int id);
-        Task DeleteProductAsync(ProductDTO productDTO);
+        Task DeleteProductAsync(int id);
         Task AddReviewAsync(int productId, ProductReviewDTO reviewDTO);
     }
 }

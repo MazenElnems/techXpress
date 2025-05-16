@@ -55,9 +55,9 @@ namespace techXpress.DataAccess.Repositories
             return _dbSet.Where(predicate);
         }
 
-        public T? GetById(Expression<Func<T, bool>> predicate)
+        public async Task<T?> GetByIdAsync(Expression<Func<T, bool>> predicate)
         {
-            return _dbSet.FirstOrDefault(predicate);
+            return await _dbSet.FirstOrDefaultAsync(predicate);
         }
 
         public void Update(T entity)

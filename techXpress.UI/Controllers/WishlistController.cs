@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using techXpress.Services.Abstraction;
 using techXpress.Services.DTOs.Products;
 using techXpress.UI.Extensions.Session;
@@ -21,7 +22,7 @@ namespace techXpress.UI.Controllers
             return View(wishList);
         }
 
-        public IActionResult Add(int id)
+        public async Task<IActionResult> Add(int id)
         {
             WishListVM? wishList = HttpContext.Session.Get<WishListVM>("wishlist");
             if (wishList == null)
@@ -32,7 +33,7 @@ namespace techXpress.UI.Controllers
             WishListItemVM? existingItem = wishList.WishListItems.FirstOrDefault(x => x.ProductId == id);
             if (existingItem == null)
             {
-                ProductDTO? product = _productManager.GetById(id);
+                ProductDTO? product = await _productManager.GetByIdAsync(id);
                 if (product != null)
                 {
                     WishListItemVM wishListItem = new WishListItemVM

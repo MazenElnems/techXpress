@@ -104,18 +104,22 @@
 @section Scripts {
     <script src="/js/productDataTable.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded' , function(){
-
+        document.addEventListener('DOMContentLoaded', function () {
             var categoryBtns = document.querySelectorAll('.categoryBtn');
 
-            categoryBtns.forEach(function(btn) {
-                btn.addEventListener('click', function() {
+            categoryBtns.forEach(function (btn) {
+                btn.addEventListener('click', function () {
                     var categoryId = this.getAttribute('data-categoryId');
+
+                    categoryBtns.forEach(function (b) {
+                        b.classList.remove('active');
+                    });
+
+                    this.classList.add('active');
 
                     $('#productTable').DataTable().ajax.url('/api/products?categoryId=' + categoryId).load();
                 });
             });
-
         });
     </script>
- }
+}
