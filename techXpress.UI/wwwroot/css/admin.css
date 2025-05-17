@@ -20,7 +20,11 @@
     transition: all 0.3s ease;
     z-index: 1000;
 }
-
+@media (max-width: 576px) {
+    .product-img-container {
+        min-height: 150px;
+    }
+}
 .sidebar.collapsed {
     width: var(--sidebar-collapsed-width);
 }
