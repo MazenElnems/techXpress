@@ -65,7 +65,9 @@ namespace techXpress.UI.Controllers
 
                 //Stripe payment logic
 
-                var domain = "https://localhost:7294";
+                //var domain = "https://localhost:7294";    
+
+                var domain = "https://techxpress.tryasp.net"; //  deployment
                 var options = new SessionCreateOptions
                 {
 
