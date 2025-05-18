@@ -43,7 +43,7 @@ namespace techXpress.Services.Managers
         public async Task CreateProductAsync(ProductDTO productDTO)
         {
             Product product = productDTO.ToProduct();
-            _unitOfWork.ProductRepository.Create(product);
+            await _unitOfWork.ProductRepository.CreateAsync(product);
             await _unitOfWork.SaveAsync();
         }
 

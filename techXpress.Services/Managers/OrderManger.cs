@@ -60,37 +60,45 @@ namespace techXpress.Services.Managers
         {
             Order order = orderDto.ToOrder();
 
-            // initialize order
+            // Initialize order
             order.OrderDate = DateTime.Now;
             order.OrderStatus = OrderStatus.Pending;
             order.TotalAmount = orderDto.TotalAmount;
-           
-            _unitOfWork.OrderRepository.Create(order);
-            
-            List<OrderDetail> orderDetails = orderDto.ProductQuantities
-                .Select(p => new OrderDetail
-                {
-                    ProductId = p.Key,
-                    Quantity = p.Value,
-                    UnitPrice = _unitOfWork.ProductRepository.GetByIdAsync(product => product.Id == p.Key).Result!.Price
-                }).ToList();
 
-            // update order stock
-            orderDetails.ForEach(async o =>
+            await _unitOfWork.OrderRepository.CreateAsync(order);
+
+            var orderDetails = new List<OrderDetail>();
+
+            foreach (var item in orderDto.ProductQuantities)
             {
-                var product = await _unitOfWork.ProductRepository.GetByIdAsync(p => p.Id == o.ProductId);
-                if (product != null)
+                var product = await _unitOfWork.ProductRepository.GetByIdAsync(p => p.Id == item.Key);
+                if (product == null)
                 {
-                    product.StockQuantity -= o.Quantity;
-                    _unitOfWork.ProductRepository.Update(product);
+                    throw new Exception($"Product with ID {item.Key} not found.");
                 }
-            });
+
+                if (product.StockQuantity < item.Value)
+                {
+                    throw new Exception($"Insufficient stock for product {product.Name}.");
+                }
+
+                product.StockQuantity -= item.Value;
+                _unitOfWork.ProductRepository.Update(product);
+
+                orderDetails.Add(new OrderDetail
+                {
+                    ProductId = item.Key,
+                    Quantity = item.Value,
+                    UnitPrice = product.Price
+                });
+            }
 
             order.OrderDetails = orderDetails;
 
             await _unitOfWork.SaveAsync();
             return order.OrderId;
         }
+
 
         public async Task UpdateOrderAsync(UpdateOrderDTO orderDto)
         {

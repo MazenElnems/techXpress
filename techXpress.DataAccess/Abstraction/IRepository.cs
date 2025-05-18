@@ -12,7 +12,7 @@ namespace techXpress.DataAccess.Abstraction
         IEnumerable<T> GetAll(params string[]? Includes);
         IEnumerable<T> GetAllWhere(Expression<Func<T, bool>> predicate);
         Task<T?> GetByIdAsync(Expression<Func<T, bool>> predicate);
-        void Create(T entity);
+        Task CreateAsync(T entity);
         void Update(T entity);
         void Delete(T entity);
     }

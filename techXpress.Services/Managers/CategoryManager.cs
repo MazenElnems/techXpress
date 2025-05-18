@@ -37,7 +37,7 @@ namespace techXpress.Services.Managers
                 throw new ArgumentNullException(nameof(categoryCreateDTO));
 
             Category category = categoryCreateDTO.ToCategory();
-            _unitOfWork.CategoryRepository.Create(category);
+            await _unitOfWork.CategoryRepository.CreateAsync(category);
             await _unitOfWork.SaveAsync();
         }
 

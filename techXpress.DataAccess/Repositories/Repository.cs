@@ -22,13 +22,13 @@ namespace techXpress.DataAccess.Repositories
             _dbSet = _db.Set<T>();
         }
 
-        public virtual void Create(T entity)
+        public virtual async Task CreateAsync(T entity)
         {
             if(entity is Product p)
             {
                 p.SellerId = 1;
             }
-            _dbSet.Add(entity);
+            await _dbSet.AddAsync(entity);
         }
 
         public void Delete(T entity)
