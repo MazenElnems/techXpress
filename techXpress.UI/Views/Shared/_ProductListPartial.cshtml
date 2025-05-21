@@ -2,6 +2,17 @@
 @model PagedProductListVM
 <link href="~/css/productCard.css" rel="stylesheet" />
 
+<style>
+    .bi-star-half,
+    .bi-star-fill,
+    .bi-star {
+        color: gold;
+    }
+    .text-secondary {
+        color: #6c757d !important;
+    }
+</style>
+
 <div class="row g-4">
     @if (Model.Products.Any())
     {
@@ -33,9 +44,35 @@
                         </div>
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div class="product-rating">
-                                @for (int i = 1; i <= 5; i++)
+                                @{
+                                    // Convert rating to stars
+                                    int fullStars = (int)Math.Floor(product.AverageRating);
+                                    bool hasHalfStar = product.AverageRating - fullStars >= 0.5;
+                                    int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                                }
+
+                                @for (int i = 0; i < fullStars; i++)
                                 {
-                                    <i class="bi bi-star-fill @(i <= 4 ? "text-warning" : "text-secondary")"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                }
+
+                                @if (hasHalfStar)
+                                {
+                                    <i class="bi bi-star-half"></i>
+                                }
+
+                                @for (int i = 0; i < emptyStars; i++)
+                                {
+                                    <i class="bi bi-star"></i>
+                                }
+
+                                @if (product.AverageRating > 0)
+                                {
+                                    <span class="ms-1 small text-secondary">(@product.AverageRating.ToString("0.0"))</span>
+                                }
+                                else
+                                {
+                                    <span class="ms-1 small text-secondary">(No ratings)</span>
                                 }
                             </div>
                             <div class="product-price fw-bold">$@product.Price.ToString("F2")</div>

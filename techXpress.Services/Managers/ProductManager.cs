@@ -67,9 +67,10 @@ namespace techXpress.Services.Managers
 
         public IEnumerable<ProductDTO> GetProductsWhere(ProductQueryDTO productQuery)
         {
-            IEnumerable<ProductDTO> products = _unitOfWork.ProductRepository.GetAllWhere(p => (productQuery.CategoryId == null || p.CategoryId == productQuery.CategoryId) &&
-                     (string.IsNullOrEmpty(productQuery.SearchTerm) || p.Name.Contains(productQuery.SearchTerm)))
-                     .Select(p => p.ToDto());
+            IEnumerable<ProductDTO> products = _unitOfWork.ProductRepository.GetAll("Reviews")
+                .Where(p => (productQuery.CategoryId == null || p.CategoryId == productQuery.CategoryId) &&
+                            (string.IsNullOrEmpty(productQuery.SearchTerm) || p.Name.Contains(productQuery.SearchTerm)))
+                .Select(p => p.ToDto());
 
             if (productQuery.SortBy == "PriceAsc")
             {

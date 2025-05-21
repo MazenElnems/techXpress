@@ -63,8 +63,6 @@
         animation: fadeIn 0.5s ease-out;
     }
 
-
-
     .auth-header {
         text-align: center;
         margin-bottom: 2.5rem;
@@ -230,18 +228,6 @@
         color: var(--primary-hover);
     }
 
-    .validation-message {
-        color: #ef4444;
-        font-size: 0.85rem;
-        margin-top: 0.25rem;
-        display: flex;
-        align-items: center;
-    }
-
-    .validation-message i {
-        margin-right: 0.25rem;
-    }
-
     .validation-summary {
         margin-top: 1.5rem;
         border-radius: 0.75rem;
@@ -253,10 +239,33 @@
     .validation-summary ul {
         margin: 0;
         padding-left: 1.5rem;
+        list-style-type: none;
     }
 
     .validation-summary li {
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.5rem;
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+    }
+
+    .validation-summary li::before {
+        content: '•';
+        color: #ef4444;
+        font-weight: bold;
+        margin-right: 0.5rem;
+    }
+
+    .validation-message {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .validation-message i {
+        margin-right: 0.25rem;
     }
 </style>
 
@@ -266,6 +275,14 @@
             <h2>Welcome Back</h2>
             <p>Sign in to your techXpress account</p>
         </div>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="validation-summary">
+                <div asp-validation-summary="All" class="text-danger">
+                </div>
+            </div>
+        }
 
         <form asp-action="Login" asp-controller="Account" method="post">
             <input type="hidden" value="@ViewBag.ReturnUrl" name="ReturnUrl"/>
@@ -306,13 +323,6 @@
                 <a asp-action="Register" asp-controller="Account" class="auth-link">Create an account</a>
             </div>
         </form>
-
-        @if (!ViewData.ModelState.IsValid && ViewData.ModelState[string.Empty]?.Errors.Count > 0)
-        {
-            <div class="validation-summary">
-                <div asp-validation-summary="All" class="text-danger"></div>
-            </div>
-        }
     </div>
 </div>
 
@@ -326,7 +336,6 @@
             togglePassword.addEventListener('click', function() {
                 const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordField.setAttribute('type', type);
-                
                 this.classList.toggle('bi-eye');
                 this.classList.toggle('bi-eye-slash');
             });

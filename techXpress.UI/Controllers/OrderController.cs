@@ -6,6 +6,7 @@ using techXpress.Services.Abstraction;
 using techXpress.Services.DTOs.Orders;
 using techXpress.UI.ActionRequests;
 using techXpress.UI.Extensions.Session;
+using techXpress.UI.VMs.Orders;
 using techXpress.UI.VMs.ShoppingCart;
 
 namespace techXpress.UI.Controllers
@@ -158,6 +159,52 @@ namespace techXpress.UI.Controllers
             HttpContext.Session.Remove("Cart");
 
             return View(id);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = UserRole.Admin)]
+        public IActionResult Reports()
+        {
+            var allOrders = _orderManger.GetAllOrdersWithUsers();
+            
+            var reportData = new OrderReportsVM
+            {
+                TotalOrders = allOrders.Count(),
+                TotalRevenue = allOrders.Sum(o => o.TotalAmount),
+                PendingOrders = allOrders.Count(o => o.OrderStatus == "Pending"),
+                CompletedOrders = allOrders.Count(o => o.OrderStatus == "Shipped"),
+                CanceledOrders = allOrders.Count(o => o.OrderStatus == "Canceled"),
+                
+                // Monthly revenue for the last 12 months
+                MonthlyRevenue = allOrders
+                    .Where(o => o.OrderDate >= DateTime.Now.AddMonths(-12))
+                    .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month })
+                    .Select(g => new MonthlyRevenueData
+                    {
+                        Month = $"{g.Key.Year}-{g.Key.Month:D2}",
+                        Revenue = g.Sum(o => o.TotalAmount)
+                    })
+                    .OrderBy(x => x.Month)
+                    .ToList(),
+
+                // Order status distribution
+                OrderStatusDistribution = allOrders
+                    .GroupBy(o => o.OrderStatus)
+                    .Select(g => new OrderStatusData
+                    {
+                        Status = g.Key,
+                        Count = g.Count()
+                    })
+                    .ToList(),
+
+                // Recent orders
+                RecentOrders = allOrders
+                    .OrderByDescending(o => o.OrderDate)
+                    .Take(5)
+                    .ToList()
+            };
+
+            return View(reportData);
         }
     }
 }

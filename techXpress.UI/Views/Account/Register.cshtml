@@ -141,33 +141,6 @@
         color: var(--primary-color);
     }
 
-    .password-strength {
-        height: 4px;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 2px;
-        margin-top: 0.5rem;
-        overflow: hidden;
-    }
-
-    .password-strength-meter {
-        height: 100%;
-        width: 0;
-        border-radius: 2px;
-        transition: width 0.3s ease, background-color 0.3s ease;
-    }
-
-    .password-strength-text {
-        font-size: 0.8rem;
-        color: var(--secondary-text);
-        margin-top: 0.25rem;
-        text-align: right;
-    }
-
-    .weak { background-color: #ef4444; width: 25%; }
-    .fair { background-color: #f97316; width: 50%; }
-    .good { background-color: #22c55e; width: 75%; }
-    .strong { background-color: #10b981; width: 100%; }
-
     .auth-btn {
         background-color: var(--primary-color);
         color: var(--dark-bg);
@@ -263,13 +236,22 @@
     .validation-summary ul {
         margin: 0;
         padding-left: 1.5rem;
+        list-style-type: none;
     }
 
     .validation-summary li {
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.5rem;
+        color: #ef4444;
+        display: flex;
+        align-items: center;
     }
 
-  
+    .validation-summary li::before {
+        content: '•';
+        color: #ef4444;
+        font-weight: bold;
+        margin-right: 0.5rem;
+    }
 </style>
 
 <div class="auth-wrapper">
@@ -278,6 +260,15 @@
             <h2>Create Account</h2>
             <p>Join the techXpress community</p>
         </div>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="validation-summary">
+                <div asp-validation-summary="All" class="text-danger">
+                    
+                </div>
+            </div>
+        }
 
         <form asp-controller="Account" asp-action="Register" method="post">
             <div class="form-group">
@@ -308,10 +299,6 @@
                         <input asp-for="Password" class="form-control" type="password" id="passwordField" placeholder="Create a password" />
                         <i class="bi bi-eye-slash input-icon" id="togglePassword"></i>
                     </div>
-                    <div class="password-strength">
-                        <div class="password-strength-meter" id="passwordStrengthMeter"></div>
-                    </div>
-                    <div class="password-strength-text" id="passwordStrengthText"></div>
                     <span asp-validation-for="Password" class="validation-message">
                     </span>
                 </div>
@@ -323,7 +310,7 @@
                         <i class="bi bi-eye-slash input-icon" id="toggleConfirmPassword"></i>
                     </div>
                     <span asp-validation-for="PasswordConfirmation" class="validation-message">
-        
+                    
                     </span>
                 </div>
             </div>
@@ -349,13 +336,6 @@
                 <a asp-action="Login" asp-controller="Account" class="auth-link">Sign in</a>
             </div>
         </form>
-
-        @if (!ViewData.ModelState.IsValid && ViewData.ModelState[string.Empty]?.Errors.Count > 0)
-        {
-            <div class="validation-summary">
-                <div asp-validation-summary="All" class="text-danger"></div>
-            </div>
-        }
     </div>
 </div>
 
@@ -382,41 +362,6 @@
             
             togglePasswordVisibility(togglePassword, passwordField);
             togglePasswordVisibility(toggleConfirmPassword, confirmPasswordField);
-            
-            // Password strength meter
-            const passwordStrengthMeter = document.getElementById('passwordStrengthMeter');
-            const passwordStrengthText = document.getElementById('passwordStrengthText');
-            
-            passwordField.addEventListener('input', function() {
-                const password = this.value;
-                let strength = 0;
-                
-                // Update strength based on password characteristics
-                if (password.length >= 8) strength += 1;
-                if (/[A-Z]/.test(password)) strength += 1;
-                if (/[0-9]/.test(password)) strength += 1;
-                if (/[^A-Za-z0-9]/.test(password)) strength += 1;
-                
-                // Update the meter
-                passwordStrengthMeter.className = 'password-strength-meter';
-                
-                if (password.length === 0) {
-                    passwordStrengthMeter.style.width = '0';
-                    passwordStrengthText.textContent = '';
-                } else if (strength === 1) {
-                    passwordStrengthMeter.classList.add('weak');
-                    passwordStrengthText.textContent = 'Weak';
-                } else if (strength === 2) {
-                    passwordStrengthMeter.classList.add('fair');
-                    passwordStrengthText.textContent = 'Fair';
-                } else if (strength === 3) {
-                    passwordStrengthMeter.classList.add('good');
-                    passwordStrengthText.textContent = 'Good';
-                } else {
-                    passwordStrengthMeter.classList.add('strong');
-                    passwordStrengthText.textContent = 'Strong';
-                }
-            });
         });
     </script>
 }

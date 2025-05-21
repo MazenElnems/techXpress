@@ -62,35 +62,35 @@
                     <h4 class="text-warning">Admin Dashboard</h4>
                 </div>
                 <div class="nav flex-column">
-                    <a asp-controller="Home" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" ? "active" : "")">
+                    <a asp-controller="Home" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
                         <i class="bi bi-house"></i>
                         <span>Home</span>
                     </a>
-                    <a asp-controller="Product" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Product" ? "active" : "")">
+                    <a asp-controller="Product" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Product" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
                         <i class="bi bi-box"></i>
                         <span>Products</span>
                     </a>
-                    <a asp-controller="Category" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Category" ? "active" : "")">
+                    <a asp-controller="Category" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Category" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
                         <i class="bi bi-tags"></i>
                         <span>Categories</span>
                     </a>
-                    <a asp-controller="Order" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Order" ? "active" : "")">
+                    <a asp-controller="Order" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Order" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
                         <i class="bi bi-cart"></i>
                         <span>Orders</span>
                     </a>
-                    <a asp-action="Index" asp-controller="Role" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Role" ? "active" : "")">
+                    <a asp-action="Index" asp-controller="Role" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Role" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
                         <i class="bi bi-people"></i>
                         <span>Roles</span>
                     </a>
-                    <a asp-action="Index" asp-controller="User" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "User" ? "active" : "")">
+                    <a asp-action="Index" asp-controller="User" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "User" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
                         <i class="bi bi-people"></i>
                         <span>Users</span>
                     </a>
-                    <a href="#" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Report" ? "active" : "")">
+                    <a asp-action="Reports" asp-controller="Order" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Order" && ViewContext.RouteData.Values["Action"].ToString() == "Reports" ? "active" : "")">
                         <i class="bi bi-graph-up"></i>
                         <span>Reports</span>
                     </a>
-                    <a asp-action="Logout" asp-controller="Account" class="sidebar-link">
+                    <a asp-action="Logout" asp-controller="Account" class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Account" && ViewContext.RouteData.Values["Action"].ToString() == "Logout" ? "active" : "")">
                         <i class="bi bi-box-arrow-right"></i>
                         <span>Logout</span>
                     </a>
@@ -158,6 +158,16 @@
                         sidebar.classList.remove('show');
                     }
                 }
+            });
+
+            // Sidebar link active state on click
+            document.querySelectorAll('.sidebar-link').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    document.querySelectorAll('.sidebar-link').forEach(function(l) {
+                        l.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
             });
         });
     </script>

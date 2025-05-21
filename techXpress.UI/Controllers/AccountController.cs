@@ -95,11 +95,11 @@ namespace techXpress.UI.Controllers
 
                 // 1. save user in the db.
                 IdentityResult result = await _userManager.CreateAsync(user, request.Password);
-                await _userManager.AddToRoleAsync(user, UserRole.Customer);     // add customer role by default
 
                 // 2. check if the user is saved successfully.
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, UserRole.Customer);     // add customer role by default
                     return RedirectToAction(nameof(Login));
                 }
                 else
