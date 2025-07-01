@@ -28,6 +28,9 @@ TechXpress is a full-featured e-commerce platform designed for selling electroni
 - **Payment Gateway:** Stripe / PayPal integration
 - **Hosting:** Azure
 
+  ## Live Demo  
+🌐 [Visit TechXpress](https://techxpress.tryasp.net/)  
+
 ### Steps to Run Locally
 1. Clone the repository:
    ```sh
