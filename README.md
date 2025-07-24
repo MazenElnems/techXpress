@@ -25,11 +25,53 @@ TechXpress is a full-featured e-commerce platform designed for selling electroni
 - **Frontend:** Razor Pages / MVC
 - **Database:** SQL Server
 - **Authentication:** Identity Framework
-- **Payment Gateway:** Stripe / PayPal integration
-- **Hosting:** Azure
+- **Payment Gateway:** Stripe 
+- **Hosting:** Monsterasp
 
 ## Live Demo  
 🌐 [Visit TechXpress](https://techxpress.tryasp.net/)  
+
+## Used Design Patterns
+
+**Repository Pattern**
+Abstracts data access logic to separate data persistence concerns from business logic.
+
+**Unit of Work Pattern**
+Handles transactions across multiple repositories to ensure data consistency.
+
+**Dependency Injection (DI)**
+Promotes loose coupling and enhances testability by injecting services where needed.
+
+Model-View-Controller (MVC)
+Organizes application logic into models, views, and controllers to promote separation of concerns.
+
+## Architecture Patterns
+TechXpress follows the **Three-Tier Architecture** pattern to separate concerns and improve maintainability:
+
+### 1. Presentation Layer (techXpress.UI)
+
+- **Tech Used:** ASP.NET Core MVC / Razor Pages  
+- **Purpose:**  
+  - Handles user interaction and UI rendering.  
+  - Sends requests to the Business Logic Layer.  
+  - Displays data received from the Business Logic Layer.  
+
+### 2. Business Logic Layer (techXpress.Services)
+
+- **Tech Used:** ASP.NET Core Services  
+- **Purpose:**  
+  - Contains core application logic and business rules.  
+  - Processes data from the Presentation Layer before passing it to the Data Layer.  
+  - Validates input, manages workflows, handles calculations, etc.  
+
+### 3. Data Access Layer (techXpress.DataAccess)
+
+- **Tech Used:** Entity Framework Core  
+- **Purpose:**  
+  - Communicates with the database.  
+  - Performs CRUD operations.  
+  - Maps database entities to domain models.  
+
 
 ### Steps to Run Locally
 1. Clone the repository:
@@ -58,5 +100,3 @@ Contributions are welcome! To contribute:
 3. Commit your changes (`git commit -m 'Add feature'`).
 4. Push to your branch (`git push origin feature-name`).
 5. Open a pull request.
-
-
