@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Rotativa.AspNetCore;
 using Stripe.Checkout;
 using techXpress.Services.Abstraction;
 using techXpress.Services.DTOs.Orders;
@@ -205,6 +206,61 @@ namespace techXpress.UI.Controllers
             };
 
             return View(reportData);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = UserRole.Admin)]
+        public IActionResult GetReportPDF()
+        {
+            var allOrders = _orderManger.GetAllOrdersWithUsers();
+
+            var reportData = new OrderReportsVM
+            {
+                TotalOrders = allOrders.Count(),
+                TotalRevenue = allOrders.Sum(o => o.TotalAmount),
+                PendingOrders = allOrders.Count(o => o.OrderStatus == "Pending"),
+                CompletedOrders = allOrders.Count(o => o.OrderStatus == "Shipped"),
+                CanceledOrders = allOrders.Count(o => o.OrderStatus == "Canceled"),
+
+                // Monthly revenue for the last 12 months
+                MonthlyRevenue = allOrders
+                    .Where(o => o.OrderDate >= DateTime.Now.AddMonths(-12))
+                    .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month })
+                    .Select(g => new MonthlyRevenueData
+                    {
+                        Month = $"{g.Key.Year}-{g.Key.Month:D2}",
+                        Revenue = g.Sum(o => o.TotalAmount)
+                    })
+                    .OrderBy(x => x.Month)
+                    .ToList(),
+
+                // Order status distribution
+                OrderStatusDistribution = allOrders
+                    .GroupBy(o => o.OrderStatus)
+                    .Select(g => new OrderStatusData
+                    {
+                        Status = g.Key,
+                        Count = g.Count()
+                    })
+                    .ToList(),
+
+                // Recent orders
+                RecentOrders = allOrders
+                    .OrderByDescending(o => o.OrderDate)
+                    .Take(5)
+                    .ToList()
+            };
+
+            return new ViewAsPdf("ReportsPDF", reportData, ViewData)
+            {
+                PageMargins = new Rotativa.AspNetCore.Options.Margins
+                {
+                    Top = 20,
+                    Bottom = 20,
+                    Left = 20,
+                    Right = 20
+                }
+            };
         }
     }
 }

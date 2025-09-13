@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using techXpress.DataAccess.Entities;
 using Stripe;
+using Rotativa.AspNetCore;
 
 namespace techXpress.UI
 {
@@ -66,6 +67,8 @@ namespace techXpress.UI
             StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
             #endregion
+
+            RotativaConfiguration.Setup("wwwroot", wkhtmltopdfRelativePath: "Rotativa");
 
             #region Configure the HTTP request pipeline.
             var app = builder.Build();
